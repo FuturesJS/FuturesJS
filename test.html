@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>ClueList Beta</title>
+    <script src="vendor/jquery/jquery-1.4.2.js"></script>
+    <script src="vendor/underscore/underscore-min.js"></script>
+    <script src="lib/promise.js"></script>
+    <script>
+      var p = make_promise();
+    </script>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      #hide_load_from_user {
+        background-color: #afc;
+      }
+      #not_logged_in {
+        background-color: #fca;
+      }
+      .mask {
+        position: fixed;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        z-index: 1000;
+      }
+      .lazy_load {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+  </body>
+</html>
