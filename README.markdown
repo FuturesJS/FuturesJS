@@ -10,18 +10,29 @@ Note: Due to the nature of Document-Driven Development this documentation is mor
     var p = make_promise(),
     timeout = setTimeout(function() {
       p.smash("Suxorz!");
-    }, 10000);
-    async_call_with_callback_and_errback(function(data){
-      p.fulfill(data);
-    });
-    p.when(function(data) {alert("Got some data: \n\n" + JSON.strinigfy(data ,undefined, '\t'))});
-    p.fail(function(data) {alert("Timed out after 10 seconds with message '" + data + "'"));
+    }, 10000),
+    passable_promise;
 
-    passable_promise = p.public(); // Hide 'smash' and 'fulfill' methods
+    $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?tags=kitten&tagmode=any&format=json&jsoncallback=?",
+      function(data){
+        p.fulfill(data);
+    });
+    p.when(function(data) {
+      clearTimeout(timeout);
+    });
+    p.fail(function(data) {
+      alert("Timed out after 10 seconds with message '" + data + "'");
+    });
+
+    passable_promise = p.passable(); // Hide 'smash' and 'fulfill' methods
     passable_promise
-      .when(function(data){ alert('Success Message 2') })
+      .when(function(data) { 
+        data.items.slice(0,4).forEach(function(item,i,arr){
+          $("<img/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+        });
+      })
       .fail(function(data){ alert('Failure Message 2') })
-      ;
+    ;
 
 ## Wrapping your functions as promisables and subscribables
 PromiseJS can wrap your functions in order to provide Futures and Subscriptions.
