@@ -7,7 +7,7 @@ Note: Due to the nature of Document-Driven Development this documentation is mor
 
 
 ## Single Promises
-    var p = make_promise(),
+    var p = Promise.make(),
     timeout = setTimeout(function() {
       p.smash("Suxorz!");
     }, 10000),
@@ -38,12 +38,12 @@ Note: Due to the nature of Document-Driven Development this documentation is mor
 ## Multiple Promises
 Sometimes you have multiple promises which you would like to process in a particular order. Here's a joiner
 
-    var p1 = make_promise(),
-    p2 = make_promise(),
-    p3 = make_promise(),
+    var p1 = Promise.make(),
+    p2 = Promise.make(),
+    p3 = Promise.make(),
     j;
 
-    j = join_promises([p1, p2, p3]);
+    j = Promise.join([p1, p2, p3]);
     j.when(function(arr) {
       setTimeout(function() {
         if ("Hello, World!" === arr.join('')) {
@@ -70,7 +70,7 @@ If your function has predictable argument order you can tell Promise the order a
       // do_stuff
     };
 
-    myFunc = promisify(myFunc, { "when": 2, "fail": 3 });
+    myFunc = Promise.promisify(myFunc, { "when": 2, "fail": 3 });
     // the old callback and errback are now optional and handled correctly if present
     myFunc(arg0, arg1, [optional_callback], [optional_errback])
       .when(function(data){
@@ -138,7 +138,7 @@ the abstracted interface to be whatever you prefer it to be:
     }
 
 Now you have a very customized implementation which Promise can easily understand:
-    var myFunc = promisify(promisifiable, true); // TODO maybe 'custom' rather than true?
+    var myFunc = Promise.promisify(promisifiable, true); // TODO maybe 'custom' rather than true?
     myFunc({
       asnyc: true,
       dataType: "jsonp",

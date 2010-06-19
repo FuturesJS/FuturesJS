@@ -63,7 +63,7 @@
 
       // Demonstrate how to make, keep, and break a promise
       $(function(){
-          var p = make_promise(),
+          var p = Promise.make(),
           timeout = setTimeout(function() {
             p.smash("Suxorz!");
           }, 4000),
@@ -103,7 +103,7 @@
       // Demonstrate that we can promisify a function
       $(function() {
         var results = {},
-        getJSON = promisify($.getJSON, { "when": 2, "fail": 3 });
+        getJSON = Promise.promisify($.getJSON, { "when": 2, "fail": 3 });
 
         getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
           { tags: "cat", tagmode: "any", format: "json" }
@@ -172,7 +172,7 @@
           };
         };
 
-        ajax = promisify(promisifiable, "custom"); // could still use params hash
+        ajax = Promise.promisify(promisifiable, "custom"); // could still use params hash
         ajax({
           url: "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
           data: { tags: "dog", tagmode: "any", format: "json" }, 
@@ -199,12 +199,12 @@
       });
 
       (function() {
-        var p1 = make_promise(),
-        p2 = make_promise(),
-        p3 = make_promise(),
+        var p1 = Promise.make(),
+        p2 = Promise.make(),
+        p3 = Promise.make(),
         j;
 
-        j = join_promises([p1, p2, p3]);
+        j = Promise.join([p1, p2, p3]);
         j.when(function(arr) {
           setTimeout(function() {
             if ("Hello, World!" === arr.join('')) {
