@@ -6,36 +6,222 @@
     <title>ClueList Beta</title>
     <script src="vendor/jquery/jquery-1.4.2.js"></script>
     <script src="vendor/underscore/underscore-min.js"></script>
+    <script src="http://bitbucket.org/JustinLove/es5/raw/c6103eab597c/es5.js"></script>
+    <script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script>
     <script src="lib/promise.js"></script>
+    <script src="vendor/jsunit/jsunit.js"></script>
     <script>
-      var p = make_promise();
+      // Test App
+      (function() {
+        var data_store = {
+          "contacts" :
+            [
+              {
+                "name" : "AJ ONeal",
+                "phone" : "317-4-COOLAJ",
+                "email" : "coolaj86@email.com"
+              },
+              {
+                "name" : "Jamshid Mavandi",
+                "phone" : "801-MVND-AAI",
+                "email" : "jamshid@mvndaai.name"
+              }
+            ]
+        }
+
+        function get_with_args(resource, callback, errback, delay) {
+          if (undefined === delay) {
+            delay = 281; // a goodly number of milliseconds
+          }
+          setTimeout(function() {
+            if ("http://coolaj86.info/contacts" == resource) {
+              callback && callback(datastore);
+            } else if (callback) {
+              errback && errback(datastore);
+            }
+          }, delay);
+          return {
+            // fake XHR
+            abort : function(){}
+          };
+        }
+
+        function get_with_hash(params) {
+          get_with_args(params.resource, params.callback, params.errback, params.delay);
+        }
+
+        function get_with_promisable() {
+          return function() {alert('override me');};
+        }
+
+        window.Asynkr = {
+          get_with_args: get_with_args,
+          get_with_hash: get_with_hash,
+          get_with_promise: get_with_promisable()
+        };
+      }());
+
+      // Demonstrate how to make, keep, and break a promise
+      $(function(){
+          var p = make_promise(),
+          timeout = setTimeout(function() {
+            p.smash("Suxorz!");
+          }, 4000),
+          passable_promise;
+
+          $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+            { tags: "kitten", tagmode: "any", format: "json" },
+            function(data){
+              p.fulfill(data);
+          });
+          p.when(function(data) {
+            clearTimeout(timeout);
+          });
+          p.fail(function(err) {
+            alert("Timed out after 10 seconds with message '" + err + "'");
+          });
+
+          passable_promise = p.passable(); // Hide 'smash' and 'fulfill' methods
+          passable_promise
+            .when(function(data) { 
+              data.items.slice(0,4).forEach(function(item,i,arr){
+                $("<img class='basic'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+              });
+            })
+            .fail(function(data){ alert('Failure Message 2') })
+          ;
+          setTimeout(function() {
+            if (4 === $("img.basic").length) {
+              $("#info").html($("#info").html() + "Basic Test Passed\n");
+              $("img.basic").remove();
+            } else {
+              throw new Error("Basic Test Failed");
+            }
+          }, 3000);
+      });
+
+      // Demonstrate that we can promisify a function
+      $(function() {
+        var results = {},
+        getJSON = promisify($.getJSON, { "when": 2, "fail": 3 });
+
+        getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+          { tags: "cat", tagmode: "any", format: "json" }
+          )
+          // I can now issue multiple callbacks with .when()
+          .when(function(data){
+            data.items.slice(0,4).forEach(function(item,i,arr){
+              $("<img class='promisify_args'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+            });
+          })
+          // passes in whichever result myFunc originally handed back
+          .withResult(function(result){
+            results.result = result;
+          })
+        ;
+
+        // the old callback and errback are now optional and handled correctly if present
+        getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+          { tags: "puppy", tagmode: "any", format: "json" },
+          function(data){
+            data.items.slice(0,4).forEach(function(item,i,arr){
+              $("<img class='promisify_args'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+            });
+          }
+        );
+
+        setTimeout(function() {
+          $("#info").append("<br/>")
+          if (8 === $("img.promisify_args").length) {
+            $("#info").html($("#info").html() + "Promisify Test Passed\n");
+            $("img.promisify_args").remove();
+          } else {
+            throw new Error("Promisify Test Failed");
+          }
+        }, 3000);
+      });
+
+      // Custom Promisify
+      $(function() {
+        var ajax,
+        promisifiable = function (callback, errback) {
+          return function() {
+            // This is your interface. You can leave arguments as is,
+            // or you can make it whatever you like
+            var args = Array.prototype.slice.call(arguments),
+            timeout,
+            xhr;
+
+            // jQuery.ajax has a timeout abstraction, but we'll create our own for example's sake.
+            timeout = setTimeout(function() {
+              // Crockford's promise doesn't cater to late-comers.
+              // Once the timeout the call should be aborted for safety's sake.
+              // If it were to succeed soon after it would throw.
+              xhr.abort();
+              errback("Timeout Failure");
+            }, 30000);
+
+            // Here we mangle the settings hash to our taste
+            args[0]['error'] = errback;
+            args[0]['success'] = function(data) {
+              clearTimeout(timeout);
+              callback(data);
+            };
+            xhr = $.ajax.apply($.ajax, args);
+            return xhr;
+          };
+        };
+
+        ajax = promisify(promisifiable, "custom"); // could still use params hash
+        ajax({
+          url: "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+          data: { tags: "dog", tagmode: "any", format: "json" }, 
+          asnyc: true,
+          dataType: "jsonp",
+          //error: silently_ignored
+          //success: silently_ignored
+        })
+          .when(function(data) {
+            data.items.slice(0,4).forEach(function(item,i,arr) {
+              $("<img class='promisify_custom'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+            });
+          })
+        ;
+
+        setTimeout(function() {
+          if (4 === $("img.promisify_custom").length) {
+            $("#info").html($("#info").html() + "<br/> Promisify Wrapper Test Passed\n");
+            $("img.promisify_custom").remove();
+          } else {
+            throw new Error("Promisify Wrapper Test Failed");
+          }
+        }, 3000);
+      });
+
+      (function() {
+        var p1 = make_promise(),
+        p2 = make_promise(),
+        p3 = make_promise(),
+        j;
+
+        j = join_promises([p1, p2, p3]);
+        j.when(function(arr) {
+          setTimeout(function() {
+            if ("Hello, World!" === arr.join('')) {
+              $("#info").html($("#info").html() + "<br/> Joiner Passes <br/>");
+            } else {
+              throw new Error("Joiner Fails");
+            }
+          }, 3000);
+        });
+
+        p3.fulfill("World!");
+        p1.fulfill("Hello");
+        p2.fulfill(", ");
+      }());
     </script>
-    <style>
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
-      #hide_load_from_user {
-        background-color: #afc;
-      }
-      #not_logged_in {
-        background-color: #fca;
-      }
-      .mask {
-        position: fixed;
-        margin: 0px;
-        padding: 0px;
-        width: 100%;
-        height: 100%;
-        top: 0px;
-        left: 0px;
-        z-index: 1000;
-      }
-      .lazy_load {
-        display: none;
-      }
-    </style>
   </head>
   <body>
+    <div id="info"></div>
   </body>
 </html>

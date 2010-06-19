@@ -6,14 +6,15 @@ PromiseJS is a colletion of tools for function-level Promises, Futures, Subscrip
 Note: Due to the nature of Document-Driven Development this documentation is more up to date than some of the code.
 
 
-## Examples
+## Single Promises
     var p = make_promise(),
     timeout = setTimeout(function() {
       p.smash("Suxorz!");
     }, 10000),
     passable_promise;
 
-    $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?tags=kitten&tagmode=any&format=json&jsoncallback=?",
+    $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+      { tags: "kitten", tagmode: "any", format: "json" },
       function(data){
         p.fulfill(data);
     });
@@ -34,7 +35,31 @@ Note: Due to the nature of Document-Driven Development this documentation is mor
       .fail(function(data){ alert('Failure Message 2') })
     ;
 
-## Wrapping your functions as promisables and subscribables
+## Multiple Promises
+Sometimes you have multiple promises which you would like to process in a particular order. Here's a joiner
+
+    var p1 = make_promise(),
+    p2 = make_promise(),
+    p3 = make_promise(),
+    j;
+
+    j = join_promises([p1, p2, p3]);
+    j.when(function(arr) {
+      setTimeout(function() {
+        if ("Hello, World!" === arr.join('')) {
+          $("#info").html($("#info").html() + "<br/> Joiner Passes <br/>");
+        } else {
+          throw new Error("Joiner Fails");
+        }
+      }, 3000);
+    });
+
+    p3.fulfill("World!");
+    p1.fulfill("Hello");
+    p2.fulfill(", ");
+
+
+## Wrapping existing functions as promisables and subscribables
 PromiseJS can wrap your functions in order to provide Futures and Subscriptions.
 Since Promise can't guess the semantics of the parameters passed into your function, 
 nor its results we provide two basic ways to wrap your functions.
@@ -57,6 +82,8 @@ If your function has predictable argument order you can tell Promise the order a
       .withResult(function(result){
         // passes in whichever result myFunc originally handed back
       });
+
+TODO: Allow a map
 
 ### Custom wrapping a function
 The simple argument-index wrapper provided with PromiseJS isn't adequate for an implementation like this:
@@ -135,3 +162,4 @@ You could easily modify your implementation to cause them to be the first to exe
 ### Further Customization
 If you want to be more custom than either of the above wrappers allow
 then you might as well just look at the source, copy, paste, and season to taste.
+
