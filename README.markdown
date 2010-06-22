@@ -163,3 +163,89 @@ You could easily modify your implementation to cause them to be the first to exe
 If you want to be more custom than either of the above wrappers allow
 then you might as well just look at the source, copy, paste, and season to taste.
 
+## Subscriptions
+SEMI IMPLEMENTED
+
+A low-level subscription
+    var s = Promise.subscription(), timeout1, timeout2, passable_subscription;
+
+    timeout1 = setTimeout(function() {
+      s.miss("Missed this issue!");
+    }, 10000);
+    // Note: It's possible that there is a 0 time delay (i.e. abstracting local and web storage)
+    $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+      { tags: "kitten", tagmode: "any", format: "json" },
+      function(data){
+        clearTimeout(timeout1);
+        s.deliver(data);
+    });
+
+    timeout2 = setTimeout(function() {
+      s.miss("Missed that issue!");
+    }, 10000)
+    $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+      { tags: "mitten", tagmode: "any", format: "json" },
+      function(data){
+        clearTimeout(timeout2);
+        s.deliver(data);
+    });
+    // TODO create a joiner that accepts multiple asyncs and
+    // (by params) either discards older data when it is received out of order
+    // OR waits to deliver in order to keep order
+    //
+    // i.e. Promise.join(a1)
+    //      // do stuff
+    //      Promise.join(a2)
+    //      // do stuff
+    //      a2 comes back immediately. If it fires now, a1 is discarded.
+    //      optionally it can wait for a1 and fire twice in the correct order.
+    //      Promise.join(a3)
+    //      a3 comes back and fires because a1 and a2 have already fired
+    // the respond in the order 
+
+
+    s.subscribe(function(data) {
+      clearTimeout(timeout);
+    });
+    s.fail(function(data) {
+      alert("Timed out after 10 seconds with message '" + data + "'");
+
+    function get_data() {
+    }
+    s.deliver("data"); // or s.issue("data");
+    s.("data");
+
+
+A higher-level subscribable
+    var myfunc = Promise.subscribify(myfunc, params),
+    unsubscribe;
+    // NOTE there will also be an option to pass in a function
+    // which delivers the subscription as a result immediately (synchronously)
+    // this way it is possible for the original function to behave exactly as it did before,
+    // but still trigger the subscription!
+    /*
+    var subscription, unsubscribe;
+    Promise.subscribiy(myfunc, prams, function(s) {
+      subscription = s;
+    });
+    // Don't freak out, this is guarunteed synchronous :D
+    unsubscribe = subscription.subscribe(other_func);
+    normal_result = myfunc();
+    // this when applies to the most recently called
+    subscription.when(func);
+    */
+
+
+    // As an object, subscribe is always accessible
+    // Any time the function is called, the subscriber
+    // is notified of the response
+    unsubscribe = myfunc.subscribe(other_function);
+
+    // As a function, when and fail are always accessible
+    // For this call of the function the promisee is notified
+    // of the result, but not for subsequent calls.
+    myfunc(args)
+      .when(callback)
+      .fail(errback);
+
+    unsubscribe();

@@ -219,6 +219,36 @@
         p1.fulfill("Hello");
         p2.fulfill(", ");
       }());
+
+
+      // Demonstrate basic subscription
+      $(function () {
+        var s = Promise.subscription(),
+        i = 0;
+
+        function recurse_subscription() {
+          s.deliver(i += 1);
+          if (i > 3) {
+            return;
+          }
+          setTimeout(recurse_subscription, 1000);
+        }
+        setTimeout(recurse_subscription, 1000);
+
+        s.subscribe(function (issue) {
+          console.log('Delivery '+issue+' of 4 passes');
+        });
+      }());
+      
+      // Demonstrate subscribify
+      $(function () {
+        var unsubscribe;
+        //TODO optionally pass in a function which returns subscribe methods. This method with be synchronous in that
+        //it gets called before the next line of the program executes. In this fashion it is possible to create a method
+        //which is EXACTLY the same (inputs and outputs) as the original
+        $.getJSON = Promise.subscribify($.getJSON, { "when": 2, "fail": 3 }, "func which returns subscribe methods");
+        unsubscribe = $.getJSON.subscribe();
+      }());
     </script>
   </head>
   <body>
