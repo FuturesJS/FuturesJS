@@ -1,13 +1,13 @@
-# PromiseJS
+# FuturesJS
 
 ## About
-PromiseJS is a colletion of tools for function-level Promises, Futures, Subscriptions, and the like.
+FuturesJS is a colletion of tools for function-level Promises, Futures, Subscriptions, and the like.
 
 Note: Due to the nature of Document-Driven Development this documentation is more up to date than some of the code.
 
 
 ## Single Promises
-    var p = Promise.make(),
+    var p = Futures.promise(),
     timeout = setTimeout(function() {
       p.smash("Suxorz!");
     }, 10000),
@@ -38,12 +38,12 @@ Note: Due to the nature of Document-Driven Development this documentation is mor
 ## Multiple Promises
 Sometimes you have multiple promises which you would like to process in a particular order. Here's a joiner
 
-    var p1 = Promise.make(),
-    p2 = Promise.make(),
-    p3 = Promise.make(),
+    var p1 = Futures.promise(),
+    p2 = Futures.promise(),
+    p3 = Futures.promise(),
     j;
 
-    j = Promise.join([p1, p2, p3]);
+    j = Futures.join([p1, p2, p3]);
     j.when(function(arr) {
       setTimeout(function() {
         if ("Hello, World!" === arr.join('')) {
@@ -60,7 +60,7 @@ Sometimes you have multiple promises which you would like to process in a partic
 
 
 ## Wrapping existing functions as promisables and subscribables
-PromiseJS can wrap your functions in order to provide Futures and Subscriptions.
+FuturesJS can wrap your functions in order to provide Futures and Subscriptions.
 Since Promise can't guess the semantics of the parameters passed into your function, 
 nor its results we provide two basic ways to wrap your functions.
 
@@ -70,7 +70,7 @@ If your function has predictable argument order you can tell Promise the order a
       // do_stuff
     };
 
-    myFunc = Promise.promisify(myFunc, { "when": 2, "fail": 3 });
+    myFunc = Futures.promisify(myFunc, { "when": 2, "fail": 3 });
     // the old callback and errback are now optional and handled correctly if present
     myFunc(arg0, arg1, [optional_callback], [optional_errback])
       .when(function(data){
@@ -86,7 +86,7 @@ If your function has predictable argument order you can tell Promise the order a
 TODO: Allow a map
 
 ### Custom wrapping a function
-The simple argument-index wrapper provided with PromiseJS isn't adequate for an implementation like this:
+The simple argument-index wrapper provided with FuturesJS isn't adequate for an implementation like this:
     var myFunc = function(params) {
       // do_stuff
     }
@@ -138,7 +138,7 @@ the abstracted interface to be whatever you prefer it to be:
     }
 
 Now you have a very customized implementation which Promise can easily understand:
-    var myFunc = Promise.promisify(promisifiable, true); // TODO maybe 'custom' rather than true?
+    var myFunc = Futures.promisify(promisifiable, true); // TODO maybe 'custom' rather than true?
     myFunc({
       asnyc: true,
       dataType: "jsonp",
@@ -167,7 +167,7 @@ then you might as well just look at the source, copy, paste, and season to taste
 SEMI IMPLEMENTED
 
 A low-level subscription
-    var s = Promise.subscription(), timeout1, timeout2, passable_subscription;
+    var s = Futures.subscription(), timeout1, timeout2, passable_subscription;
 
     timeout1 = setTimeout(function() {
       s.miss("Missed this issue!");
@@ -193,13 +193,13 @@ A low-level subscription
     // (by params) either discards older data when it is received out of order
     // OR waits to deliver in order to keep order
     //
-    // i.e. Promise.join(a1)
+    // i.e. Futures.join(a1)
     //      // do stuff
-    //      Promise.join(a2)
+    //      Futures.join(a2)
     //      // do stuff
     //      a2 comes back immediately. If it fires now, a1 is discarded.
     //      optionally it can wait for a1 and fire twice in the correct order.
-    //      Promise.join(a3)
+    //      Futures.join(a3)
     //      a3 comes back and fires because a1 and a2 have already fired
     // the respond in the order 
 
@@ -217,7 +217,7 @@ A low-level subscription
 
 
 A higher-level subscribable
-    var myfunc = Promise.subscribify(myfunc, params),
+    var myfunc = Futures.subscribify(myfunc, params),
     unsubscribe;
     // NOTE there will also be an option to pass in a function
     // which delivers the subscription as a result immediately (synchronously)
@@ -225,7 +225,7 @@ A higher-level subscribable
     // but still trigger the subscription!
     /*
     var subscription, unsubscribe;
-    Promise.subscribiy(myfunc, prams, function(s) {
+    Futures.subscribiy(myfunc, prams, function(s) {
       subscription = s;
     });
     // Don't freak out, this is guarunteed synchronous :D
