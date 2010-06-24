@@ -5,22 +5,29 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Futures</title>
     <script src="vendor/jquery/jquery-1.4.2.js"></script>
-    <script src="vendor/underscore/underscore-min.js"></script>
+    <script src="vendor/underscore/underscore.js"></script>
     <script src="http://bitbucket.org/JustinLove/es5/raw/c6103eab597c/es5.js"></script>
     <script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script>
+    <script src="vendor/persevere/global-es5.js"></script>
+    <script src="vendor/jaysyncunit/jaysyncunit.js"></script>
     <script src="lib/futures.js"></script>
     <script>
       (function() {
         var AjaxUnit = {},
         tests = {},
+        runables = {},
         num_tests = 0,
         num_over = 0,
+        completeTest,
+        addTest,
+        runTests,
         begin;
 
         $(function () {
           $('<div id="ajax_unit_test"><span id="aut_num_tests"></span></div>').appendTo("body");
         });
-        begin = function(name, wait) {
+
+        begin = function(name, wait, func) {
           var timeout;
           wait = wait || 10000; // undefind, 0, 'false' and false become 10seconds
 

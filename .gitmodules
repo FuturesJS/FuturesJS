@@ -1,0 +1,6 @@
+[submodule "vendor/jaysyncunit"]
+	path = vendor/jaysyncunit
+	url = git@github.com:coolaj86/jaysyncunit.git
+[submodule "vendor/underscore"]
+	path = vendor/underscore
+	url = http://github.com/documentcloud/underscore.git
