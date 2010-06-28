@@ -12,63 +12,6 @@
     <script src="vendor/jaysyncunit/jaysyncunit.js"></script>
     <script src="lib/futures.js"></script>
     <script>
-      (function() {
-        var AjaxUnit = {},
-        tests = {},
-        runables = {},
-        num_tests = 0,
-        num_over = 0,
-        completeTest,
-        addTest,
-        runTests,
-        begin;
-
-        $(function () {
-          $('<div id="ajax_unit_test"><span id="aut_num_tests"></span></div>').appendTo("body");
-        });
-
-        begin = function(name, wait, func) {
-          var timeout;
-          wait = wait || 10000; // undefind, 0, 'false' and false become 10seconds
-
-          if (undefined !== tests[name]) {
-            throw new Error('"'+name+'" is already defined');
-          }
-          tests[name] = undefined;
-          num_tests += 1;
-          $(function (){
-            $("<div id='"+name+"'></div>").appendTo("#ajax_unit_test").html('"'+name+'" running...');
-            $('#aut_num_tests').html(num_tests + ' tests running...');
-          });
-
-          // Timeout
-          timeout = setTimeout(function() {
-            if (undefined !== tests[name]) {
-              throw new Error('"'+name+'" timed out after completing with status "'+tests[name]+'".');
-            }
-            num_over += 1;
-            $(function (){$('#'+name).html('"'+name+'" failed');});
-          }, wait);
-
-          // Test(success||failure)
-          return function (status) {
-            //alert('booya!');
-            if (undefined !== tests[name]) {
-              alert('"'+name+'" completed after timeout with status "'+tests[name]+'".');
-            }
-            tests[name] = status;
-            num_over += 1;
-            clearTimeout(timeout);
-            status = status && "Passed" || "Failed"
-            $(function (){$('#'+name).html('"'+name+'" ' + status);});
-          };
-        }
-
-        AjaxUnit.begin = begin;
-        window.AjaxUnit = AjaxUnit;
-      }());
-    </script>
-    <script>
       // Test App
       (function() {
         var data_store = {
@@ -118,50 +61,50 @@
           get_with_promise: get_with_promisable()
         };
       }());
-
       // Demonstrate how to make, keep, and break a promise
-      $(function(){
-          var test = AjaxUnit.begin('Basic_Promise'),
-          p = Futures.promise(),
-          timeout = setTimeout(function() {
-            p.smash("Suxorz!");
-          }, 4000),
-          passable_promise;
+      JSUnit.addTest('Basic Promise', function() {
+        var that = this,
+        p = Futures.promise(),
+        timeout = setTimeout(function() {
+          p.smash("Suxorz!");
+        }, 4000),
+        passable_promise;
 
-          $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
-            { tags: "kitten", tagmode: "any", format: "json" },
-            function(data){
-              p.fulfill(data);
-          });
-          p.when(function(data) {
-            clearTimeout(timeout);
-          });
-          p.fail(function(err) {
-            alert("Timed out after 10 seconds with message '" + err + "'");
-          });
+        $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+          { tags: "kitten", tagmode: "any", format: "json" },
+          function(data){
+            p.fulfill(data);
+        });
+        p.when(function(data) {
+          clearTimeout(timeout);
+        });
+        p.fail(function(err) {
+          alert("Timed out after 10 seconds with message '" + err + "'");
+        });
 
-          passable_promise = p.passable(); // Hide 'smash' and 'fulfill' methods
-          passable_promise
-            .when(function(data) { 
-              data.items.slice(0,4).forEach(function(item,i,arr){
-                $("<img class='basic'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
-              });
-            })
-            .fail(function(data){ alert('Failure Message 2') })
-          ;
-          setTimeout(function(status) {
-            status = false;
-            if (4 === $("img.basic").length) {
-              $("img.basic").remove();
-              status = true;
-            }
-            test(status);
-          }, 4000);
-      });
+        passable_promise = p.passable(); // Hide 'smash' and 'fulfill' methods
+        passable_promise
+          .when(function(data) { 
+            data.items.slice(0,4).forEach(function(item,i,arr){
+              //$("<img class='basic'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
+            });
+            that.complete(true);
+          })
+          .fail(function(data){ that.complete(false) })
+        ;
+        // this.tearDown(function () {$("img.basic").remove()});
+      }, 5000);
 
+
+
+
+
+      /************
+       * Promisify
+       ************/
       // Demonstrate that we can promisify a function
-      $(function() {
-        var test = AjaxUnit.begin('Basic_Promisify'),
+      JSUnit.addTest('Basic Promisify', function () {
+        var that = this,
         results = {},
         getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
 
@@ -171,38 +114,37 @@
           // I can now issue multiple callbacks with .when()
           .when(function(data){
             data.items.slice(0,4).forEach(function(item,i,arr){
-              $("<img class='promisify_args'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+              //$("<img class='promisify_args'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
             });
+            that.complete(true);
           })
           // passes in whichever result myFunc originally handed back
           .withResult(function(result){
             results.result = result;
           })
         ;
+      }, 5000);
 
+      JSUnit.addTest('Basic Promisify2', function () {
+        var that = this,
+        results = {},
+        getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
         // the old callback and errback are now optional and handled correctly if present
         getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
           { tags: "puppy", tagmode: "any", format: "json" },
           function(data){
             data.items.slice(0,4).forEach(function(item,i,arr){
-              $("<img class='promisify_args'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+              //$("<img class='promisify_args'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
             });
+            that.complete(true);
           }
         );
-
-        setTimeout(function(status) {
-          status = false
-          if (8 === $("img.promisify_args").length) {
-            $("img.promisify_args").remove();
-            status = true;
-          }
-          test(status);
-        }, 4000);
-      });
+      }, 5000);
 
       // Custom Promisify
-      $(function() {
-        var test = AjaxUnit.begin('Custom_Promisify'),
+      JSUnit.addTest('Custom Promisify', function () {
+        // TODO maybe the 'this' was a bad idea?
+        var that = this,
         ajax,
         promisifiable = function (callback, errback) {
           return function() {
@@ -219,7 +161,7 @@
               // If it were to succeed soon after it would throw.
               xhr.abort();
               errback("Timeout Failure");
-            }, 4000);
+            }, 3000);
 
             // Here we mangle the settings hash to our taste
             args[0]['error'] = errback;
@@ -243,49 +185,60 @@
         })
           .when(function(data) {
             data.items.slice(0,4).forEach(function(item,i,arr) {
-              $("<img class='promisify_custom'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+              //$("<img class='promisify_custom'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
             });
+            that.complete(true);
           })
         ;
+      }, 5000);
 
-        setTimeout(function(status) {
-          status = false;
-          if (4 === $("img.promisify_custom").length) {
-            $("img.promisify_custom").remove();
-            status = true;
-          } 
-          test(status);
-        }, 4000);
-      });
 
+
+
+
+      /****************
+       * Promise-Joins
+       ****************/
       // Demonstrate that the joiner works
-      (function() {
-        var test = AjaxUnit.begin('Synchronous_Join'),
+      JSUnit.addTest('Synchronous Join', function () {
+        var that = this,
         p1 = Futures.promise(),
         p2 = Futures.promise(),
         p3 = Futures.promise(),
         j;
 
+        // Show that the repsonses come back in correct order
         j = Futures.join([p1, p2, p3]);
         j.when(function(arr) {
-          setTimeout(function(status) {
             status = false;
             if ("Hello, World!" === arr.join('')) {
               status = true;
             }
-            test(status);
-          }, 4000);
+            that.complete(status);
         });
 
-        p3.fulfill("World!");
-        p1.fulfill("Hello");
-        p2.fulfill(", ");
-      }());
+        // Set the responses to come back out of order
+        setTimeout(function() {
+          p3.fulfill("World!");
+        }, 250);
+        setTimeout(function() {
+          p1.fulfill("Hello");
+        }, 350);
+        setTimeout(function() {
+          p2.fulfill(", ");
+        }, 600);
+      }, 1000);
 
 
+
+
+
+      /****************
+       * Subscriptions
+       ****************/
       // Demonstrate basic subscription
-      $(function () {
-        var test = AjaxUnit.begin('Basic_Subscription'),
+      JSUnit.addTest('Basic Subscription', function () {
+        var that = this,
         s = Futures.subscription(),
         i = 0;
 
@@ -301,18 +254,22 @@
         s.subscribe(function (issue) {
           console.log('Delivery '+issue+' of 4 passes');
           if (4 === i) {
-            test(true);
+            that.complete(true);
           }
         });
-      }());
+      }, 5000);
+/*
+*/
+
       
       // Demonstrate subscribify
-      $(function () {
-        var test = AjaxUnit.begin('Basic_Subscribify'),
+      JSUnit.addTest('Basic Subscribify', function () {
+        var that = this,
         unsubscribe, 
         getJSON,
         keywords = ['trogdor', 'burninator', 'peasant', 'strongbad'],
-        i = 0;
+        i = 0,
+        timeout;
 
 
         //TODO optionally pass in a function which returns subscribe methods. This method with be synchronous in that
@@ -320,31 +277,44 @@
         //which is EXACTLY the same (inputs and outputs) as the original
         getJSON = Futures.subscribify($.getJSON, { "when": 2 }, "func which returns subscribe methods");
         function recurse_subscription() {
+          var inner_timeout;
           if (i >= keywords.length) {
             return;
           }
-          i += 1;
           getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
               { tags: keywords[i], tagmode: "any", format: "json" });
-          setTimeout(recurse_subscription, 1000);
+          inner_timeout = setTimeout(recurse_subscription, 300);
         }
-        setTimeout(recurse_subscription, 1000);
+        timeout = setTimeout(recurse_subscription, 300);
         unsubscribe = getJSON
           .subscribe(function(data) {
             data.items.slice(0,4).forEach(function(item) {
-              $("<img class='subscribify'/>").attr("src", item.media.m).css("height", "150px").appendTo("body");
+              //$("<img class='subscribify'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
             });
             //alert("i: "+i);
-            if (i == 4 && 16 == $(".subscribify").length) {
-              //alert("yaboo!");
-              test(true)
+            i += 1;
+            //alert("yaboo! " + i);
+            if (i == 4) {// && 16 == $(".subscribify").length) {
+              //alert("yaboo! should be 4 = " + i);
+              //i = 100;
+              that.complete(true)
             }
           });
+      // This takes a minimum of 4x the speed listed above
+      }, 10000);
 
-      }());
+      
+      JSUnit.addTest('Synchronize Subscriptions', function () {
+      try {
+        
+      } catch(ignore) {}
+      }, 10000);
+
+      JSUnit.runTests();
     </script>
   </head>
   <body>
     <div id="info"></div>
+    <div>Synch Subscriptions will fail, the code isn't built yet</div>
   </body>
 </html>

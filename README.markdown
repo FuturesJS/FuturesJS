@@ -1,7 +1,7 @@
 # FuturesJS
 
 ## About
-FuturesJS is a colletion of tools for function-level Promises, Futures, Subscriptions, and the like.
+A collection of tools for Futures including Promises, Subscriptions, and Joiners.
 
 Note: Due to the nature of Document-Driven Development this documentation is more up to date than some of the code.
 
