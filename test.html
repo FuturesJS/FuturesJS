@@ -200,7 +200,7 @@
        * Promise-Joins
        ****************/
       // Demonstrate that the joiner works
-      JSUnit.addTest('Synchronous Join', function () {
+      JSUnit.addTest('Synchronous Join Array', function () {
         var that = this,
         p1 = Futures.promise(),
         p2 = Futures.promise(),
@@ -212,6 +212,35 @@
         j.when(function(arr) {
             status = false;
             if ("Hello, World!" === arr.join('')) {
+              status = true;
+            }
+            that.complete(status);
+        });
+
+        // Set the responses to come back out of order
+        setTimeout(function() {
+          p3.fulfill("World!");
+        }, 250);
+        setTimeout(function() {
+          p1.fulfill("Hello");
+        }, 350);
+        setTimeout(function() {
+          p2.fulfill(", ");
+        }, 600);
+      }, 1000);
+
+      JSUnit.addTest('Synchronous Join Args', function () {
+        var that = this,
+        p1 = Futures.promise(),
+        p2 = Futures.promise(),
+        p3 = Futures.promise(),
+        j;
+
+        // Show that the repsonses come back in correct order
+        j = Futures.join(p1, p2, p3);
+        j.when(function(a1, a2, a3) {
+            status = false;
+            if ("Hello, World!" === [a1, a2, a3].join('')) {
               status = true;
             }
             that.complete(status);
@@ -291,11 +320,8 @@
             data.items.slice(0,4).forEach(function(item) {
               //$("<img class='subscribify'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
             });
-            //alert("i: "+i);
             i += 1;
-            //alert("yaboo! " + i);
             if (i == 4) {// && 16 == $(".subscribify").length) {
-              //alert("yaboo! should be 4 = " + i);
               //i = 100;
               that.complete(true)
             }
@@ -305,16 +331,59 @@
 
       
       JSUnit.addTest('Synchronize Subscriptions', function () {
-      try {
-        
-      } catch(ignore) {}
-      }, 10000);
+        var that = this,
+        s1 = Futures.subscription(),
+        s2 = Futures.subscription(),
+        s3 = Futures.subscription(),
+        sync;
+
+        // Show that the repsonses come back in correct order
+        sync = Futures.synchronize([s1, s2, s3]);
+        sync.subscribe(function(arr) {
+            status = false;
+            console.log("got string: " + JSON.stringify(arr));
+            if ("Hello, World!" === arr.join('')) {
+              status = true;
+            }
+            that.complete(status);
+        });
+
+        // Set the responses to come back out of order
+        // Responses are sent in this order:
+        // AJ, Goodbye, Good-bye, World!, Hello, ',', Good-bye
+        // These are discarded as old:
+        // AJ, Goodbye, Good-bye
+        // This is the final order:
+        // Hello, World!
+        setTimeout(function() {
+          s3.deliver("AJ!");
+        }, 50);
+        setTimeout(function() {
+          s1.deliver("Goodbye");
+        }, 100);
+        setTimeout(function() {
+          s1.deliver("Good-bye");
+        }, 150);
+        setTimeout(function() {
+          s3.deliver("World!");
+        }, 200);
+        setTimeout(function() {
+          s1.deliver("Hello");
+        }, 250);
+        setTimeout(function() {
+          s2.deliver(", ");
+        }, 300);
+        // Should not fire again
+        setTimeout(function() {
+          s1.deliver("Good-bye");
+        }, 150);
+      }, 5000);
 
       JSUnit.runTests();
     </script>
   </head>
   <body>
     <div id="info"></div>
-    <div>Synch Subscriptions will fail, the code isn't built yet</div>
+    <div>`synchronize` for Subscriptions will fail, the code isn't built yet</div>
   </body>
 </html>

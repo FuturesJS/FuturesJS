@@ -43,6 +43,7 @@ Sometimes you have multiple promises which you would like to process in a partic
     p3 = Futures.promise(),
     j;
 
+    #TODO use args as array or an actual array
     j = Futures.join([p1, p2, p3]);
     j.when(function(arr) {
       setTimeout(function() {
@@ -164,7 +165,6 @@ If you want to be more custom than either of the above wrappers allow
 then you might as well just look at the source, copy, paste, and season to taste.
 
 ## Subscriptions
-SEMI IMPLEMENTED
 
 A low-level subscription
     var s = Futures.subscription(), timeout1, timeout2, passable_subscription;
@@ -189,20 +189,6 @@ A low-level subscription
         clearTimeout(timeout2);
         s.deliver(data);
     });
-    // TODO create a joiner that accepts multiple asyncs and
-    // (by params) either discards older data when it is received out of order
-    // OR waits to deliver in order to keep order
-    //
-    // i.e. Futures.join(a1)
-    //      // do stuff
-    //      Futures.join(a2)
-    //      // do stuff
-    //      a2 comes back immediately. If it fires now, a1 is discarded.
-    //      optionally it can wait for a1 and fire twice in the correct order.
-    //      Futures.join(a3)
-    //      a3 comes back and fires because a1 and a2 have already fired
-    // the respond in the order 
-
 
     s.subscribe(function(data) {
       clearTimeout(timeout);
@@ -249,3 +235,47 @@ A higher-level subscribable
       .fail(errback);
 
     unsubscribe();
+
+## Synchronize (Join) Subscriptions
+    s1 = Futures.subscription(),
+    s2 = Futures.subscription(),
+    s3 = Futures.subscription(),
+    sync;
+
+    // Show that the repsonses come back in correct order
+    sync = Futures.synchronize([s1, s2, s3]);
+    sync.subscribe(function(arr) {
+        status = false;
+        alert(arr.join('')); //"Hello, World!"
+    });
+
+    // AJ, Goodbye, Good-bye, World!, Hello, ',', Good-bye
+    // These are discarded as old:
+    // AJ, Goodbye, Good-bye
+    // The last "Good-bye" waits for the next round of deliveries
+    // and is never called
+    s3.deliver("AJ!");
+    s1.deliver("Goodbye");
+    s1.deliver("Good-bye");
+    s3.deliver("World!");
+    s1.deliver("Hello");
+    s2.deliver(", ");
+    s1.deliver("Good-bye");
+
+TODO
+====
+  * A joiner that accepts multiple asyncs may be useful:
+    // TODO create a joiner that accepts multiple asyncs and
+    // (by params) either discards older data when it is received out of order
+    // OR waits to deliver in order to keep order
+    //
+    // i.e. Futures.join(a1)
+    //      // do stuff
+    //      Futures.join(a2)
+    //      // do stuff
+    //      a2 comes back immediately. If it fires now, a1 is discarded.
+    //      optionally it can wait for a1 and fire twice in the correct order.
+    //      Futures.join(a3)
+    //      a3 comes back and fires because a1 and a2 have already fired
+    // the respond in the order 
+
