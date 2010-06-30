@@ -6,7 +6,7 @@
     <title>Futures</title>
     <script src="vendor/jquery/jquery-1.4.2.js"></script>
     <script src="vendor/underscore/underscore.js"></script>
-    <script src="http://bitbucket.org/JustinLove/es5/raw/c6103eab597c/es5.js"></script>
+    <!-- script src="http://bitbucket.org/JustinLove/es5/raw/c6103eab597c/es5.js"></script -->
     <script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script>
     <script src="vendor/persevere/global-es5.js"></script>
     <script src="vendor/jaysyncunit/jaysyncunit.js"></script>
@@ -103,7 +103,7 @@
        * Promisify
        ************/
       // Demonstrate that we can promisify a function
-      JSUnit.addTest('Basic Promisify', function () {
+      JSUnit.addTest('Basic Promisify using withResult for original result', function () {
         var that = this,
         results = {},
         getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
@@ -294,7 +294,7 @@
         var that = this,
         unsubscribe, 
         getJSON,
-        keywords = ['trogdor', 'burninator', 'peasant', 'strongbad'],
+        keywords = ['trogdor', 'burninator'],
         i = 0,
         timeout;
 
@@ -310,33 +310,57 @@
           inner_timeout = setTimeout(recurse_subscription, 200);
         }
         timeout = setTimeout(recurse_subscription, 500);
+
         unsubscribe = getJSON
-          .subscribe(function(data) {
+          .subscribe(function (data) {
             i += 1;
-            if (i == 4) {
+            if (i == 2) {
               that.complete(true)
             }
+          }, function (u) {
+            // TODO require synchronous callback to avoid yucky assignment and keep chainability
+            // this is not implemented yet!
+            unsubscribe = u;
           });
-      // This takes a minimum of 4x the speed listed above
+      }, 10000);
+
+      JSUnit.addTest('Subscription hands back a promises', function () {
+        var that = this,
+        keywords = ['peasant', 'strongbad'],
+        i = 0,
+        p,
+        getJSON;
+
+        getJSON = Futures.subscribify($.getJSON, { "when": 2 });
+        p = getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+            { tags: keywords[i], tagmode: "any", format: "json" })
+        getJSON.subscribe(function (data) {
+            Futures.log('got some data'); 
+        });
+        // TODO be able to join on a promise and a subscription 
+        p.when(function () { that.complete(true); });
       }, 10000);
 
       // noConflict
-      JSUnit.addTest('noConflict Subscribify (being implemented)', function () {
-        var that = this;
-        var subscription;
-        getJSON = Futures.subscribify($.getJSON, { 
-          "when": 2,
-          "noConflict": function (s) {
+      JSUnit.addTest('noConflict Subscribify (under construction)', function () {
+        var that = this,
+        subscription;
+
+        getJSON = Futures.subscribify($.getJSON, {"when": 2 })
+          .noConflict(function (s) {
             subscription = s;
-          }
-        });
+          });
+        //alert('hey' + Object.keys(subscription));
+        // something going wrong here:
+        getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+            { tags: 'country', tagmode: "any", format: "json" });
+
         subscription.subscribe(function () {
           that.complete(true);
         });
-      }, 10000);
-
-      JSUnit.addTest('Subscription with Promises (being implemented)', function () {
-        
+        subscription.when(function () {
+          that.complete(true);
+        });
       }, 10000);
 
       // See that one round of subscriptions passes
