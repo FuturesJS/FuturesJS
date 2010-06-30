@@ -281,14 +281,12 @@
         setTimeout(recurse_subscription, 100);
 
         s.subscribe(function (issue) {
-          console.log('Delivery '+issue+' of 4 passes');
+          Futures.log('Delivery '+issue+' of 4 passes');
           if (4 === i) {
             that.complete(true);
           }
         });
       }, 5000);
-/*
-*/
 
       
       // Demonstrate subscribify
@@ -301,10 +299,7 @@
         timeout;
 
 
-        //TODO optionally pass in a function which returns subscribe methods. This method with be synchronous in that
-        //it gets called before the next line of the program executes. In this fashion it is possible to create a method
-        //which is EXACTLY the same (inputs and outputs) as the original
-        getJSON = Futures.subscribify($.getJSON, { "when": 2 }, "func which returns subscribe methods");
+        getJSON = Futures.subscribify($.getJSON, { "when": 2 });
         function recurse_subscription() {
           var inner_timeout;
           if (i >= keywords.length) {
@@ -325,10 +320,23 @@
       // This takes a minimum of 4x the speed listed above
       }, 10000);
 
+      // noConflict
       JSUnit.addTest('noConflict Subscribify (being implemented)', function () {
+        var that = this;
+        var subscription;
+        getJSON = Futures.subscribify($.getJSON, { 
+          "when": 2,
+          "noConflict": function (s) {
+            subscription = s;
+          }
+        });
+        subscription.subscribe(function () {
+          that.complete(true);
+        });
       }, 10000);
 
       JSUnit.addTest('Subscription with Promises (being implemented)', function () {
+        
       }, 10000);
 
       // See that one round of subscriptions passes
@@ -343,7 +351,7 @@
         sync = Futures.synchronize([s1, s2, s3]);
         sync.subscribe(function(arr) {
             status = false;
-            console.log("got string: " + JSON.stringify(arr));
+            Futures.log("got string: " + JSON.stringify(arr));
             if ("Hello, World!" === arr.join('')) {
               status = true;
             }
@@ -393,7 +401,7 @@
         // Show that the repsonses come back in correct order
         sync = Futures.synchronize([s1, s2, s3]);
         sync.subscribe(function(arr) {
-            console.log("got string: " + JSON.stringify(arr));
+            Futures.log("got string: " + JSON.stringify(arr));
             if (0 == i && "Hello, World!" === arr.join('')) {
               i += 1;
             } else if (1 == i && "Goodbye, World!" === arr.join('')) {
