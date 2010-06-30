@@ -15,13 +15,14 @@
         });
 
         completeTest = function (status) {
-          var item = this;
+          var _item = this;
           $(function() {
+            var item = _item;
             if (undefined === item.result) {
               num_over += 1;
               clearTimeout(item.timeout);
             } else {
-              alert('"'+item.name+'" completed after timeout with status "'+status+'".');
+              alert('"'+item.name+'" completed another time with the status "'+status+'".');
             }
             
             item.result = status;
@@ -59,12 +60,15 @@
         };
 
         runTests = function() {$(function() {
+          var item;
           for (key in runables) {
-              var item = runables[key];
-              item.timeout = setTimeout(function() {
-                num_over += 1;
-                item.complete(false);
-              }, item.wait);
+              item = runables[key];
+              (function (local_item) {
+                item.timeout = setTimeout(function() {
+                  num_over += 1;
+                  local_item.complete(false);
+                }, item.wait);
+              }(item));
               $("<div id='"+item.lname+"'></div>").appendTo("#ajax_unit_test").html('"'+item.name+'" running...');
               $('#aut_num_tests').html(num_tests + ' tests running...');
               item.func();

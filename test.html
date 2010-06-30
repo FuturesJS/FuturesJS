@@ -276,9 +276,9 @@
           if (i > 3) {
             return;
           }
-          setTimeout(recurse_subscription, 1000);
+          setTimeout(recurse_subscription, 100);
         }
-        setTimeout(recurse_subscription, 1000);
+        setTimeout(recurse_subscription, 100);
 
         s.subscribe(function (issue) {
           console.log('Delivery '+issue+' of 4 passes');
@@ -312,24 +312,26 @@
           }
           getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
               { tags: keywords[i], tagmode: "any", format: "json" });
-          inner_timeout = setTimeout(recurse_subscription, 300);
+          inner_timeout = setTimeout(recurse_subscription, 200);
         }
-        timeout = setTimeout(recurse_subscription, 300);
+        timeout = setTimeout(recurse_subscription, 500);
         unsubscribe = getJSON
           .subscribe(function(data) {
-            data.items.slice(0,4).forEach(function(item) {
-              //$("<img class='subscribify'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
-            });
             i += 1;
-            if (i == 4) {// && 16 == $(".subscribify").length) {
-              //i = 100;
+            if (i == 4) {
               that.complete(true)
             }
           });
       // This takes a minimum of 4x the speed listed above
       }, 10000);
 
-      
+      JSUnit.addTest('noConflict Subscribify (being implemented)', function () {
+      }, 10000);
+
+      JSUnit.addTest('Subscription with Promises (being implemented)', function () {
+      }, 10000);
+
+      // See that one round of subscriptions passes
       JSUnit.addTest('Synchronize Subscriptions', function () {
         var that = this,
         s1 = Futures.subscription(),
@@ -379,10 +381,60 @@
         }, 150);
       }, 5000);
 
+      // See that two messages come through
+      JSUnit.addTest('Synchronize Two Subscriptions', function () {
+        var that = this,
+        s1 = Futures.subscription(),
+        s2 = Futures.subscription(),
+        s3 = Futures.subscription(),
+        sync,
+        i = 0;
+
+        // Show that the repsonses come back in correct order
+        sync = Futures.synchronize([s1, s2, s3]);
+        sync.subscribe(function(arr) {
+            console.log("got string: " + JSON.stringify(arr));
+            if (0 == i && "Hello, World!" === arr.join('')) {
+              i += 1;
+            } else if (1 == i && "Goodbye, World!" === arr.join('')) {
+              i += 1;
+              that.complete(true);
+            } else if (2 == i) {
+              that.complete(false);
+            }
+        });
+
+        // Hello, World!
+        // Goodbye, World!
+        setTimeout(function() {
+          s3.deliver("World!");
+        }, 100);
+        setTimeout(function() {
+          s1.deliver("Hello");
+        }, 150);
+        setTimeout(function() {
+          s2.deliver(", ");
+        }, 200);
+        setTimeout(function() {
+          s1.deliver("Good-bye");
+        }, 250);
+        setTimeout(function() {
+          s1.deliver("Goodbye");
+        }, 300);
+        setTimeout(function() {
+          s3.deliver("World!");
+        }, 350);
+        setTimeout(function() {
+          s2.deliver(", ");
+        }, 400);
+      }, 5000);
+
+      
+
       JSUnit.runTests();
     </script>
   </head>
   <body>
-    <div id="info"></div>
+    <a href="http://github.com/coolaj86/futures">FuturesJS On GitHub</a>
   </body>
 </html>
