@@ -60,6 +60,9 @@ Examples
 
 Detailed Examples
 =============
+
+The [http://coolaj86.info/futuresjs/](test page) source has plenty of examples in it!
+
 ## Single Promises
     var p = Futures.promise(),
     timeout = setTimeout(function() {
