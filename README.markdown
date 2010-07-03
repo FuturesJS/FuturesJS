@@ -4,6 +4,8 @@ FuturesJS
 ## About
 A collection of tools for Futures including Promises, Subscriptions, and Joiners.
 
+[Google Groups Mailing List](http://groups.google.com/group/futures-javascript)
+
 Examples
 --------
 ### Create your own magic:
