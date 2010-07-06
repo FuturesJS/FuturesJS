@@ -4,10 +4,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Futures</title>
+    <link rel="stylesheet" type="text/css" href="vendor/highlight/styles/school_book.css" media="screen" />
+    <script src="vendor/showdown/showdown.js"></script>
+    <script src="vendor/highlight/highlight.pack.js"></script>
     <script src="vendor/jquery/jquery-1.4.2.js"></script>
     <script src="vendor/underscore/underscore.js"></script>
     <!-- script src="http://bitbucket.org/JustinLove/es5/raw/c6103eab597c/es5.js"></script -->
-    <script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script>
+    <!-- script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script -->
     <script src="vendor/persevere/global-es5.js"></script>
     <script src="vendor/jaysyncunit/jaysyncunit.js"></script>
     <script src="lib/futures.js"></script>
@@ -95,6 +98,27 @@
         // this.tearDown(function () {$("img.basic").remove()});
       }, 5000);
 
+      // Demonstrate how to guarantee an immediate promise
+      JSUnit.addTest('Immediate Promise (Guarantee)', function() {
+        var that = this,
+        p = Futures.promise("Guarantee"),
+        timeout = setTimeout(function() {
+          p.smash("Suxorz!");
+          that.complete(false);
+        }, 100),
+        passable_promise;
+
+        p.when(function(data) {
+          clearTimeout(timeout);
+          // === doesn't work in this case on data
+          if ("Guarantee" === data.toString()) {
+            that.complete(true);
+          }
+        });
+        p.fail(function(err) {
+          alert("Errored with message '" + err + "'");
+        });
+      }, 5000);
 
 
 
@@ -358,6 +382,22 @@
         subscription.subscribe(function () {
           that.complete(true);
         });
+      }, 10000);
+
+      // noConflict
+      JSUnit.addTest('noConflict Subscribify with when', function () {
+        var that = this,
+        subscription;
+
+        getJSON = Futures.subscribify($.getJSON, {"when": 2 })
+          .noConflict(function (s) {
+            subscription = s;
+          });
+        //alert('hey' + Object.keys(subscription));
+        // something going wrong here:
+        getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+            { tags: 'country', tagmode: "any", format: "json" });
+
         subscription.when(function () {
           that.complete(true);
         });
@@ -468,5 +508,38 @@
   </head>
   <body>
     <a href="http://github.com/coolaj86/futures">FuturesJS On GitHub</a>
+    <div id="doc">
+JavaScript with Showdown &amp; Highlight:
+
+    (function () {
+      var string = "Hello World!";
+      alert(string);
+    }());
+    </div>
   </body>
+    <script>
+      "use strict";
+      (function (doc) {
+        var showdown = new Showdown.converter(),
+        body = doc.getElementById('doc'),
+        markdown,
+        html;
+
+        markdown = body.innerHTML;
+        html = showdown.makeHtml(markdown);
+        body.innerHTML = html;
+   
+        hljs.initHighlightingOnLoad();
+       // Highlight syntax
+      /*
+        var pres = document.getElementsByTagName('pre');
+        for (var i = 0; i < pres.length; i++) {
+          if (pres[i].firstChild) // && pres[i].firstChild.nodeName == 'CODE')
+
+            hljs.highlightBlock(pres[i].firstChild);
+        }
+      */
+      }(window.document));
+    </script>
+
 </html>

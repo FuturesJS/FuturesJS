@@ -279,3 +279,7 @@ TODO
     //      a3 comes back and fires because a1 and a2 have already fired
     // the respond in the order 
 
+Related Projects
+================
+  * [http://ajaxian.com/archives/javascript-strands-adding-futures-to-javascript](Strands)
+  * [http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx](MSDN Promise)
