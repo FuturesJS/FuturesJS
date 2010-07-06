@@ -1,10 +1,78 @@
-# FuturesJS
+FuturesJS
+=========
 
 ## About
 A collection of tools for Futures including Promises, Subscriptions, and Joiners.
 
-Note: Due to the nature of Document-Driven Development this documentation is more up to date than some of the code.
+[Google Groups Mailing List](http://groups.google.com/group/futures-javascript)
 
+Examples
+--------
+### Create your own magic:
+
+    // Promises may be fulfilled or smashed only once
+    var p = Futures.promise()
+        // success
+        .fulfill(data) // keeps promise to give `data` to all `func`s
+        .when(func) // promises to `func`
+        // error
+        .smash(error) // delivers `error` to all `func`s
+        .fail(func) // informs `func` of error
+        // utility
+        .passable() // returns this p without `fulfill` or `smash`
+        ;
+
+
+    // Subscriptions may be delivered or held multiple times
+    var s = Futures.subscription()
+        // success
+        .deliver(data) // delivers `data` to all subscribers
+        .subscribe(func) // receives `data` each time deliver is called
+        // error
+        .hold(error) // notifies that the subscription is on hold
+        .fail(func) // receives notification on failure
+
+
+    // Joins return a promise which triggers when all joined promises have been fulfilled or smashed
+    var p;
+    p = Futures.join(p1, p2, p3);
+    p.when(function (r1, r2, r3) {
+        // results returned in order
+    });
+    p = Futures.join([p1, p2, p3]);
+    p.when(function (p_arr) {
+        // p_arr holds the results of [p1, p2, p3] in order
+    });
+
+    // Synchronizations trigger each time all of the subscriptions have delivered or held at least one new subscription
+    // If s1 were to deliver 4 times before s2 and s3 deliver once, the 4th delivery is used
+    var s;
+    s = Futures.synchronize(s1,s2,s3);
+    s.subscribe(function (r1,r2,r3) {
+        // most recent results returned in order
+    });
+    s = Futures.synchronize([s1,s2,s3]);
+    s.subscribe(function (s_arr) {
+        // s_arr holds the most recent results of [s1, s2, s3]
+    });
+
+### Intercept an existing function to provide subscriptions:
+
+    var subscription;
+    $.getJSON = Futures.subscribify($.getJSON, {"when" : 2}).noConflict(function (s) {
+        // The "when" callback is the second argument
+        subscription = s; // synchronous callback instead of return
+    });
+    subscription.subscribe(function () {
+        // Whenever $.getJSON returns data I get notified, but $.getJSON doesn't change!
+        // $.getJSON will accept the same arguments and give the same return values as before!
+    });
+
+
+Detailed Examples
+=============
+
+The [http://coolaj86.info/futuresjs/](test page) source has plenty of examples in it!
 
 ## Single Promises
     var p = Futures.promise(),
@@ -264,6 +332,11 @@ A higher-level subscribable
 
 TODO
 ====
+  * Allow a promise-join to accept a subscription
+  * Provide a chain(func1(params),params).next(func2(result1)).next(func3(reselt2))
+  * Provide an self-fulfilling promise p = Futures.guarantee(data);
+    * same as Futures.promise().fulfil(data).passable();
+  * Futures.subscribe(func) should fire immediately if the data is available
   * A joiner that accepts multiple asyncs may be useful:
     // TODO create a joiner that accepts multiple asyncs and
     // (by params) either discards older data when it is received out of order
