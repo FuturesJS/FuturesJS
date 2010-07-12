@@ -1,0 +1,113 @@
+<html>
+<head>
+<!--
+Copyright (c) 2007 Ryan Schuft (ryan.schuft@gmail.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<script src='../inflection.js'></script>
+</head>
+<body>
+<script>
+/*
+  This code runs several special cases and some normal singular nouns through
+  the inflection code that modified String to have the pluralize function on
+  it.  The results are shown on the resulting web page for human inspection.
+  It also converts everything back into its singular form to compare results.
+*/
+var s=[
+  'person','man','woman','child','sex','move','Person','Man','Woman','Child',
+  'Sex','Move','equipment','information','rice','money','species','series',
+  'fish','sheep','deer','Equipment','Information','Rice','Money','Species',
+  'Series','Fish','Sheep','Deer','octopus','wolf','potato','fool','blue',
+  'bus','student','tuna','Octopus','Wolf','Potato','Fool','Blue','Bus',
+  'Student','Tuna','news','News','mouse','Mouse','information','Information',
+  'ox','Ox','virus','Virus','archive','Archive','louse','Louse','curve','Curve'
+];
+var p=[];
+var r=[];
+for(var x=0;x<s.length;x++)
+{
+  p[x]=s[x].pluralize();
+  var passed=(s[x]==p[x].singularize());
+  r[x]="<font style='color:"+((passed)?("Black"):("Red"))+";'>";
+  r[x]+="Test "+((passed)?("Passed"):("Failed"));
+  r[x]+=": "+s[x]+" -> "+p[x]+" -> "+p[x].singularize();
+  r[x]+="</font>";
+}
+var x=r.length;
+s[x]='hamburger';
+p[x]=s[x].pluralize('nonsense');
+var passed=(s[x].singularize('nonsense')==p[x]);
+r[x]="<font style='color:"+((passed)?("Black"):("Red"))+";'>";
+r[x]+="Override Test "+((passed)?("Passed"):("Failed"));
+r[x]+=": "+s[x]+" -> "+p[x]+" -> "+p[x].singularize('nonsense');
+r[x]+="</font>";
+x=r.length;
+s[x]='Hamburger';
+p[x]=s[x].pluralize('Nonsense');
+var passed=(s[x].singularize('Nonsense')==p[x]);
+r[x]="<font style='color:"+((passed)?("Black"):("Red"))+";'>";
+r[x]+="Override Test "+((passed)?("Passed"):("Failed"));
+r[x]+=": "+s[x]+" -> "+p[x]+" -> "+p[x].singularize('Nonsense');
+r[x]+="</font>";
+for(var x=0;x<r.length;x++)document.writeln(r[x]+'<br>');
+var c1="this_is_a_test";
+var c2="THIS_IS_A_TEST";
+var c3="this/is/a/path/to/a/clever_module";
+var c4="THIS/IS/A/PATH/TO/A/CLEVER_MODULE";
+document.writeln("Camelize Test: "+c1.camelize()+" and "+c2.camelize(true));
+document.writeln("<br>");
+document.writeln("Camelize Test: "+c3.camelize()+" and "+c4.camelize(true));
+document.writeln("<br>");
+var u1=c3.camelize();
+document.writeln("Underscore Test: "+u1.underscore());
+document.writeln("<br>");
+document.writeln("Humanize Test: "+c1.humanize()+" and "+c1.humanize(true));
+document.writeln("<br>");
+document.writeln("Humanize Test: "+"author_id".humanize());
+document.writeln("<br>");
+document.writeln("Capitalize Test: "+"author_id".capitalize());
+document.writeln("<br>");
+document.writeln("Dasherize Test: "+"author_id blah".dasherize());
+document.writeln("<br>");
+var t1="the man under the foot-bridge tells us how-to dance";
+document.writeln("Titleize Test: "+t1.titleize());
+document.writeln("<br>");
+var d1="ActiveRecord::CoreExtensions::String::Inflections";
+document.writeln("Demodulize Test: "+d1.demodulize());
+document.writeln("<br>");
+document.writeln("Tableize Test: "+"MessageBusProperty".tableize());
+document.writeln("<br>");
+document.writeln("Classify Test: "+"message_bus_properties".classify());
+document.writeln("<br>");
+document.writeln("Foreign_key Test: "+"Bus::Property".foreign_key(true));
+document.writeln("<br>");
+document.writeln("Foreign_key Test: "+"MessageBusProperty".foreign_key());
+document.writeln("<br>");
+document.writeln("Ordinalize Test: "+"2 place is the 1 loser".ordinalize());
+document.writeln("<br>");
+document.writeln("Ordinalize Test: "+"3 place or 15 or 100".ordinalize());
+document.writeln("<br>");
+document.writeln("Ordinalize Test: "+"the 113 word2skip".ordinalize());
+document.writeln("<br>");
+</script>
+</body>
+</html>
+

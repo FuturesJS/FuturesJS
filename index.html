@@ -1,8 +1,58 @@
 <html>
   <head>
     <title>FuturesJS - Promises, Subscriptions, Joins, Synchronizations, etc</title>
+    <link rel="stylesheet" type="text/css" href="vendor/highlight/styles/school_book.css" media="screen" />
+    <script src="vendor/showdown/showdown.js"></script>
+    <script src="vendor/highlight/highlight.pack.js"></script>
+    <script src="vendor/jquery/jquery-1.4.2.js"></script>
+    <script src="vendor/underscore/underscore.js"></script>
+    <!-- script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script -->
+    <script src="vendor/persevere/global-es5.js"></script>
   </head>
   <body>
-    Hello World!
+What is [FuturesJS](http://github.com/coolaj86/futures)?
+==================
+
+[FuturesJS](http://github.com/coolaj86/futures) is a JavaScript library which (when used as directed) simplifies handling Callbacks, Errbacks, Promises, Subscriptions, Joins, Synchronization of asynchronous data, and Eventually Consistent data. It is akin to [this well documented this MSDN library](http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx), but with a liberal MIT license.
+
+Promises, Immediates, and Joins
+============
+
+
+What is a Promise?
+-----------------
+
+A promise (as per [Douglas Crockford](http://www.google.com/search?client=ubuntu&channel=fs&q=yuiblog.com%2Fcrockford&ie=utf-8&oe=utf-8)) is (essentially) a chainable callback object with the following methods:
+
+  * Futures.promise(_[guarantee]_) - returns a promise object
+    * `when()` - pass in a function which accepts a data parameter
+    * `fulfill()` - pass in a single data parameter which will be sent to all `when`ers once
+    * `fail()` - pass in a function which accepts an error parameter
+    * `smash()` - pass in a single error parameter which will be sent to all `fail`ers once
+
+Chainable means that the object returns itself so these methods can be called in sequence. A normal callback function might look like this:
+
+    var xhr = getAsyncData(arg1, arg2, callback, {onError : errback, setTimeout : 5000});
+
+To use a promise with such a function you would do something like this:
+
+    var p = Futures.promise(),
+    xhr = getAsyncData(arg1, arg2, p.fulfill, {onError : p.fail, setTimeout : 5000});
+    p.when(callback1)
+     .when(callback2)
+     .when(callback3)
+     .fail(callback4);
+
+What are Immediates (Guarantees)?
+---------------------------------
+
+Immediates (guarantees) are promises which are guaranteed to be fulfilled because they are immediately fulfilled. FuturesJS provides a shortcut method for just this case.
+
+    var p = promise('pass in the data');
+
+Or if you prefer the "long" way:
+
+    var p = promise().fulfill('pass in the data').passable();
+
   </body>
 </html>
