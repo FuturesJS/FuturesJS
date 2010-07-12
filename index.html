@@ -9,7 +9,7 @@
     <!-- script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script -->
     <script src="vendor/persevere/global-es5.js"></script>
   </head>
-  <body>
+  <body id="doc">
 What is [FuturesJS](http://github.com/coolaj86/futures)?
 ==================
 
@@ -53,6 +53,29 @@ Immediates (guarantees) are promises which are guaranteed to be fulfilled becaus
 Or if you prefer the "long" way:
 
     var p = promise().fulfill('pass in the data').passable();
+    <script>
+      "use strict";
+      (function (doc) {
+        var showdown = new Showdown.converter(),
+        body = doc.getElementById('doc'),
+        markdown,
+        html;
 
+        markdown = body.innerHTML;
+        html = showdown.makeHtml(markdown);
+        body.innerHTML = html;
+   
+        hljs.initHighlightingOnLoad();
+       // Highlight syntax
+      /*
+        var pres = document.getElementsByTagName('pre');
+        for (var i = 0; i < pres.length; i++) {
+          if (pres[i].firstChild) // && pres[i].firstChild.nodeName == 'CODE')
+
+            hljs.highlightBlock(pres[i].firstChild);
+        }
+      */
+      }(window.document));
+    </script>
   </body>
 </html>
