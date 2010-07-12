@@ -511,6 +511,10 @@
     <div id="doc">
 JavaScript with Showdown &amp; Highlight:
 
+    // I'd like to find a way to write the code, documentation
+    // examples, and tests all together using some sort of parser
+    // like this, and have it output the usable code as copy/pastable
+    // text - maybe even with a compress option
     (function () {
       var string = "Hello World!";
       alert(string);
@@ -541,5 +545,37 @@ JavaScript with Showdown &amp; Highlight:
       */
       }(window.document));
     </script>
+    <script>
+$(function() {
+    function getAsyncData(arg1, arg2, callback) {
+        callback(arg1);
+    }
+    function say(what) {
+      $("<span>").html(what).appendTo('#doc');
+    }
 
+    var myFuturific;
+
+    (function () {
+      var s = Futures.subscription();
+      myFuturific = function (arg1, arg2) {
+        var p = Futures.promise();
+        var xhr = getAsyncData(arg1, arg2, s.deliver, {onError : s.hold, setTimeout : 5000});
+        s.subscribe(p.fulfill);
+        s.hold(p.smash);
+        return p.passable();
+      };
+      myFuturific.subscribe = s.subscribe;
+    }());
+
+    myFuturific.subscribe(say);
+    myFuturific(".");
+    myFuturific("..").when(function(a){
+});
+
+
+
+
+});
+    </script>
 </html>
