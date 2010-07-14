@@ -8,9 +8,9 @@ Getting Started
 
 See the [Getting Started](http://coolaj86.github.com/futures/) GitHub page. 
 
-Additionally test.html contains a number of (obviously) working examples. These can also be accessed live from the [http://coolaj86.info/futuresjs/](computer in my closet) - when it's on that is.
+Additionally test.html contains a number of (obviously) working examples. These can also be accessed live from the [computer in my closet](http://coolaj86.info/futuresjs/) - when it's on that is.
 
-[Google Groups Mailing List](http://groups.google.com/group/futures-javascript)
+Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailing List](http://groups.google.com/group/futures-javascript)
 
 Near-future TODOs
 ----
