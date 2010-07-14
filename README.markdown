@@ -1,10 +1,24 @@
 FuturesJS
 =========
 
-## About
-A collection of tools for Futures including Promises, Subscriptions, and Joiners.
+FuturesJS is a JavaScript library which (when used as directed) simplifies handling Callbacks, Errbacks, Promises, Subscriptions, Joins, Synchronization of asynchronous data, and Eventually Consistent data. It is akin to this well documented this MSDN library, but with a liberal MIT license.
+
+Getting Started
+---------------
+
+See the [Getting Started](http://coolaj86.github.com/futures/) GitHub page. 
+
+Additionally test.html contains a number of (obviously) working examples. These can also be accessed live from the [http://coolaj86.info/futuresjs/](computer in my closet) - when it's on that is.
 
 [Google Groups Mailing List](http://groups.google.com/group/futures-javascript)
+
+Near-future TODOs
+----
+  * Allow a promise-join to accept a subscription
+  * Document the API in this readme
+  * Create an 'Interceptor' which uses a hash to determine how to promisify a function
+  * Once CommonJS gets things figured out, become CommonJS compatible
+
 
 Examples
 --------
@@ -12,13 +26,12 @@ Examples
 
     // Promises may be fulfilled or smashed only once
     var p = Futures.promise()
-        // success
         .fulfill(data) // keeps promise to give `data` to all `func`s
         .when(func) // promises to `func`
-        // error
+
         .smash(error) // delivers `error` to all `func`s
         .fail(func) // informs `func` of error
-        // utility
+
         .passable() // returns this p without `fulfill` or `smash`
         ;
 
@@ -330,12 +343,9 @@ A higher-level subscribable
     s2.deliver(", ");
     s1.deliver("Good-bye");
 
-TODO
+Maybe TODO
 ====
-  * Allow a promise-join to accept a subscription
   * Provide a chain(func1(params),params).next(func2(result1)).next(func3(reselt2))
-  * Provide an self-fulfilling promise p = Futures.guarantee(data);
-    * same as Futures.promise().fulfil(data).passable();
   * Futures.subscribe(func) should fire immediately if the data is available
   * A joiner that accepts multiple asyncs may be useful:
     // TODO create a joiner that accepts multiple asyncs and
@@ -354,5 +364,6 @@ TODO
 
 Related Projects
 ================
+  * [http://wiki.commonjs.org/wiki/Promises](CommonJS Promises)
   * [http://ajaxian.com/archives/javascript-strands-adding-futures-to-javascript](Strands)
   * [http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx](MSDN Promise)
