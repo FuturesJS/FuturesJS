@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Futures</title>
+    <link rel="stylesheet" type="text/css" href="vendor/highlight/styles/school_book.css" media="screen" />
+    <script src="vendor/showdown/showdown.js"></script>
+    <script src="vendor/highlight/highlight.pack.js"></script>
+    <script src="vendor/jquery/jquery-1.4.2.js"></script>
+    <script src="vendor/underscore/underscore.js"></script>
+    <!-- script src="http://bitbucket.org/JustinLove/es5/raw/c6103eab597c/es5.js"></script -->
+    <!-- script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script -->
+    <script src="vendor/persevere/global-es5.js"></script>
+    <script src="vendor/jaysyncunit/jaysyncunit.js"></script>
+    <script src="lib/futures.js"></script>
+    <script>
+      // Test App
+      (function() {
+        var data_store = {
+          "contacts" :
+            [
+              {
+                "name" : "AJ ONeal",
+                "phone" : "317-4-COOLAJ",
+                "email" : "coolaj86@email.com"
+              },
+              {
+                "name" : "Jamshid Mavandi",
+                "phone" : "801-MVND-AAI",
+                "email" : "jamshid@mvndaai.name"
+              }
+            ]
+        }
+
+        function get_with_args(resource, callback, errback, delay) {
+          if (undefined === delay) {
+            delay = 281; // a goodly number of milliseconds
+          }
+          setTimeout(function() {
+            if ("http://coolaj86.info/contacts" == resource) {
+              callback && callback(datastore);
+            } else if (callback) {
+              errback && errback(datastore);
+            }
+          }, delay);
+          return {
+            // fake XHR
+            abort : function(){}
+          };
+        }
+
+        function get_with_hash(params) {
+          get_with_args(params.resource, params.callback, params.errback, params.delay);
+        }
+
+        function get_with_promisable() {
+          return function() {alert('override me');};
+        }
+
+        window.Asynkr = {
+          get_with_args: get_with_args,
+          get_with_hash: get_with_hash,
+          get_with_promise: get_with_promisable()
+        };
+      }());
+      // Demonstrate how to make, keep, and break a promise
+      JSUnit.addTest('Basic Promise', function() {
+        var that = this,
+        p = Futures.promise(),
+        timeout = setTimeout(function() {
+          p.smash("Suxorz!");
+        }, 4000),
+        passable_promise;
+
+        $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+          { tags: "kitten", tagmode: "any", format: "json" },
+          function(data){
+            p.fulfill(data);
+        });
+        p.when(function(data) {
+          clearTimeout(timeout);
+        });
+        p.fail(function(err) {
+          alert("Timed out after 10 seconds with message '" + err + "'");
+        });
+
+        passable_promise = p.passable(); // Hide 'smash' and 'fulfill' methods
+        passable_promise
+          .when(function(data) { 
+            data.items.slice(0,4).forEach(function(item,i,arr){
+              //$("<img class='basic'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
+            });
+            that.complete(true);
+          })
+          .fail(function(data){ that.complete(false) })
+        ;
+        // this.tearDown(function () {$("img.basic").remove()});
+      }, 5000);
+
+      // Demonstrate how to guarantee an immediate promise
+      JSUnit.addTest('Immediate Promise (Guarantee)', function() {
+        var that = this,
+        p = Futures.promise("Guarantee"),
+        timeout = setTimeout(function() {
+          p.smash("Suxorz!");
+          that.complete(false);
+        }, 100),
+        passable_promise;
+
+        p.when(function(data) {
+          clearTimeout(timeout);
+          // === doesn't work in this case on data
+          if ("Guarantee" === data.toString()) {
+            that.complete(true);
+          }
+        });
+        p.fail(function(err) {
+          alert("Errored with message '" + err + "'");
+        });
+      }, 5000);
+
+
+
+
+      /************
+       * Promisify
+       ************/
+      // Demonstrate that we can promisify a function
+      JSUnit.addTest('Basic Promisify using withResult for original result', function () {
+        var that = this,
+        results = {},
+        getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
+
+        getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+          { tags: "cat", tagmode: "any", format: "json" }
+          )
+          // I can now issue multiple callbacks with .when()
+          .when(function(data){
+            data.items.slice(0,4).forEach(function(item,i,arr){
+              //$("<img class='promisify_args'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
+            });
+            that.complete(true);
+          })
+          // passes in whichever result myFunc originally handed back
+          .withResult(function(result){
+            results.result = result;
+          })
+        ;
+      }, 5000);
+
+      JSUnit.addTest('Basic Promisify2', function () {
+        var that = this,
+        results = {},
+        getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
+        // the old callback and errback are now optional and handled correctly if present
+        getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+          { tags: "puppy", tagmode: "any", format: "json" },
+          function(data){
+            data.items.slice(0,4).forEach(function(item,i,arr){
+              //$("<img class='promisify_args'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
+            });
+            that.complete(true);
+          }
+        );
+      }, 5000);
+
+      // Custom Promisify
+      JSUnit.addTest('Custom Promisify', function () {
+        // TODO maybe the 'this' was a bad idea?
+        var that = this,
+        ajax,
+        promisifiable = function (callback, errback) {
+          return function() {
+            // This is your interface. You can leave arguments as is,
+            // or you can make it whatever you like
+            var args = Array.prototype.slice.call(arguments),
+            timeout,
+            xhr;
+
+            // jQuery.ajax has a timeout abstraction, but we'll create our own for example's sake.
+            timeout = setTimeout(function() {
+              // Crockford's promise doesn't cater to late-comers.
+              // Once the timeout the call should be aborted for safety's sake.
+              // If it were to succeed soon after it would throw.
+              xhr.abort();
+              errback("Timeout Failure");
+            }, 3000);
+
+            // Here we mangle the settings hash to our taste
+            args[0]['error'] = errback;
+            args[0]['success'] = function(data) {
+              clearTimeout(timeout);
+              callback(data);
+            };
+            xhr = $.ajax.apply($.ajax, args);
+            return xhr;
+          };
+        };
+
+        ajax = Futures.promisify(promisifiable, "custom"); // could still use params hash
+        ajax({
+          url: "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+          data: { tags: "dog", tagmode: "any", format: "json" }, 
+          asnyc: true,
+          dataType: "jsonp",
+          //error: silently_ignored
+          //success: silently_ignored
+        })
+          .when(function(data) {
+            data.items.slice(0,4).forEach(function(item,i,arr) {
+              //$("<img class='promisify_custom'/ >").attr("src", item.media.m).css("height", "150px").appendTo("body");
+            });
+            that.complete(true);
+          })
+        ;
+      }, 5000);
+
+
+
+
+
+      /****************
+       * Promise-Joins
+       ****************/
+      // Demonstrate that the joiner works
+      JSUnit.addTest('Synchronous Join Array', function () {
+        var that = this,
+        p1 = Futures.promise(),
+        p2 = Futures.promise(),
+        p3 = Futures.promise(),
+        j;
+
+        // Show that the repsonses come back in correct order
+        j = Futures.join([p1, p2, p3]);
+        j.when(function(arr) {
+            status = false;
+            if ("Hello, World!" === arr.join('')) {
+              status = true;
+            }
+            that.complete(status);
+        });
+
+        // Set the responses to come back out of order
+        setTimeout(function() {
+          p3.fulfill("World!");
+        }, 250);
+        setTimeout(function() {
+          p1.fulfill("Hello");
+        }, 350);
+        setTimeout(function() {
+          p2.fulfill(", ");
+        }, 600);
+      }, 1000);
+
+      JSUnit.addTest('Synchronous Join Args', function () {
+        var that = this,
+        p1 = Futures.promise(),
+        p2 = Futures.promise(),
+        p3 = Futures.promise(),
+        j;
+
+        // Show that the repsonses come back in correct order
+        j = Futures.join(p1, p2, p3);
+        j.when(function(a1, a2, a3) {
+            status = false;
+            if ("Hello, World!" === [a1, a2, a3].join('')) {
+              status = true;
+            }
+            that.complete(status);
+        });
+
+        // Set the responses to come back out of order
+        setTimeout(function() {
+          p3.fulfill("World!");
+        }, 250);
+        setTimeout(function() {
+          p1.fulfill("Hello");
+        }, 350);
+        setTimeout(function() {
+          p2.fulfill(", ");
+        }, 600);
+      }, 1000);
+
+
+
+
+
+      /****************
+       * Subscriptions
+       ****************/
+      // Demonstrate basic subscription
+      JSUnit.addTest('Basic Subscription', function () {
+        var that = this,
+        s = Futures.subscription(),
+        i = 0;
+
+        function recurse_subscription() {
+          s.deliver(i += 1);
+          if (i > 3) {
+            return;
+          }
+          setTimeout(recurse_subscription, 100);
+        }
+        setTimeout(recurse_subscription, 100);
+
+        s.subscribe(function (issue) {
+          Futures.log('Delivery '+issue+' of 4 passes');
+          if (4 === i) {
+            that.complete(true);
+          }
+        });
+      }, 5000);
+
+      
+      // Demonstrate subscribify
+      JSUnit.addTest('Basic Subscribify', function () {
+        var that = this,
+        unsubscribe, 
+        getJSON,
+        keywords = ['trogdor', 'burninator'],
+        i = 0,
+        timeout;
+
+
+        getJSON = Futures.subscribify($.getJSON, { "when": 2 });
+        function recurse_subscription() {
+          var inner_timeout;
+          if (i >= keywords.length) {
+            return;
+          }
+          getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+              { tags: keywords[i], tagmode: "any", format: "json" });
+          inner_timeout = setTimeout(recurse_subscription, 200);
+        }
+        timeout = setTimeout(recurse_subscription, 500);
+
+        unsubscribe = getJSON
+          .subscribe(function (data) {
+            i += 1;
+            if (i == 2) {
+              that.complete(true)
+            }
+          }, function (u) {
+            // TODO require synchronous callback to avoid yucky assignment and keep chainability
+            // this is not implemented yet!
+            unsubscribe = u;
+          });
+      }, 10000);
+
+      JSUnit.addTest('Subscription hands back a promises', function () {
+        var that = this,
+        keywords = ['peasant', 'strongbad'],
+        i = 0,
+        p,
+        getJSON;
+
+        getJSON = Futures.subscribify($.getJSON, { "when": 2 });
+        p = getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+            { tags: keywords[i], tagmode: "any", format: "json" })
+        getJSON.subscribe(function (data) {
+            Futures.log('got some data'); 
+        });
+        // TODO be able to join on a promise and a subscription 
+        p.when(function () { that.complete(true); });
+      }, 10000);
+
+      // noConflict
+      JSUnit.addTest('noConflict Subscribify', function () {
+        var that = this,
+        subscription;
+
+        getJSON = Futures.subscribify($.getJSON, {"when": 2 })
+          .noConflict(function (s) {
+            subscription = s;
+          });
+        //alert('hey' + Object.keys(subscription));
+        // something going wrong here:
+        getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+            { tags: 'country', tagmode: "any", format: "json" });
+
+        subscription.subscribe(function () {
+          that.complete(true);
+        });
+      }, 10000);
+
+      // noConflict
+      JSUnit.addTest('noConflict Subscribify with when', function () {
+        var that = this,
+        subscription;
+
+        getJSON = Futures.subscribify($.getJSON, {"when": 2 })
+          .noConflict(function (s) {
+            subscription = s;
+          });
+        //alert('hey' + Object.keys(subscription));
+        // something going wrong here:
+        getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+            { tags: 'country', tagmode: "any", format: "json" });
+
+        subscription.when(function () {
+          that.complete(true);
+        });
+      }, 10000);
+
+      // See that one round of subscriptions passes
+      JSUnit.addTest('Synchronize Subscriptions', function () {
+        var that = this,
+        s1 = Futures.subscription(),
+        s2 = Futures.subscription(),
+        s3 = Futures.subscription(),
+        sync;
+
+        // Show that the repsonses come back in correct order
+        sync = Futures.synchronize([s1, s2, s3]);
+        sync.subscribe(function(arr) {
+            status = false;
+            Futures.log("got string: " + JSON.stringify(arr));
+            if ("Hello, World!" === arr.join('')) {
+              status = true;
+            }
+            that.complete(status);
+        });
+
+        // Set the responses to come back out of order
+        // Responses are sent in this order:
+        // AJ, Goodbye, Good-bye, World!, Hello, ',', Good-bye
+        // These are discarded as old:
+        // AJ, Goodbye, Good-bye
+        // This is the final order:
+        // Hello, World!
+        setTimeout(function() {
+          s3.deliver("AJ!");
+        }, 50);
+        setTimeout(function() {
+          s1.deliver("Goodbye");
+        }, 100);
+        setTimeout(function() {
+          s1.deliver("Good-bye");
+        }, 150);
+        setTimeout(function() {
+          s3.deliver("World!");
+        }, 200);
+        setTimeout(function() {
+          s1.deliver("Hello");
+        }, 250);
+        setTimeout(function() {
+          s2.deliver(", ");
+        }, 300);
+        // Should not fire again
+        setTimeout(function() {
+          s1.deliver("Good-bye");
+        }, 150);
+      }, 5000);
+
+      // See that two messages come through
+      JSUnit.addTest('Synchronize Two Subscriptions', function () {
+        var that = this,
+        s1 = Futures.subscription(),
+        s2 = Futures.subscription(),
+        s3 = Futures.subscription(),
+        sync,
+        i = 0;
+
+        // Show that the repsonses come back in correct order
+        sync = Futures.synchronize([s1, s2, s3]);
+        sync.subscribe(function(arr) {
+            Futures.log("got string: " + JSON.stringify(arr));
+            if (0 == i && "Hello, World!" === arr.join('')) {
+              i += 1;
+            } else if (1 == i && "Goodbye, World!" === arr.join('')) {
+              i += 1;
+              that.complete(true);
+            } else if (2 == i) {
+              that.complete(false);
+            }
+        });
+
+        // Hello, World!
+        // Goodbye, World!
+        setTimeout(function() {
+          s3.deliver("World!");
+        }, 100);
+        setTimeout(function() {
+          s1.deliver("Hello");
+        }, 150);
+        setTimeout(function() {
+          s2.deliver(", ");
+        }, 200);
+        setTimeout(function() {
+          s1.deliver("Good-bye");
+        }, 250);
+        setTimeout(function() {
+          s1.deliver("Goodbye");
+        }, 300);
+        setTimeout(function() {
+          s3.deliver("World!");
+        }, 350);
+        setTimeout(function() {
+          s2.deliver(", ");
+        }, 400);
+      }, 5000);
+
+      
+
+      JSUnit.runTests();
+    </script>
+  </head>
+  <body>
+    <a href="http://github.com/coolaj86/futures">FuturesJS On GitHub</a>
+    <div id="doc">
+JavaScript with Showdown &amp; Highlight:
+
+    // I'd like to find a way to write the code, documentation
+    // examples, and tests all together using some sort of parser
+    // like this, and have it output the usable code as copy/pastable
+    // text - maybe even with a compress option
+    (function () {
+      var string = "Hello World!";
+      alert(string);
+    }());
+    </div>
+  </body>
+    <script>
+      "use strict";
+      (function (doc) {
+        var showdown = new Showdown.converter(),
+        body = doc.getElementById('doc'),
+        markdown,
+        html;
+
+        markdown = body.innerHTML;
+        html = showdown.makeHtml(markdown);
+        body.innerHTML = html;
+   
+        hljs.initHighlightingOnLoad();
+       // Highlight syntax
+      /*
+        var pres = document.getElementsByTagName('pre');
+        for (var i = 0; i < pres.length; i++) {
+          if (pres[i].firstChild) // && pres[i].firstChild.nodeName == 'CODE')
+
+            hljs.highlightBlock(pres[i].firstChild);
+        }
+      */
+      }(window.document));
+    </script>
+    <script>
+$(function() {
+    function getAsyncData(arg1, arg2, callback) {
+        callback(arg1);
+    }
+    function say(what) {
+      $("<span>").html(what).appendTo('#doc');
+    }
+
+    var myFuturific;
+
+    (function () {
+      var s = Futures.subscription();
+      myFuturific = function (arg1, arg2) {
+        var p = Futures.promise();
+        var xhr = getAsyncData(arg1, arg2, s.deliver, {onError : s.hold, setTimeout : 5000});
+        s.subscribe(p.fulfill);
+        s.hold(p.smash);
+        return p.passable();
+      };
+      myFuturific.subscribe = s.subscribe;
+    }());
+
+    myFuturific.subscribe(say);
+    myFuturific(".");
+    myFuturific("..").when(function(a){
+});
+
+
+
+
+});
+    </script>
+</html>
