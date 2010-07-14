@@ -404,7 +404,7 @@
       }, 10000);
 
       // See that one round of subscriptions passes
-      JSUnit.addTest('Synchronize Subscriptions', function () {
+      JSUnit.addTest('Futures.synchronize() - Synchronize one round of Subscriptions', function () {
         var that = this,
         s1 = Futures.subscription(),
         s2 = Futures.subscription(),
@@ -454,7 +454,7 @@
       }, 5000);
 
       // See that two messages come through
-      JSUnit.addTest('Synchronize Two Subscriptions', function () {
+      JSUnit.addTest('Futures.synchronize() - Synchronize two rounds of Subscriptions', function () {
         var that = this,
         s1 = Futures.subscription(),
         s2 = Futures.subscription(),
@@ -501,6 +501,31 @@
         }, 400);
       }, 5000);
 
+
+      /************
+       * Triggers *
+       ************/
+      JSUnit.addTest('Futures.trigger() - Anonymous (event) trigger', function () {
+        var that = this,
+        t = Futures.trigger(),
+        i = 0;
+
+        function recurse_subscription() {
+          i += 1;
+          t.fire();
+          if (i > 3) {
+            return;
+          }
+          setTimeout(recurse_subscription, 100);
+        }
+        setTimeout(recurse_subscription, 100);
+
+        t.listen(function (ignore) {
+          if (4 === i) {
+            that.complete(true);
+          }
+        });
+      }, 5000);
       
 
       JSUnit.runTests();
