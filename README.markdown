@@ -14,10 +14,13 @@ Additionally test.html contains a number of (obviously) working examples. These 
 
 Near-future TODOs
 ----
-  * Allow a promise-join to accept a subscription
-  * Document the API in this readme
+  * Allow a promise join to accept a subscription (and unsubscribe on completion)
+  * Document the API in this readme and move remaining useful examples to the getting started
   * Create an 'Interceptor' which uses a hash to determine how to promisify a function
   * Once CommonJS gets things figured out, become CommonJS compatible
+  * .when().then().then().then() - chain in sequence with the same result
+  * .chain().next().next().next() - chain in sequence with the last result
+  * Encourage users to post use cases on the wiki
 
 
 Examples
