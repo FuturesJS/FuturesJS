@@ -119,25 +119,29 @@ Not as New
 
 Related Projects
 ================
-  * [http://wiki.commonjs.org/wiki/Promises](CommonJS Promises)
-  * [http://ajaxian.com/archives/javascript-strands-adding-futures-to-javascript](Strands)
-  * [http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx](MSDN Promise)
+  * [CommonJS Promises](http://wiki.commonjs.org/wiki/Promises)
+  * [Strands](http://ajaxian.com/archives/javascript-strands-adding-futures-to-javascript)
+  * [MSDN Promise](http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx)
+
+Suggested Reading
+=================
+  * [Async Method Queues](http://www.dustindiaz.com/async-method-queues/)
 
 Ideas for the future...
 =======================
   * Futures.subscribe(func) should fire immediately if the data is available
   * A joiner that accepts multiple asyncs may be useful:
-    // TODO create a joiner that accepts multiple asyncs and
-    // (by params) either discards older data when it is received out of order
-    // OR waits to deliver in order to keep order
-    //
-    // i.e. Futures.join(a1)
-    //      // do stuff
-    //      Futures.join(a2)
-    //      // do stuff
-    //      a2 comes back immediately. If it fires now, a1 is discarded.
-    //      optionally it can wait for a1 and fire twice in the correct order.
-    //      Futures.join(a3)
-    //      a3 comes back and fires because a1 and a2 have already fired
-    // the respond in the order 
+      // TODO create a joiner that accepts multiple asyncs and
+      // (by params) either discards older data when it is received out of order
+      // OR waits to deliver in order to keep order
+      //
+      // i.e. Futures.join(a1)
+      //      // do stuff
+      //      Futures.join(a2)
+      //      // do stuff
+      //      a2 comes back immediately. If it fires now, a1 is discarded.
+      //      optionally it can wait for a1 and fire twice in the correct order.
+      //      Futures.join(a3)
+      //      a3 comes back and fires because a1 and a2 have already fired
+      // the respond in the order 
   * Allow user to specify what to pass to a sequence rather than creating a function sequence(func, args_to_func, sequence_directive)
