@@ -26,14 +26,16 @@ API
 New
 -----
 
-    // Instead of nesting callbacks 10 levels deep, pass the provided callback instead
-    // Each next function receives the previous result and an array of all previous results
+  Instead of nesting callbacks 10 levels deep, pass the provided callback instead
+  Each next function receives the previous result and an array of all previous results
+
     Futures.sequence(function (callback) {})
         .then(function (callback, previousResult, index, [result0, result1, ...]) {})
 
 
-    // A breakable, timeoutable, asynchronous while loop. 
-    // Warning: this is too slow for long running loops (4ms+ intervals minimum)
+  A breakable, timeoutable, asynchronous while loop. 
+  Warning: this is too slow for long running loops (4ms+ intervals minimum)
+
     Futures.whilst(function (previousResult) {
             // expression may be something such as (i < 100)
             // letFinish = true will allow this iteration of the loop to finish 
@@ -49,9 +51,10 @@ New
         .breakNow(); // forcefully break the loop immediately
 
 
-    // A breakable, timeoutable, asynchronous while loop. 
-    // Warning: this is too slow for long running loops (4ms+ intervals minimum)
-    Futures.whilst(function (previousResult) {
+  A breakable, timeoutable, asynchronous do loop. 
+  Warning: this is too slow for long running loops (4ms+ intervals minimum)
+ 
+   Futures.whilst(function (previousResult) {
             // expression may be something such as (i < 100)
             // letFinish = true will allow this iteration of the loop to finish 
             this.until(expression, letFinish); // break when true
@@ -131,6 +134,7 @@ Ideas for the future...
 =======================
   * Futures.subscribe(func) should fire immediately if the data is available
   * A joiner that accepts multiple asyncs may be useful:
+
       // TODO create a joiner that accepts multiple asyncs and
       // (by params) either discards older data when it is received out of order
       // OR waits to deliver in order to keep order
@@ -144,4 +148,5 @@ Ideas for the future...
       //      Futures.join(a3)
       //      a3 comes back and fires because a1 and a2 have already fired
       // the respond in the order 
+
   * Allow user to specify what to pass to a sequence rather than creating a function sequence(func, args_to_func, sequence_directive)
