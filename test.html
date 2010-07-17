@@ -526,7 +526,98 @@
           }
         });
       }, 5000);
-      
+
+
+      /**********
+       * Chains *
+       **********/
+      JSUnit.addTest('Futures.sequence() - Chain functions', function () {
+        var that = this,
+        i = 0,
+        t = 0
+        c;
+
+        function count_seq(fulfill, result, index, arr) {
+          t = (t == 200) ? 0 : 200;
+          setTimeout(function () {
+          if (!result) {
+            result = 0;
+          }
+          if (i !== result) {
+            alert('results unequal');
+            that.complete(false);
+            return;
+          }
+          
+          if (i !== arr.length) {
+            alert('array size not sequence');
+            that.complete(false);
+            return;
+          }
+
+          if (i !== index+1) {
+            alert('indices unequal: ' + i + ' ' + index);
+            that.complete(false);
+            return;
+          }
+
+          if (i && result !== arr[i-1]) {
+            alert('array result mismatch');
+            that.complete(false);
+            return;
+          }
+          //alert('test passes: ' + i + ' ' + result + ' ' + index + ' ' + arr[index]);
+          fulfill(i += 1);
+          }, t);
+        }
+
+        var c;
+        // Initialize with the head of the chain in the chain
+        c = Futures.sequence(count_seq)
+          .then(count_seq)
+          .then(count_seq)
+          .then(count_seq)
+          .then(count_seq)
+          .then(function (p, result, i, arr) {
+            //alert(JSON.stringify(arr));
+            if (5 !== arr.length) {
+              that.complete(false);
+            }
+            arr.forEach(function (item, i, arr) {
+              if (i + 1 !== arr[i]) {
+                that.complete(false);
+              }
+            });
+            that.complete(true);
+          });
+      }, 10000);     
+      // chain end
+  
+      /**
+       * Whilst & Loop
+       */  
+      JSUnit.addTest('Futures.whilst() - Whilst & Loop functions', function () {
+        var that = this,
+        q = 0,
+        r = 3,
+        s = 1,
+        doer;
+
+        // WARN: putting blocking calls such as `alert` will count towards your timeout
+        // if you want to debug with `alert`, be sure to set a high timeout (or Infinity)
+        doer = Futures.whilst(function(lastResult) {
+          this.breakIf(q > r); // throw an immediately caught exception to end execution
+          //this.breakIf(q < r, true); // or don't throw the exception, let the loop finish
+          //alert('q: ' + q);
+          q += s;
+          return q;
+        }, { timeout: 5000, maxLoops: 10, interval: 1}).then(function (p, result, i, arr) {
+          if (4 === result) {
+            that.complete(true);
+          }
+        });
+      }, 10000);     
+      // whilst end end
 
       JSUnit.runTests();
     </script>
