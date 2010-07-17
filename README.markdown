@@ -54,7 +54,7 @@ New
   A breakable, timeoutable, asynchronous do loop. 
   Warning: this is too slow for long running loops (4ms+ intervals minimum)
  
-   Futures.whilst(function (previousResult) {
+     Futures.whilst(function (previousResult) {
             // expression may be something such as (i < 100)
             // letFinish = true will allow this iteration of the loop to finish 
             this.until(expression, letFinish); // break when true
