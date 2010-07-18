@@ -13,8 +13,11 @@ Additionally test.html contains a number of (obviously) working examples. These 
 Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailing List](http://groups.google.com/group/futures-javascript)
 
 Near-future TODOs
-----
-  * Allow a promise join to accept a subscription (and unsubscribe on completion)
+-----------------
+  * Create tests for joins which now accept subscriptions
+  * Update documentation about joins
+  * Create tests for subscriptions which now accept subscribe(callback, errback)
+  * Update docs, and do the same for promises
   * Document the API in this readme and move remaining useful examples to the getting started
   * Create an 'Interceptor' which uses a hash to determine how to promisify a function
   * Once CommonJS gets things figured out, become CommonJS compatible
