@@ -29,35 +29,23 @@ Loading FuturesJS
 Download the file `lib/futures.js` and include it in your application.
 
 In a browser:
-    &lt;script src='lib/futures.js'>&lt/script>
+    <script src='lib/futures.js'></script>
 
 In Node.js:
     node> var Futures = require('./lib/futures');
-    node> Futures;
-    { promise: [Function]
-    , join: [Function]
-    , promisify: [Function]
-    , subscription: [Function]
-    , subscribify: [Function]
-    , synchronize: [Function]
-    , trigger: [Function]
-    , whilst: [Function]
-    , loop: [Function]
-    , sequence: [Function]
-    , log: [Function]
-    , error: [Function]
-    }
 
-For Rhino you will need `env.js` as Futures utilizes `setTimeout` and friends.
+For Rhino you will need `env.js` as Futures utilizes `setTimeout` and its friends.
 
 API
 =====
 
-Futures.promise()
+Futures.promise() -- create a promise object
 -----------------
 
-    // Creates a promise object
-    // If guarantee (optional) is passed, an immediate (an already fulfilled promise) is returned instead
+Creates a promise object
+
+If guarantee (optional) is passed, an immediate (an already fulfilled promise) is returned instead
+
     Futures.promise(var guarantee)
         // Call all callbacks passed into `when` in the order they were received and pass result
         .fulfill(var result)
@@ -69,10 +57,19 @@ Futures.promise()
         .fail(function (error) {})
 
 
-Futures.subscription()
+Futures.promisify() -- wrap a function with a promisable
+-------------------
+
+Convert a function into a promisable with a directive or create a promise from a subscripiton.
+
+See the getting started. TODO copy from Getting Started.
+
+
+Futures.subscription() -- create a subscription object
 ----------------------
 
-    // Subscriptions may be delivered or held multiple times
+Subscriptions may be delivered or held multiple times
+
     Futures.subscription()
         // delivers `data` to all subscribers
         .deliver(data) 
@@ -85,7 +82,25 @@ Futures.subscription()
         .miss(errback)
 
 
-Futures.join()
+Futures.subscribify() -- wrap a function with a subscribable
+---------------------
+
+See the Getting Started. TODO.
+
+
+Futures.subscrpition2promise() -- create a promise from a subscription
+------------------------------
+
+Pass in a subscription and get back a promise. [Not Implemented Yet]
+
+
+Futures.trigger() -- create an anonymous event listener / triggerer
+-----------------
+
+See the Getting Started. TODO fill this in.
+
+
+Futures.join() -- create a promise joined from two or more promises / subscriptions
 --------------
 
 Joins return a promise which triggers when all joined promises (and subscriptions) have been fulfilled or smashed.
@@ -102,7 +117,7 @@ Join accepts both promises and subscriptions. One-time self-unsubscribing promis
          });
 
 
-Futures.synchronize()
+Futures.synchronize() -- create a subscription synchronized with two or more subscriptions
 ---------------------
 
 Synchronizations trigger each time all of the subscriptions have delivered or held at least one new subscription
@@ -119,7 +134,7 @@ If s1 were to deliver 4 times before s2 and s3 deliver once, the 4th delivery is
     });
 
 
-Futures.sequence()
+Futures.sequence() -- Sequence two or more asynchronous (and synchronous) functions to execute synchronously
 ------------------
 
 Instead of nesting callbacks 10 levels deep, pass callback instead.
@@ -130,7 +145,7 @@ Each next function receives the previous result and an array of all previous res
         .then(function (callback, previousResult, index, [result0, result1, ...]) { callback("I'm here."); })
 
 
-Futures.whilst()
+Futures.whilst() -- Safely loop a block of code with the option to timeout, sleep, or quit after max loop count
 ----------------
 
 A breakable, timeoutable, asynchronous while loop. 
@@ -151,6 +166,7 @@ Warning: this is too slow for long running loops (4ms+ intervals minimum)
         .when(function (data) {})
         .breakNow(); // forcefully break the loop immediately
 
+TODO allow asynchronous functions to exist in the loop
 
 Futures.loop()
 --------------
@@ -173,6 +189,36 @@ Warning: this is too slow for long running loops (4ms+ intervals minimum)
         .then(function (callback, previousResult, index, [result0, result1, ...])).then(...)
         .when(function (data) {}).when(...)
         .breakNow(); // forcefully break the loop immediately
+
+
+Futures.sleep() -- Sleep for some number of ms
+---------------
+
+Not implemented yet
+
+
+Futures.wait() -- Wait for some number of ms
+--------------
+
+Not implemented yet
+
+
+Futures.watchdog() -- Create a watchdog which throws if not kept alive
+------------------
+
+Not implemented yet
+
+
+Futures.log() -- log messages to the console
+-------------
+
+Used internally. Uses console.log if available. does nothing otherwise.
+
+
+Futures.error() -- throw an error and log message
+---------------
+
+Used internally. Throws an exception and uses console.log if available.
 
 
 Related Projects
