@@ -23,21 +23,119 @@ Near-future TODOs
   * Once CommonJS gets things figured out, become CommonJS compatible
   * Encourage users to post use cases on the wiki
 
+Loading FuturesJS
+=================
+
+Download the file `lib/futures.js` and include it in your application.
+
+In a browser:
+    &lt;script src='lib/futures.js'>&lt/script>
+
+In Node.js:
+    node> var Futures = require('./lib/futures');
+    node> Futures;
+    { promise: [Function]
+    , join: [Function]
+    , promisify: [Function]
+    , subscription: [Function]
+    , subscribify: [Function]
+    , synchronize: [Function]
+    , trigger: [Function]
+    , whilst: [Function]
+    , loop: [Function]
+    , sequence: [Function]
+    , log: [Function]
+    , error: [Function]
+    }
+
+For Rhino you will need `env.js` as Futures utilizes `setTimeout` and friends.
+
 API
 =====
 
-New
------
+Futures.promise()
+-----------------
 
-  Instead of nesting callbacks 10 levels deep, pass the provided callback instead
-  Each next function receives the previous result and an array of all previous results
+    // Creates a promise object
+    // If guarantee (optional) is passed, an immediate (an already fulfilled promise) is returned instead
+    Futures.promise(var guarantee)
+        // Call all callbacks passed into `when` in the order they were received and pass result
+        .fulfill(var result)
+        // Returns immediately if the result is available, or as soon as it becomes available
+        .when(function (result) {})
+        // Call all errbacks passed into `fail` in the order they were received and pass error
+        .smash(var error)
+        //
+        .fail(function (error) {})
 
-    Futures.sequence(function (callback) {})
-        .then(function (callback, previousResult, index, [result0, result1, ...]) {})
+
+Futures.subscription()
+----------------------
+
+    // Subscriptions may be delivered or held multiple times
+    Futures.subscription()
+        // delivers `data` to all subscribers
+        .deliver(data) 
+        // receives `data` each time deliver is called
+        // returns unsubscribe(); 
+        .subscribe(callback);
+        // notifies that the subscription is "on hold"
+        .hold(error)
+        // receives notification on failure
+        .miss(errback)
 
 
-  A breakable, timeoutable, asynchronous while loop. 
-  Warning: this is too slow for long running loops (4ms+ intervals minimum)
+Futures.join()
+--------------
+
+Joins return a promise which triggers when all joined promises (and subscriptions) have been fulfilled or smashed.
+
+Join accepts both promises and subscriptions. One-time self-unsubscribing promises are generated automatically.
+
+    Futures.join(promise1, promise2, subscription3);
+        .when(function (result1, result2, result3) {
+            // results returned in order
+         });
+    Futures.join([p1, p2, p3]);
+        .when(function (p_arr) {
+            // p_arr holds the results of [p1, p2, p3] in order
+         });
+
+
+Futures.synchronize()
+---------------------
+
+Synchronizations trigger each time all of the subscriptions have delivered or held at least one new subscription
+
+If s1 were to deliver 4 times before s2 and s3 deliver once, the 4th delivery is used
+
+    var s = Futures.synchronize(s1, s2, s3, ...);
+    s.subscribe(function (r1,r2,r3) {
+        // most recent results returned in order
+    });
+    s = Futures.synchronize([s1, s2, s3, ...]);
+    s.subscribe(function (s_arr) {
+        // s_arr holds the most recent results of [s1, s2, s3, ...]
+    });
+
+
+Futures.sequence()
+------------------
+
+Instead of nesting callbacks 10 levels deep, pass callback instead.
+
+Each next function receives the previous result and an array of all previous results
+
+    Futures.sequence(function (callback) { callback("I'm ready."); })
+        .then(function (callback, previousResult, index, [result0, result1, ...]) { callback("I'm here."); })
+
+
+Futures.whilst()
+----------------
+
+A breakable, timeoutable, asynchronous while loop. 
+
+Warning: this is too slow for long running loops (4ms+ intervals minimum)
 
     Futures.whilst(function (previousResult) {
             // expression may be something such as (i < 100)
@@ -54,8 +152,12 @@ New
         .breakNow(); // forcefully break the loop immediately
 
 
-  A breakable, timeoutable, asynchronous do loop. 
-  Warning: this is too slow for long running loops (4ms+ intervals minimum)
+Futures.loop()
+--------------
+
+A breakable, timeoutable, asynchronous do loop. 
+
+Warning: this is too slow for long running loops (4ms+ intervals minimum)
  
      Futures.whilst(function (previousResult) {
             // expression may be something such as (i < 100)
@@ -71,70 +173,25 @@ New
         .then(function (callback, previousResult, index, [result0, result1, ...])).then(...)
         .when(function (data) {}).when(...)
         .breakNow(); // forcefully break the loop immediately
-  
-Not as New
-----------
 
-    // Creates a promise object
-    // If guarantee (optional) is passed, an immediate (an already fulfilled promise) is returned instead
-    Futures.promise(var guarantee)
-        // Call all callbacks passed into `when` in the order they were received and pass result
-        .fulfill(var result)
-        // Returns immediately if the result is available, or as soon as it becomes available
-        .when(function (result) {})
-        // Call all errbacks passed into `fail` in the order they were received and pass error
-        .smash(var error)
-        //
-        .fail(function (error) {})
-
-
-    // Subscriptions may be delivered or held multiple times
-    Futures.subscription()
-        // delivers `data` to all subscribers
-        .deliver(data) 
-        // receives `data` each time deliver is called
-        // returns unsubscribe(); 
-        .subscribe(func);
-        // notifies that the subscription is "on hold"
-        .hold(error)
-        // receives notification on failure
-        .miss(func)
-
-
-    // Joins return a promise which triggers when all joined promises have been fulfilled or smashed
-    Futures.join(p1, p2, p3);
-        .when(function (r1, r2, r3) {
-            // results returned in order
-         });
-    Futures.join([p1, p2, p3]);
-        .when(function (p_arr) {
-            // p_arr holds the results of [p1, p2, p3] in order
-         });
-
-
-    // Synchronizations trigger each time all of the subscriptions have delivered or held at least one new subscription
-    // If s1 were to deliver 4 times before s2 and s3 deliver once, the 4th delivery is used
-    var s = Futures.synchronize(s1, s2, s3, ...);
-    s.subscribe(function (r1,r2,r3) {
-        // most recent results returned in order
-    });
-    s = Futures.synchronize([s1, s2, s3, ...]);
-    s.subscribe(function (s_arr) {
-        // s_arr holds the most recent results of [s1, s2, s3, ...]
-    });
 
 Related Projects
 ================
+
   * [CommonJS Promises](http://wiki.commonjs.org/wiki/Promises)
   * [Strands](http://ajaxian.com/archives/javascript-strands-adding-futures-to-javascript)
   * [MSDN Promise](http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx)
 
+
 Suggested Reading
 =================
+
   * [Async Method Queues](http://www.dustindiaz.com/async-method-queues/)
+
 
 Ideas for the future...
 =======================
+
   * Futures.subscribe(func) should fire immediately if the data is available
   * A joiner that accepts multiple asyncs may be useful:
 
