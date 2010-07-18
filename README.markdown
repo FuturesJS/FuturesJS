@@ -176,7 +176,7 @@ If s1 were to deliver 4 times before s2 and s3 deliver once, the 4th delivery is
     });
 
 
-Futures.sequence() -- Sequence two or more asynchronous (and synchronous) functions to execute synchronously
+Futures.sequence() -- chain two or more asynchronous (and synchronous) functions
 ------------------
 
 Instead of nesting callbacks 10 levels deep, pass callback instead.
@@ -187,10 +187,10 @@ Each next function receives the previous result and an array of all previous res
         .then(function (callback, previousResult, index, [result0, result1, ...]) { callback("I'm here."); })
 
 
-Futures.whilst() -- Safely loop a block of code with the option to timeout, sleep, or quit after max loop count
+Futures.whilst() -- begin a "safe" loop with timeout, sleep, and max loop options
 ----------------
 
-A breakable, timeoutable, asynchronous while loop. 
+A breakable, timeoutable, asynchronous non-blocking while loop. 
 
 Warning: this is too slow for long running loops (4ms+ intervals minimum)
 
