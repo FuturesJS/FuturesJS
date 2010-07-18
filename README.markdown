@@ -60,7 +60,21 @@ If guarantee (optional) is passed, an immediate (an already fulfilled promise) i
 Futures.promisify() -- wrap a function with a promisable
 -------------------
 
-Convert a function into a promisable with a directive or create a promise from a subscripiton.
+This is a quick'n'dirty convenience method for creating a promisable from an existing function.
+
+    var myFunc = function (url, data, callback, errback) {
+    //                      0,    1,      2,      3
+    //                      let promisify know the index
+    //
+        callback("Number five is alive!");
+    };
+
+    myFunc = Futures.promisify(myFunc, { "when": 2, "fail": 3 });
+
+    myFunc(url, data) // now promisified
+      .when(callback)
+      .fail(errback);
+
 
 See the getting started. TODO copy from Getting Started.
 
@@ -85,19 +99,47 @@ Subscriptions may be delivered or held multiple times
 Futures.subscribify() -- wrap a function with a subscribable
 ---------------------
 
-See the Getting Started. TODO.
+    var myFunc = function (url, data, callback, errback) {
+    //                      0,    1,      2,      3
+    //                      let subscribify know the index
+    //
+        callback("Number five is alive!");
+    };
+
+    myFunc = Futures.subscribify(myFunc, { "when": 2, "fail": 3 });
+
+    var unsubscribe = myFunc(url, data).subscribe(callback);
+    var unmisscribe = myFunc(url, data).miss(errback);
+
+** noConflict **
+
+    var subscription;
+    $.getJSON = Futures.subscribify($.getJSON, {"when":2}).noConflict(function (s) {
+      subscription = s; // This is a synchronous callback
+    });
+    var unsubscribe = subscription.subscribe(func1);
+    subscription..when(one_time_func);
+
+    var xhr = $.getJSON(url, data);
 
 
 Futures.subscrpition2promise() -- create a promise from a subscription
 ------------------------------
 
-Pass in a subscription and get back a promise. [Not Implemented Yet]
+Pass in a subscription or subscribable and get back a promise. This is what Futures.join() uses internally to allow the joining of subscriptions.
+
+    var promise = Futures.subscription2promise(subscription);
 
 
 Futures.trigger() -- create an anonymous event listener / triggerer
 -----------------
 
-See the Getting Started. TODO fill this in.
+    var t = Futures.trigger();
+    var mute = t.listen(callback1)
+    var mute2 = t.listen(callback2);
+    t.fire();
+
+TODO chain mutes such that the last .listen returns all mutes?
 
 
 Futures.join() -- create a promise joined from two or more promises / subscriptions
@@ -212,13 +254,17 @@ Not implemented yet
 Futures.log() -- log messages to the console
 -------------
 
-Used internally. Uses console.log if available. does nothing otherwise.
+Uses console.log if available. does nothing otherwise.
+
+    Futures.log("Info message.");
 
 
 Futures.error() -- throw an error and log message
 ---------------
 
-Used internally. Throws an exception and uses console.log if available.
+Throws an exception and uses console.log if available.
+
+    Futures.error("Error Message");
 
 
 Related Projects
@@ -241,6 +287,7 @@ Ideas for the future...
   * Futures.subscribe(func) should fire immediately if the data is available
   * A joiner that accepts multiple asyncs may be useful:
 
+
       // TODO create a joiner that accepts multiple asyncs and
       // (by params) either discards older data when it is received out of order
       // OR waits to deliver in order to keep order
@@ -254,5 +301,6 @@ Ideas for the future...
       //      Futures.join(a3)
       //      a3 comes back and fires because a1 and a2 have already fired
       // the respond in the order 
+
 
   * Allow user to specify what to pass to a sequence rather than creating a function sequence(func, args_to_func, sequence_directive)
