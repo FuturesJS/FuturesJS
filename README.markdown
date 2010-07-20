@@ -8,7 +8,7 @@ Getting Started
 
 See the [Getting Started](http://coolaj86.github.com/futures/) GitHub page. 
 
-Additionally test.html contains a number of (obviously) working examples. These can also be accessed live from the [computer in my closet](http://coolaj86.info/futuresjs/) - when it's on that is.
+Additionally test.html contains a number of (obviously) working examples. These can also be accessed live from the [computer in my closet](http://coolaj86.info/futuresjs/) - when it's on that is. If the tests ever aren't passing it's because I'm adding new features at that exact moment - I always pass before commit/push-ing. =8^D
 
 Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailing List](http://groups.google.com/group/futures-javascript)
 
@@ -16,7 +16,16 @@ Near-future TODOs
 -----------------
   * Document concrete Use Cases
   * Create tests for subscriptions which now accept subscribe(callback, errback) and update API
+    * if(true === errback) {// subscribe callback as errback; set unsubscribe to unsubscribe both }
+  * Implement subscription.stopUntilNextIssue(); subscription.stop(); subscription.resume();
+    * This is for the case that the old issue is too out-of-date to deliver to new subscribers
   * Create an 'Interceptor' which uses a hash to determine how to promisify a function
+  * Handle asynchronous calls in `whilst()`
+    * return early from the iteration when breakIf() has not yet ping() / keepAlive()
+    * set a default timout on each loop
+  * Clean `sequence()`
+    * use this.fulfill(returnVal) instead of passing in callback
+    * simplify func(result, i, array) to func(result)
 
 Loading FuturesJS
 =================
@@ -30,6 +39,8 @@ In Node.js:
     node> var Futures = require('./lib/futures');
 
 For Rhino you will need `env.js` as Futures utilizes `setTimeout` and its friends.
+
+FYI: FuturesJS does pass JSLint regularly (but not daily)
 
 API
 =====
