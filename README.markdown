@@ -14,14 +14,10 @@ Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailin
 
 Near-future TODOs
 -----------------
+  * Document concrete Use Cases
   * Create tests for joins which now accept subscriptions
-  * Update documentation about joins
-  * Create tests for subscriptions which now accept subscribe(callback, errback)
-  * Update docs, and do the same for promises
-  * Document the API in this readme and move remaining useful examples to the getting started
+  * Create tests for subscriptions which now accept subscribe(callback, errback) and update API
   * Create an 'Interceptor' which uses a hash to determine how to promisify a function
-  * Once CommonJS gets things figured out, become CommonJS compatible
-  * Encourage users to post use cases on the wiki
 
 Loading FuturesJS
 =================
@@ -94,6 +90,21 @@ Subscriptions may be delivered or held multiple times
         .hold(error)
         // receives notification on failure
         .miss(errback)
+
+Futures.subscription()(*unsubscribe*)()(*resubscribe*)()...
+-----------------------------------------------------
+
+It is possible to put a single subscription "on hold" by calling the anonymous `unsubscribe()` function which is returned.
+The same subscription can be resumed by calling its return function. The cycle continues indefinitely.
+
+    var s,
+    unsubscribe,
+    resubscribe;
+
+    s = Futures.subscription();
+    unsubcribe = s.subscribe(callback);
+    resubscribe = unsubscribe();
+    unsubscribe = resubscribe();
 
 
 Futures.subscribify() -- wrap a function with a subscribable
@@ -301,7 +312,8 @@ Suggested Reading
 Ideas for the future...
 =======================
 
-  * Futures.subscribe(func) should fire immediately if the data is available
+  * Once CommonJS gets things figured out, become CommonJS compatible
+  * Encourage users to post use cases on the wiki
   * A joiner that accepts multiple asyncs may be useful:
 
 
