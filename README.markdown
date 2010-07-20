@@ -232,7 +232,7 @@ Warning: this is too slow for long running loops (4ms+ intervals minimum)
         .when(function (data) {}).when(...)
         .breakNow(); // forcefully break the loop immediately
 
-Futures.asyncify() -- cause a synchronous function to execute as an asynchronous promisable
+Futures.asyncify() -- create an asynchronous function from a synchronous one
 ------------------
 
 Given a syncback, returns a promisable - for all those times when you're depending on the order being unpredictable!
