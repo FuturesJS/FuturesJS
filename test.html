@@ -120,7 +120,7 @@
       });
 
       // Demonstrate how to guarantee an immediate promise
-      JSUnit.addTest('Immediate Promise (Guarantee)', function() {
+      JSUnit.addTest('Futures.promise(immediate) - Guaranteed Promise', function() {
         var that = this,
         p = Futures.promise("Guarantee"),
         timeout = setTimeout(function() {
@@ -148,7 +148,7 @@
        * Promisify
        ************/
       // Demonstrate that we can promisify a function
-      JSUnit.addTest('Basic Promisify using withResult for original result', function () {
+      JSUnit.addTest('Futures.promisify(func).withResult(syncback) - Original result', function () {
         var that = this,
         results = {},
         getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
@@ -170,7 +170,7 @@
         ;
       }, 5000);
 
-      JSUnit.addTest('Basic Promisify2', function () {
+      JSUnit.addTest('Futures.promisify(func)(callback) - Accepts original callback just like original', function () {
         var that = this,
         results = {},
         getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
@@ -187,7 +187,7 @@
       }, 5000);
 
       // Custom Promisify
-      JSUnit.addTest('Custom Promisify', function () {
+      JSUnit.addTest('Futures.promisify() - stupid prewrap idea... TODO remove this', function () {
         // TODO maybe the 'this' was a bad idea?
         var that = this,
         ajax,
@@ -245,15 +245,15 @@
        * Promise-Joins
        ****************/
       // Demonstrate that the joiner works
-      JSUnit.addTest('Synchronous Join Array', function () {
+      JSUnit.addTest('Futures.join([p1,s2,p3]) - Array of Promises and Subscriptions', function () {
         var that = this,
         p1 = Futures.promise(),
-        p2 = Futures.promise(),
+        s2 = Futures.subscription(),
         p3 = Futures.promise(),
         j;
 
         // Show that the repsonses come back in correct order
-        j = Futures.join([p1, p2, p3]);
+        j = Futures.join([p1, s2, p3]);
         j.when(function(arr) {
             status = false;
             if ("Hello, World!" === arr.join('')) {
@@ -270,11 +270,11 @@
           p1.fulfill("Hello");
         }, 350);
         setTimeout(function() {
-          p2.fulfill(", ");
+          s2.deliver(", ");
         }, 600);
       }, 1000);
 
-      JSUnit.addTest('Synchronous Join Args', function () {
+      JSUnit.addTest('Futures.join(p1,p2,p3) - Args of Promises', function () {
         var that = this,
         p1 = Futures.promise(),
         p2 = Futures.promise(),
@@ -311,7 +311,7 @@
        * Subscriptions
        ****************/
       // Demonstrate basic subscription
-      JSUnit.addTest('Basic Subscription', function () {
+      JSUnit.addTest('Futures.subscription()', function () {
         var that = this,
         s = Futures.subscription(),
         i = 0;
@@ -335,7 +335,7 @@
 
       
       // Demonstrate subscribify
-      JSUnit.addTest('Basic Subscribify', function () {
+      JSUnit.addTest('Futures.subscribify()', function () {
         var that = this,
         unsubscribe, 
         getJSON,
@@ -369,7 +369,7 @@
           });
       }, 10000);
 
-      JSUnit.addTest('Subscription hands back a promises', function () {
+      JSUnit.addTest('Futures.subscribify()().when() - Subscribable creates instance promises', function () {
         var that = this,
         keywords = ['peasant', 'strongbad'],
         i = 0,
@@ -387,7 +387,7 @@
       }, 10000);
 
       // noConflict
-      JSUnit.addTest('noConflict Subscribify', function () {
+      JSUnit.addTest('Futures.subscribify(func, directive).noConflict(syncback) - non-invasive subscription', function () {
         var that = this,
         subscription;
 
@@ -406,7 +406,7 @@
       }, 10000);
 
       // noConflict
-      JSUnit.addTest('noConflict Subscribify with when', function () {
+      JSUnit.addTest('Futures.subscribify(func, directive).noConflict(syncback) - Subscribify with when', function () {
         var that = this,
         subscription;
 
@@ -644,8 +644,11 @@
     </script>
   </head>
   <body>
-    <a href="http://github.com/coolaj86/futures">FuturesJS On GitHub</a>
     <div id="doc">
+[FuturesJS on GitHub](http://github.com/coolaj86/futures) 
+
+...running the [JaySyncUnit](http://github.com/coolaj86/jaysyncunit) Test Suite
+
 JavaScript with Showdown &amp; Highlight:
 
     // I'd like to find a way to write the code, documentation
