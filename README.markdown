@@ -15,7 +15,6 @@ Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailin
 Near-future TODOs
 -----------------
   * Document concrete Use Cases
-  * Create tests for joins which now accept subscriptions
   * Create tests for subscriptions which now accept subscribe(callback, errback) and update API
   * Create an 'Interceptor' which uses a hash to determine how to promisify a function
 
