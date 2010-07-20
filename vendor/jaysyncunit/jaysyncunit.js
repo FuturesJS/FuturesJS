@@ -39,6 +39,8 @@
         addTest = function(name, func, wait) {
           var lname = name.toLowerCase().replace(/\W/g,'_'),
           complete;
+
+          wait = wait || 10000; // 10s is perhaps even too reasonable of a default limit
           
           if (undefined !== runables[lname]) {
             throw new Error('"'+lname+'" is already defined');
