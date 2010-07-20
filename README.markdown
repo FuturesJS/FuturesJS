@@ -232,6 +232,23 @@ Warning: this is too slow for long running loops (4ms+ intervals minimum)
         .when(function (data) {}).when(...)
         .breakNow(); // forcefully break the loop immediately
 
+Futures.asyncify() -- cause a synchronous function to execute as an asynchronous promisable
+------------------
+
+Given a syncback, returns a promisable - for all those times when you're depending on the order being unpredictable!
+
+    // Given a syncback, returns a promisable function
+    // `wait` is the number of ms before execution. If `true` it will be random between 1 - 1000ms
+    // `context` is the object which should be `this`
+    var async = Futures.asyncify(function (param1, param2, param3, ...) {
+      return "Look how synchronous I am!";
+    }, wait, context)
+
+    // The returned function returns the `when` and `fail` methods after each call.
+    async
+      .when(callback)
+      .fail(errback);
+
 
 Futures.sleep() -- Sleep for some number of ms
 ---------------

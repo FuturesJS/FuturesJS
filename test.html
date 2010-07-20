@@ -65,7 +65,7 @@
         };
       }());
       // Demonstrate how to make, keep, and break a promise
-      JSUnit.addTest('Basic Promise', function() {
+      JSUnit.addTest('Futures.promise()', function() {
         var that = this,
         p = Futures.promise(),
         timeout = setTimeout(function() {
@@ -97,6 +97,27 @@
         ;
         // this.tearDown(function () {$("img.basic").remove()});
       }, 5000);
+
+      JSUnit.addTest('Futures.asyncify()', function() {
+        var that = this,
+        asyncy,
+        out_of_order;
+
+        asyncy = Futures.asyncify(function () {
+          return "This returns after out_of_order is set to true";
+        });
+
+        asyncy().when(function (data) {
+          if(true === out_of_order && data) {
+            that.complete(true);
+            return;
+          }
+          //that.complete(false);
+        }, 100, this);
+
+        // This happens before the syncback above
+        out_of_order = true;
+      });
 
       // Demonstrate how to guarantee an immediate promise
       JSUnit.addTest('Immediate Promise (Guarantee)', function() {
