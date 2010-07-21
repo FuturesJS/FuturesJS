@@ -1,7 +1,9 @@
 FuturesJS
 =========
 
-FuturesJS is a JavaScript library which (when used as directed) simplifies handling Callbacks, Errbacks, Promises, Subscriptions, Joins, Synchronization of asynchronous data, and Eventually Consistent data. It is akin to this well documented this MSDN library, but with a liberal MIT license.
+FuturesJS is a JavaScript library which (when used as directed) simplifies handling Callbacks, Errbacks, Promises, Subscriptions, Joins, Synchronization of asynchronous data, and Eventually Consistent data.
+
+The long story: After watching the [Crockford lecture series](http://yuiblog.com/crockford) a few times some of the ideas started to sink in and I took a fresh new look at JavaScript. My immediate leap was to begin on [TriforceJS](http://github.com/coolaj86/triforce), but it was too much to bite off and chew all at once so I scrapped it temporarily and created Futures as a stepping-stone.
 
 Getting Started
 ---------------
@@ -14,18 +16,12 @@ Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailin
 
 Near-future TODOs
 -----------------
-  * Document concrete Use Cases
-  * Create tests for subscriptions which now accept subscribe(callback, errback) and update API
-    * if(true === errback) {// subscribe callback as errback; set unsubscribe to unsubscribe both }
-  * Implement subscription.stopUntilNextIssue(); subscription.stop(); subscription.resume();
-    * This is for the case that the old issue is too out-of-date to deliver to new subscribers
-  * Create an 'Interceptor' which uses a hash to determine how to promisify a function
-  * Handle asynchronous calls in `whilst()`
-    * return early from the iteration when breakIf() has not yet ping() / keepAlive()
-    * set a default timout on each loop
-  * Clean `sequence()`
-    * use this.fulfill(returnVal) instead of passing in callback
-    * simplify func(result, i, array) to func(result)
+  * Goal: Thu Jul 22nd - **Interceptor** implemented (actually, this is part of CopyCatJS, but I'll use it here)
+  * Goal: Mon Jul 26th - Implement [**asynchronous method queue chaining**](http://www.dustindiaz.com/async-method-queues/) (aka Twitter Anywhere API underpinnings)
+  * Goal: Thu Jul 29th - Document concrete **Use Cases** with Jekyll
+  * Goal: Tue Aug 3rd - Implement function **currying / partials**
+  * Please mail [the list](http://groups.google.com/group/futures-javascript) with feature requests.
+  * I'll also be getting back to work on CopyCat, PURE in Reverse (ERUP), and finally tying it all together with Triforce
 
 Loading FuturesJS
 =================
@@ -40,12 +36,12 @@ In Node.js:
 
 For Rhino you will need `env.js` as Futures utilizes `setTimeout` and its friends.
 
-FYI: FuturesJS does pass JSLint regularly (but not daily)
+FYI: FuturesJS does pass JSLint regularly (but not every single commit)
 
 API
 =====
 
-Futures.promise() -- create a promise object
+Futures.promise() -- create a chainable promise object
 -----------------
 
 Creates a promise object
@@ -310,7 +306,7 @@ Related Projects
 
   * [CommonJS Promises](http://wiki.commonjs.org/wiki/Promises)
   * [Strands](http://ajaxian.com/archives/javascript-strands-adding-futures-to-javascript)
-  * [MSDN Promise](http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx)
+  * [MSDN Promise](http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx) - this was a direct influence for some of the features (immediates) I've added. The major drawback to this library is the licensing issue.
 
 
 Suggested Reading
@@ -319,8 +315,26 @@ Suggested Reading
   * [Async Method Queues](http://www.dustindiaz.com/async-method-queues/)
 
 
+Long Term TODO
+==============
+
+API additions / fixes / changes that *will* happen
+------------------------
+
+  * Create tests for subscriptions which now accept subscribe(callback, errback) and update API
+    * if(true === errback) {// subscribe callback as errback; set unsubscribe to unsubscribe both }
+  * Implement subscription.stopUntilNextIssue(); subscription.stop(); subscription.resume();
+    * This is for the case that the old issue is too out-of-date to deliver to new subscribers
+  * Create an 'Interceptor' which uses a hash to determine how to promisify a function
+  * Handle asynchronous calls in `whilst()`
+    * return early from the iteration when breakIf() has not yet ping() / keepAlive()
+    * set a default timout on each loop
+  * Clean `sequence()`
+    * use this.fulfill(returnVal) instead of passing in callback
+    * simplify func(result, i, array) to func(result)
+
 Ideas for the future...
-=======================
+-----------------------
 
   * Once CommonJS gets things figured out, become CommonJS compatible
   * Encourage users to post use cases on the wiki
