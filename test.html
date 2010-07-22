@@ -67,6 +67,7 @@
       // Demonstrate how to make, keep, and break a promise
       JSUnit.addTest('Futures.promise()', function() {
         var that = this,
+        true_result,
         p = Futures.promise(),
         timeout = setTimeout(function() {
           p.smash("Suxorz!");
@@ -76,9 +77,11 @@
         $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
           { tags: "kitten", tagmode: "any", format: "json" },
           function(data){
+            true_result = data;
             p.fulfill(data);
         });
         p.when(function(data) {
+          true_result === data;
           clearTimeout(timeout);
         });
         p.fail(function(err) {
@@ -131,8 +134,7 @@
 
         p.when(function(data) {
           clearTimeout(timeout);
-          // === doesn't work in this case on data
-          if ("Guarantee" === data.toString()) {
+          if ("Guarantee" === data) {
             that.complete(true);
           }
         });
