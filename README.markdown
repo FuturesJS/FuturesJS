@@ -16,7 +16,7 @@ Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailin
 
 Near-future TODOs
 -----------------
-  * Goal: Thu Jul 22nd - **Interceptor** implemented (actually, this is part of CopyCatJS, but I'll use it here)
+  * Goal: Thu Jul 22nd - Copy `arguceptor()` from CopyCatJS for better subscribify directives.
   * Goal: Mon Jul 26th - Implement [**asynchronous method queue chaining**](http://www.dustindiaz.com/async-method-queues/) (aka Twitter Anywhere API underpinnings)
   * Goal: Thu Jul 29th - Document concrete **Use Cases** with Jekyll
   * Goal: Tue Aug 3rd - Implement function **currying / partials**
@@ -166,11 +166,16 @@ Joins return a promise which triggers when all joined promises (and subscription
 
 Join accepts both promises and subscriptions. One-time self-unsubscribing promises are generated automatically.
 
-    Futures.join(promise1, promise2, subscription3);
+    // params is optional
+    params = { 
+      timeout : undefined // time in ms, undefined by default
+    }
+
+    Futures.join(promise1, promise2, subscription3, ..., params);
         .when(function (result1, result2, result3) {
             // results returned in order
          });
-    Futures.join([p1, p2, p3]);
+    Futures.join([p1, p2, p3, ...], params);
         .when(function (p_arr) {
             // p_arr holds the results of [p1, p2, p3] in order
          });
@@ -357,3 +362,24 @@ Ideas for the future...
 
 
   * Allow user to specify what to pass to a sequence rather than creating a function sequence(func, args_to_func, sequence_directive)
+
+Thoughts
+========
+
+I've seen a lot of libraries that use strings to name things.
+
+    Model.extend('methodName', function () {
+      return "immediate";
+    });
+
+
+    Event.add('eventName', function () {
+      alert('Hoo-hoo! That tickles');
+    });
+    document.getElementById('poke_me').onClick = Event.fire('eventName');
+
+Personally, I don't care much for it. For some reason it just seems bleh to me.
+I'll probably add this sort of thing to Futures eventually, but I'm staying away from it for as long as I can.
+Strings are inherently global. They can be accessed from any score.
+I feel that using strings will eventually violate privacy and may shortcut / defeat sound architecture, which is something I see as a great advantage to this sort of functional design pattern.
+
