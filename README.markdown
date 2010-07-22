@@ -62,6 +62,15 @@ If guarantee (optional) is passed, an immediate (an already fulfilled promise) i
 Futures.promisify() -- wrap a function with a promisable
 -------------------
 
+NOTICE: Upcoming API change [Not Implemented Yet]
+
+    var myFunc = function (url, data, callback, params) {},
+    directive = [true, undefined, 'callback', { onError: 'errback', timeout: 'timeout'};
+    // In this case `url` is always required, `data` is optional and may be omitted
+    // `callback` must be the name of the placeholder for the callback
+    // onError is the name of the param used as by the function and `errback` must be the name
+    // timeout is similar
+
 This is a quick'n'dirty convenience method for creating a promisable from an existing function.
 
     var myFunc = function (url, data, callback, errback) {
@@ -69,9 +78,9 @@ This is a quick'n'dirty convenience method for creating a promisable from an exi
     //                      let promisify know the index
     //
         callback("Number five is alive!");
-    };
-
-    myFunc = Futures.promisify(myFunc, { "when": 2, "fail": 3 });
+    },
+    directive = {"when":2, "fail":3};
+    myFunc = Futures.promisify(myFunc, directive);
 
     myFunc(url, data) // now promisified
       .when(callback)
@@ -207,6 +216,13 @@ Each next function receives the previous result and an array of all previous res
 
     Futures.sequence(function (callback) { callback("I'm ready."); })
         .then(function (callback, previousResult, index, [result0, result1, ...]) { callback("I'm here."); })
+
+PROPOSED CHANGE: Is there a good use case for tracking the previousResults as an array? 
+I think this should be simplified to
+
+    .then(function(prevResult) {
+        this.fulfill;
+    });
 
 
 Futures.whilst() -- begin a "safe" loop with timeout, sleep, and max loop options
