@@ -232,21 +232,36 @@ A breakable, timeoutable, asynchronous non-blocking while loop.
 
 Warning: this is too slow for long running loops (4ms+ intervals minimum)
 
+Note: The next loop iteration will not occur until `this.breakIf()` has been called.
+
     Futures.whilst(function (previousResult) {
+            // breakIf *MUST* be called once per loop. It may be called asynchronously.
             // expression may be something such as (i < 100)
             // letFinish = true will allow this iteration of the loop to finish 
             this.breakIf(expression, letFinish);
         }, {
             // You may control the length of runtime as well as the pause between loops here
             interval : 1, // how long to wait before executing the next loop. Due to "clamping" this is always >= 4ms,
-            timeout : undefined, // forcefully break the loop after N ms
+            timeout : undefined, // forcefully break the loop after N ms (cumulative; not per-loop)
             maxLoops : undefined // forcefully break the loop after N iterations
         })
         .then(function (callback, previousResult, index, [result0, result1, ...]))
         .when(function (data) {})
         .breakNow(); // forcefully break the loop immediately
 
-TODO allow asynchronous functions to exist in the loop
+Example: This loop will try to interate every 1ms, but it will return early (without incrementing the loop count) nearly 200 times before `this.breakIf()` is called. It will timeout after 1 second, before the break condition is true.
+
+    var i = 0;
+    Futures.whilst(function (previousResult) {
+      var that = this;
+      setTimeout(function () {
+        i += 1;
+        that.breakIf(5 < i);
+      }, 200);
+    }, {interval:1, timeout: 1000, maxLoops: 10});
+
+
+TODO: consider iteration timeout vs cumulative timeout
 
 Futures.loop()
 --------------
