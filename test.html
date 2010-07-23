@@ -653,16 +653,23 @@
         // WARN: putting blocking calls such as `alert` will count towards your timeout
         // if you want to debug with `alert`, be sure to set a high timeout (or Infinity)
         doer = Futures.whilst(function(lastResult) {
-          this.breakIf(q > r); // throw an immediately caught exception to end execution
+          var that = this;
+          //this.breakIf(q > r); // throw an immediately caught exception to end execution
           //this.breakIf(q < r, true); // or don't throw the exception, let the loop finish
+
+          setTimeout(function () {
+            that.breakIf(q > r); // it's never too late to throw an exception!! haha suckers!
+          }, 200);
+          //setTimeout(that.breakIf, 200, (q > r)); // This format fails miserably
           //alert('q: ' + q);
           q += s;
           return q;
-        }, { timeout: 5000, maxLoops: 10, interval: 1}).then(function (p, result, i, arr) {
-          if (4 === result) {
-            that.complete(true);
-          }
-        });
+        }, { timeout: 5000, maxLoops: 10, interval: 1})
+          .then(function (p, result, i, arr) {
+            if (4 === result) {
+              that.complete(true);
+            }
+          });
       }, 10000);     
       // whilst end end
 
