@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" type="text/css" href="vendor/highlight/styles/sunburst.css" media="screen" />
+    <script src="vendor/showdown/showdown.js"></script>
+    <script src="vendor/highlight/highlight.pack.js"></script>
+    <script src="vendor/jquery/jquery-1.4.2.js"></script>
+    <script src="vendor/underscore/underscore.js"></script>
+    <!-- script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script -->
+    <script src="vendor/persevere/global-es5.js"></script>
+    <style>
+      /* This is the only custom styling of my own, the rest is highlight.js */
+      body {
+        background-color: #789;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom:1px dotted;
+        padding-left: 2px;
+        padding-right: 2px;
+        text-shadow: 1px 1px 1px #888;
+        -webkit-text-shadow: 1px 1px 1px #888;
+        -moz-text-shadow: 1px 1px 1px #888;
+      }
+      a:hover {
+        border-bottom: 1px solid;
+      }
+      #doc, #header {
+        width: 950px;
+        background-color: #FFF;
+        padding: 10px;
+        padding-left: 15px;
+        margin: 15px;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+      }
+      pre {
+        width: 900px;
+        padding: 5px;
+        padding-right: 10px;
+        padding-left: 10px;
+        margin: 5px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        box-shadow: 5px 5px 5px #888;
+        -webkit-box-shadow: 5px 5px 5px #888;
+        -moz-box-shadow: 5px 5px 5px #888;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="header">{{ page.title }}</h1>
+    <div id="doc">
+{{ content }}
+    </div>
+    <script>
+      "use strict";
+      (function (doc) {
+        var showdown = new Showdown.converter(),
+        body = doc.getElementById('doc'),
+        markdown,
+        html;
+
+        markdown = body.innerHTML;
+        html = showdown.makeHtml(markdown);
+        body.innerHTML = html;
+   
+        hljs.initHighlightingOnLoad();
+       // Highlight syntax
+      /*
+        var pres = document.getElementsByTagName('pre');
+        for (var i = 0; i < pres.length; i++) {
+          if (pres[i].firstChild) // && pres[i].firstChild.nodeName == 'CODE')
+
+            hljs.highlightBlock(pres[i].firstChild);
+        }
+      */
+      }(window.document));
+    </script>
+  </body>
+</html>

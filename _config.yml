@@ -1,0 +1,5 @@
+destination: ./_site
+auto:         false
+pygments:     true
+markdown:     rdiscount
+permalink:    none
