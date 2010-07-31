@@ -62,21 +62,7 @@ Futures.promisify(func, directive, params) -- wrap a function with a promisable
 -------------------
 
 `promisify()` uses CopyCatJS's `arguceptor()` to  wrap `func` according to the `directive`.
-The directive tells promisify enough about `func` to swap out 'callback' and 'errback'
-
-    true - this argument is always required
-    'callback' - this argument assumed to always be present and represents 'callbak'
-    'errback' - this argument assumed to always be present and represents 'errback'
-    
-    false - an optional boolean argument
-    0 - an optional int argument
-    '' - an optional string argument
-    [] - an optional array argument
-    {} - an optional params argument
-    function(){} - an optional function argument
-    
-    undefined - an optional wildcard argument (checked by position rather than type)
-    null - same as undefined
+The directive tells promisify enough about `func` to swap out `callback` for `when` and `errback` for `fail`
 
 Example:
 
@@ -84,15 +70,37 @@ Example:
     directive = [true, {}, 'callback', { onError: 'errback', timeout: 'timeout' };
     Futures.promisify(myFunc, directive);
 
-In this case 
+In this case:
 
   * `url` is always required
   * `data` is optional and will be omitted if arguments[1] isn't type 'object'
   * `callback` is the name required by Futures to assign to `when`
-  * onError is the arbitrary name of the param used as by `myFunc`
-  * `errback` is the name used by Futures to assign to `fail` if present
-  * timeout is the arbitrary name as used by `myFunc`
-  * 'timeout' is the name used by Futures to assign to the internal `timeout` if present
+  * `onError` is the arbitrary name of the param used as by `myFunc`
+  * `'errback'` is the name used by Futures to assign to `fail` if present
+  * `timeout` is the arbitrary name as used by `myFunc`
+  * `'timeout'` is the name used by Futures to assign to the internal `timeout` if present
+
+The full set of directives operate as follows:
+
+  * Specific to FuturesJS
+    * `'callback'` - this argument must always be given and represents `when`
+    * `'errback'` - this argument may will be assumed to always be present if given
+    * `'timeout'` - overrides the default timeout given in params
+
+  * CopyCatJS directives which specify that an argument will not be optional
+    * `true` - an argument with this substitute will always be required and ignored
+    * 'string_name_here' - ignored by FuturesJS, excepting the 3 above
+
+  * CopyCatJS directives which specifiy that an agument will be optional
+    * false - an optional boolean argument
+    * 0 - an optional int argument
+    * '' - an optional string argument
+    * [] - an optional array argument
+    * {} - an optional params argument
+    * function(){} - an optional function argument
+    
+    undefined - an optional wildcard argument (checked by position rather than type)
+    null - same as undefined
 
 **Deprecated:**
 
