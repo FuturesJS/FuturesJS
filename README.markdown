@@ -16,10 +16,9 @@ Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailin
 
 Near-future TODOs
 -----------------
-  * Goal: Thu Jul 22nd - Copy `arguceptor()` from CopyCatJS for better subscribify directives.
-  * Goal: Mon Jul 26th - Implement [**asynchronous method queue chaining**](http://www.dustindiaz.com/async-method-queues/) (aka Twitter Anywhere API underpinnings)
-  * Goal: Thu Jul 29th - Document concrete **Use Cases** with Jekyll
-  * Goal: Tue Aug 3rd - Implement function **currying / partials**
+  * Goal: Sat Jul 31st - Implement [**asynchronous method queue chaining**](http://www.dustindiaz.com/async-method-queues/) (aka Twitter Anywhere API underpinnings)
+  * Goal: Thu Aug 5th - Document concrete **Use Cases** with Jekyll
+  * Goal: Thu Aug 5th - Implement function **currying / partials**
   * Please mail [the list](http://groups.google.com/group/futures-javascript) with feature requests.
   * I'll also be getting back to work on CopyCat, PURE in Reverse (ERUP), and finally tying it all together with Triforce
 
@@ -59,15 +58,43 @@ If guarantee (optional) is passed, an immediate (an already fulfilled promise) i
         .fail(function (error) {})
 
 
-Futures.promisify() -- wrap a function with a promisable
+Futures.promisify(func, directive, params) -- wrap a function with a promisable
 -------------------
 
+`promisify()` uses CopyCatJS's `arguceptor()` to  wrap `func` according to the `directive`.
+The directive tells promisify enough about `func` to swap out 'callback' and 'errback'
+
+    true - this argument is always required
+    'callback' - this argument assumed to always be present and represents 'callbak'
+    'errback' - this argument assumed to always be present and represents 'errback'
+    
+    false - an optional boolean argument
+    0 - an optional int argument
+    '' - an optional string argument
+    [] - an optional array argument
+    {} - an optional params argument
+    function(){} - an optional function argument
+    
+    undefined - an optional wildcard argument (checked by position rather than type)
+    null - same as undefined
+
+Example:
+
     var myFunc = function (url, data, callback, params) {},
-    directive = [true, undefined, 'callback', { onError: 'errback', timeout: 'timeout'};
-    // In this case `url` is always required, `data` is optional and may be omitted
-    // `callback` must be the name of the placeholder for the callback
-    // onError is the name of the param used as by the function and `errback` must be the name
-    // timeout is similar
+    directive = [true, {}, 'callback', { onError: 'errback', timeout: 'timeout' };
+    Futures.promisify(myFunc, directive);
+
+In this case 
+
+  * `url` is always required
+  * `data` is optional and will be omitted if arguments[1] isn't type 'object'
+  * `callback` is the name required by Futures to assign to `when`
+  * onError is the arbitrary name of the param used as by `myFunc`
+  * `errback` is the name used by Futures to assign to `fail` if present
+  * timeout is the arbitrary name as used by `myFunc`
+  * 'timeout' is the name used by Futures to assign to the internal `timeout` if present
+
+**Deprecated:**
 
 This is a quick'n'dirty convenience method for creating a promisable from an existing function.
 
@@ -83,7 +110,6 @@ This is a quick'n'dirty convenience method for creating a promisable from an exi
     myFunc(url, data) // now promisified
       .when(callback)
       .fail(errback);
-
 
 See the getting started. TODO copy from Getting Started.
 
