@@ -68,7 +68,10 @@ Example:
 
     var myFunc = function (url, data, callback, params) {},
     directive = [true, {}, 'callback', { onError: 'errback', timeout: 'timeout' };
-    Futures.promisify(myFunc, directive);
+    var pFunc = Futures.promisify(myFunc, directive);
+    pFunc('myblag.com', {post_id: 5}, undefined, { retry: '5'  } )
+      .when(callback)
+      .fail(errback);
 
 In this case:
 
@@ -89,7 +92,7 @@ The full set of directives operate as follows:
 
   * CopyCatJS directives which specify that an argument will not be optional
     * `true` - an argument with this substitute will always be required and ignored
-    * 'string_name_here' - ignored by FuturesJS, excepting the 3 above
+    * `'arbitrary_name_here'` - ignored by FuturesJS, excepting the 3 above
 
   * CopyCatJS directives which specifiy that an agument will be optional
     * false - an optional boolean argument
@@ -99,8 +102,8 @@ The full set of directives operate as follows:
     * {} - an optional params argument
     * function(){} - an optional function argument
     
-    undefined - an optional wildcard argument (checked by position rather than type)
-    null - same as undefined
+    * `undefined` - an optional wildcard argument (checked by position rather than type)
+    * `null` - same as undefined
 
 **Deprecated:**
 
@@ -112,14 +115,14 @@ This is a quick'n'dirty convenience method for creating a promisable from an exi
     //
         callback("Number five is alive!");
     },
-    directive = ['', {}, 'callback', 'errback']; // like {"when":2, "fail":3} in old api;
-    myFunc = Futures.promisify(myFunc, directive);
+    directive = {"when":2, "fail":3};
+    myFunc = Futures.promisify(myFunc, directive, params);
 
     myFunc(url, data) // now promisified
       .when(callback)
       .fail(errback);
 
-See the getting started. TODO copy from Getting Started.
+TODO update the Getting Started.
 
 
 Futures.subscription() -- create a subscription object
