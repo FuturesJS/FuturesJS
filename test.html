@@ -67,7 +67,6 @@
       // Demonstrate how to make, keep, and break a promise
       JSUnit.addTest('Futures.promise()', function() {
         var that = this,
-        true_result,
         p = Futures.promise(),
         timeout = setTimeout(function() {
           p.smash("Suxorz!");
@@ -77,11 +76,9 @@
         $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
           { tags: "kitten", tagmode: "any", format: "json" },
           function(data){
-            true_result = data;
             p.fulfill(data);
         });
         p.when(function(data) {
-          true_result === data;
           clearTimeout(timeout);
         });
         p.fail(function(err) {
@@ -134,7 +131,8 @@
 
         p.when(function(data) {
           clearTimeout(timeout);
-          if ("Guarantee" === data) {
+          // === doesn't work in this case on data
+          if ("Guarantee" === data.toString()) {
             that.complete(true);
           }
         });
@@ -153,7 +151,8 @@
       JSUnit.addTest('Futures.promisify(func).withResult(syncback) - Original result', function () {
         var that = this,
         results = {},
-        getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
+        getJSON;
+        getJSON = Futures.promisify($.getJSON, [true, {}, 'callback'], { timeout: 1000 });
 
         getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
           { tags: "cat", tagmode: "any", format: "json" }
@@ -173,9 +172,10 @@
       }, 5000);
 
       JSUnit.addTest('Futures.promisify(func)(callback) - Accepts original callback just like original', function () {
+        // TODO maybe the 'this' was a bad idea?
         var that = this,
         results = {},
-        getJSON = Futures.promisify($.getJSON, { "when": 2, "fail": 3 });
+        getJSON = Futures.promisify($.getJSON, [true, {}, 'callback', 'errback']);
         // the old callback and errback are now optional and handled correctly if present
         getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
           { tags: "puppy", tagmode: "any", format: "json" },
@@ -188,9 +188,9 @@
         );
       }, 5000);
 
+      // TODO remove this stupid thing
       // Custom Promisify
       JSUnit.addTest('Futures.promisify() - stupid prewrap idea... TODO remove this', function () {
-        // TODO maybe the 'this' was a bad idea?
         var that = this,
         ajax,
         promisifiable = function (callback, errback) {
@@ -276,34 +276,6 @@
         }, 600);
       }, 1000);
 
-      JSUnit.addTest('Futures.join([p1,s2,p3], params) - Will fail with timeout', function () {
-        var that = this,
-        p1 = Futures.promise(),
-        s2 = Futures.subscription(),
-        p3 = Futures.promise(),
-        j;
-
-        // Show that the repsonses come back in correct order
-        j = Futures.join([p1, s2, p3], {timeout: 350});
-        j.fail(function (error_arr) {
-          that.complete(true);
-        });
-        j.when(function(arr) {
-          that.complete(false);
-        });
-
-        // Set the responses to come back out of order
-        setTimeout(function() {
-          p3.fulfill("World!");
-        }, 250);
-        setTimeout(function() {
-          p1.fulfill("Hello");
-        }, 350);
-        setTimeout(function() {
-          s2.deliver(", ");
-        }, 600);
-      }, 1000);
-
       JSUnit.addTest('Futures.join(p1,p2,p3) - Args of Promises', function () {
         var that = this,
         p1 = Futures.promise(),
@@ -374,7 +346,7 @@
         timeout;
 
 
-        getJSON = Futures.subscribify($.getJSON, { "when": 2 });
+        getJSON = Futures.subscribify($.getJSON, [true, undefined, 'callback']);
         function recurse_subscription() {
           var inner_timeout;
           if (i >= keywords.length) {
@@ -406,7 +378,7 @@
         p,
         getJSON;
 
-        getJSON = Futures.subscribify($.getJSON, { "when": 2 });
+        getJSON = Futures.subscribify($.getJSON, [true, undefined, 'callback']);
         p = getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
             { tags: keywords[i], tagmode: "any", format: "json" })
         getJSON.subscribe(function (data) {
@@ -421,7 +393,7 @@
         var that = this,
         subscription;
 
-        getJSON = Futures.subscribify($.getJSON, {"when": 2 })
+        getJSON = Futures.subscribify($.getJSON, [true, undefined, 'callback'])
           .noConflict(function (s) {
             subscription = s;
           });
@@ -440,7 +412,7 @@
         var that = this,
         subscription;
 
-        getJSON = Futures.subscribify($.getJSON, {"when": 2 })
+        getJSON = Futures.subscribify($.getJSON, [true, undefined, 'callback'])
           .noConflict(function (s) {
             subscription = s;
           });
@@ -455,7 +427,7 @@
       }, 10000);
 
       // See that one round of subscriptions passes
-      JSUnit.addTest('Futures.synchronize(s1, s2, s3) - Synchronize one round of Subscriptions', function () {
+      JSUnit.addTest('Futures.synchronize() - Synchronize one round of Subscriptions', function () {
         var that = this,
         s1 = Futures.subscription(),
         s2 = Futures.subscription(),
@@ -463,11 +435,11 @@
         sync;
 
         // Show that the repsonses come back in correct order
-        sync = Futures.synchronize(s1, s2, s3);
-        sync.subscribe(function(s1, s2, s3) {
+        sync = Futures.synchronize([s1, s2, s3]);
+        sync.subscribe(function(arr) {
             status = false;
-            Futures.log("got string: " + JSON.stringify([s1, s2, s3]));
-            if ("Hello, World!" === [s1, s2, s3].join('')) {
+            Futures.log("got string: " + JSON.stringify(arr));
+            if ("Hello, World!" === arr.join('')) {
               status = true;
             }
             that.complete(status);
@@ -480,8 +452,12 @@
         // AJ, Goodbye, Good-bye
         // This is the final order:
         // Hello, World!
-        setTimeout(s3.deliver, 50, ["AJ!"]);
-        setTimeout(s1.deliver, 100, ["Goodbye"]);
+        setTimeout(function() {
+          s3.deliver("AJ!");
+        }, 50);
+        setTimeout(function() {
+          s1.deliver("Goodbye");
+        }, 100);
         setTimeout(function() {
           s1.deliver("Good-bye");
         }, 150);
@@ -501,7 +477,7 @@
       }, 5000);
 
       // See that two messages come through
-      JSUnit.addTest('Futures.synchronize([s1, s2, s3]) - Synchronize two rounds of Subscriptions', function () {
+      JSUnit.addTest('Futures.synchronize() - Synchronize two rounds of Subscriptions', function () {
         var that = this,
         s1 = Futures.subscription(),
         s2 = Futures.subscription(),
@@ -653,23 +629,16 @@
         // WARN: putting blocking calls such as `alert` will count towards your timeout
         // if you want to debug with `alert`, be sure to set a high timeout (or Infinity)
         doer = Futures.whilst(function(lastResult) {
-          var that = this;
-          //this.breakIf(q > r); // throw an immediately caught exception to end execution
+          this.breakIf(q > r); // throw an immediately caught exception to end execution
           //this.breakIf(q < r, true); // or don't throw the exception, let the loop finish
-
-          setTimeout(function () {
-            that.breakIf(q > r); // it's never too late to throw an exception!! haha suckers!
-          }, 200);
-          //setTimeout(that.breakIf, 200, (q > r)); // This format fails miserably
           //alert('q: ' + q);
           q += s;
           return q;
-        }, { timeout: 5000, maxLoops: 10, interval: 1})
-          .then(function (p, result, i, arr) {
-            if (4 === result) {
-              that.complete(true);
-            }
-          });
+        }, { timeout: 5000, maxLoops: 10, interval: 1}).then(function (p, result, i, arr) {
+          if (4 === result) {
+            that.complete(true);
+          }
+        });
       }, 10000);     
       // whilst end end
 

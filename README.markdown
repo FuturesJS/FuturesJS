@@ -62,8 +62,6 @@ If guarantee (optional) is passed, an immediate (an already fulfilled promise) i
 Futures.promisify() -- wrap a function with a promisable
 -------------------
 
-NOTICE: Upcoming API change [Not Implemented Yet]
-
     var myFunc = function (url, data, callback, params) {},
     directive = [true, undefined, 'callback', { onError: 'errback', timeout: 'timeout'};
     // In this case `url` is always required, `data` is optional and may be omitted
@@ -79,7 +77,7 @@ This is a quick'n'dirty convenience method for creating a promisable from an exi
     //
         callback("Number five is alive!");
     },
-    directive = {"when":2, "fail":3};
+    directive = ['', {}, 'callback', 'errback']; // like {"when":2, "fail":3} in old api;
     myFunc = Futures.promisify(myFunc, directive);
 
     myFunc(url, data) // now promisified
