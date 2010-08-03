@@ -16,9 +16,9 @@ Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailin
 
 Near-future TODOs
 -----------------
-  * Goal: Sat Jul 31st - Implement [**asynchronous method queue chaining**](http://www.dustindiaz.com/async-method-queues/) (aka Twitter Anywhere API underpinnings)
-  * Goal: Thu Aug 5th - Document concrete **Use Cases** with Jekyll
-  * Goal: Thu Aug 5th - Implement function **currying / partials**
+  * Goal: Tue Aug 3rd - Implement [**asynchronous method queue chaining**](http://www.dustindiaz.com/async-method-queues/) (aka Twitter Anywhere API underpinnings)
+  * Goal: Fri Aug 6th - Document concrete **Use Cases** with Jekyll
+  * Goal: Fri Aug 20th - Implement function **currying / partials**
   * Please mail [the list](http://groups.google.com/group/futures-javascript) with feature requests.
   * I'll also be getting back to work on CopyCat, PURE in Reverse (ERUP), and finally tying it all together with Triforce
 
@@ -100,8 +100,7 @@ The full set of directives operate as follows:
     * '' - an optional string argument
     * [] - an optional array argument
     * {} - an optional params argument
-    * function(){} - an optional function argument
-    
+    * `function(){}` - an optional function argument
     * `undefined` - an optional wildcard argument (checked by position rather than type)
     * `null` - same as undefined
 
@@ -337,6 +336,43 @@ Given a syncback, returns a promisable - for all those times when you're dependi
       .when(callback)
       .fail(errback);
 
+Futures.anywhereify(providers, consumers) / Futures.futurify()
+---------------
+
+** Not Implemented Yet**
+
+Though certainly not the first to come up with the idea, this is named after the Twitter Anywhere API,
+which is perhaps the first well-known implementation of async-method queing. Plus, I don't know what
+else to call it.
+
+    var Contacts = Futures.anywhereify({
+      // Providers must be promisables
+      all: function(params) {
+        var p = Futures.promise();
+        $.ajaxSetup({ error: p.smash });
+        $.getJSON('http://graph.facebook.com/me/friends', params, p.fulfill);
+        $.ajaxSetup({ error: undefined });
+        return p.passable();
+      }
+    },{
+      // Consumers will be called in synchronous order
+      // with the `lastResult` of the previous provider or consumer.
+      // They should return either lastResult or a promise
+      randomize: function(data, params) {
+        data.sort(function(){ return Math.round(Math.random())-0.5); // Underscore.js
+        return Futures.promise(data); // Promise rename to `immediate`
+      },
+      limit: function(data, n, params) {
+        data = data.first(n);
+        return Futures.promise(data);
+      },
+      display: function(data, params) {
+        $('#friend-area').render(directive, data); // jQuery+PURE
+      }
+    });
+    Contacts.all(params).randomize().limit(10).display();
+
+
 
 Futures.sleep() -- Sleep for some number of ms
 ---------------
@@ -375,15 +411,20 @@ Throws an exception and uses console.log if available.
 Related Projects
 ================
 
-  * [CommonJS Promises](http://wiki.commonjs.org/wiki/Promises)
+  * [Narwal Promises](http://github.com/kriskowal/narwhal-lib/blob/master/lib/narwhal/promise-util.js)
+  * [MSDN Promise](http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx)
+    * The major drawback to this library is the licensing issue.
+  * [Dojo Promises](http://docs.dojocampus.org/dojo/Deferred)
   * [Strands](http://ajaxian.com/archives/javascript-strands-adding-futures-to-javascript)
-  * [MSDN Promise](http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx) - this was a direct influence for some of the features (immediates) I've added. The major drawback to this library is the licensing issue.
+  * [JavaScript API for E-based promises](http://waterken.sourceforge.net)
+  * [E promises](http://www.skyhunter.com/marcs/ewalnut.html#SEC20)
 
 
 Suggested Reading
 =================
 
-  * [Async Method Queues](http://www.dustindiaz.com/async-method-queues/)
+  * [CommonJS Promises](http://wiki.commonjs.org/wiki/Promises)
+  * [Async Method Queues (Twitter Anywhere API)](http://www.dustindiaz.com/async-method-queues/)
 
 
 Long Term TODO
