@@ -339,11 +339,9 @@ Given a syncback, returns a promisable - for all those times when you're dependi
 Futures.anywhereify(providers, consumers) / Futures.futurify()
 ---------------
 
-** Not Implemented Yet**
-
 Though certainly not the first to come up with the idea, this is named after the Twitter Anywhere API,
-which is perhaps the first well-known implementation of async-method queing. Plus, I don't know what
-else to call it.
+which is perhaps the first well-known implementation of async-method queueing.
+Plus, I don't know what else to call it.
 
     var Contacts = Futures.anywhereify({
       // Providers must be promisables
@@ -351,6 +349,13 @@ else to call it.
         var p = Futures.promise();
         $.ajaxSetup({ error: p.smash });
         $.getJSON('http://graph.facebook.com/me/friends', params, p.fulfill);
+        $.ajaxSetup({ error: undefined });
+        return p.passable();
+      },
+      one: function(id, params) {
+        var p = Futures.promise();
+        $.ajaxSetup({ error: p.smash });
+        $.getJSON('http://graph.facebook.com/' + id, params, p.fulfill);
         $.ajaxSetup({ error: undefined });
         return p.passable();
       }
@@ -368,8 +373,12 @@ else to call it.
       },
       display: function(data, params) {
         $('#friend-area').render(directive, data); // jQuery+PURE
+        // always return the data, even if you don't modify it!
+        // otherwise your results could be unexpected
+        return data;
       }
     });
+
     Contacts.all(params).randomize().limit(10).display();
 
 

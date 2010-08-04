@@ -642,6 +642,35 @@
       }, 10000);     
       // whilst end end
 
+      /**
+       * Anywhereify
+       */
+      JSUnit.addTest('Futures.anywhereify(providers, consumers) - Async method queing', function () {
+        // TODO nameOfAssert = this.ok('can blah blah blah'); nameOfAssert(b === c);
+        var that = this,
+        contacts = Futures.anywhereify({
+          all: function(params) {
+            return Futures.promise(['tom','dick','harry']);
+            // TODO should passable be a public method also?
+          },
+          one: function(id, params) {
+            return Futures.promise([['tom','dick','harry'][id]]);
+          }
+        },{
+          randomize: function(data, params) {
+            data.sort(function(){ return (Math.round(Math.random()) - 0.5); }); // Underscore.js
+            return Futures.promise(data); // Promise rename to `immediate`
+          },
+          hollaback: function(data) {
+            //alert(JSON.stringify(data));
+            if (3 === data.length) {
+              that.complete(true);
+            }
+          }
+        });
+        contacts.all().randomize().hollaback();
+      }, 1000);
+
       JSUnit.runTests();
     </script>
   </head>
