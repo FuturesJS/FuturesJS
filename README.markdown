@@ -39,6 +39,11 @@ FYI: FuturesJS does pass JSLint regularly (but not every single commit)
 API
 =====
 
+Overview
+--------
+
+`asyncify`, `chainify`, `join`, `loop`, `promise`, `promisify`, `sequence`, `subscription`, `subscription2promise`, `subscribify`, `synchronize`, `trigger`, `whilst`
+
 Futures.chainify(providers, consumers, context, params) / Futures.futurify()
 ---------------
 
