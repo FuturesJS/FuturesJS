@@ -1,7 +1,7 @@
 FuturesJS
 =========
 
-FuturesJS is a JavaScript library which (when used as directed) simplifies handling Callbacks, Errbacks, Promises, Subscriptions, Joins, Synchronization of asynchronous data, and Eventually Consistent data.
+FuturesJS is a JavaScript library which (when used as directed) simplifies handling Callbacks, Errbacks, Promises, Subscriptions, Joins, Chains, Sequences, Asynchronous Method Queues, Synchronization of asynchronous data, and Eventually Consistent data.
 
 The long story: After watching the [Crockford lecture series](http://yuiblog.com/crockford) a few times some of the ideas started to sink in and I took a fresh new look at JavaScript. My immediate leap was to begin on [TriforceJS](http://github.com/coolaj86/triforce), but it was too much to bite off and chew all at once so I scrapped it temporarily and created Futures as a stepping-stone.
 
@@ -38,6 +38,66 @@ FYI: FuturesJS does pass JSLint regularly (but not every single commit)
 
 API
 =====
+
+Futures.chainify(providers, consumers, context, params) / Futures.futurify()
+---------------
+
+Asynchronous method queueing allows you to chain actions on data which may or may not be readily available.
+This is how Twitter's @Anywhere api works.
+
+You might want a model which remotely fetches data in this fashion:
+
+    Contacts.all(params).randomize().limit(10).display();
+    Contacts.one(id, params).display();
+
+Which could be implemented like so:
+
+    var Contacts = Futures.chainify({
+      // Providers must be promisables
+      all: function(params) {
+        var p = Futures.promise();
+        $.ajaxSetup({ error: p.smash });
+        $.getJSON('http://graph.facebook.com/me/friends', params, p.fulfill);
+        $.ajaxSetup({ error: undefined });
+        return p.passable();
+      },
+      one: function(id, params) {
+        var p = Futures.promise();
+        $.ajaxSetup({ error: p.smash });
+        $.getJSON('http://graph.facebook.com/' + id, params, p.fulfill);
+        $.ajaxSetup({ error: undefined });
+        return p.passable();
+      }
+    },{
+      // Consumers will be called in synchronous order
+      // with the `lastResult` of the previous provider or consumer.
+      // They should return either lastResult or a promise
+      randomize: function(data, params) {
+        data.sort(function(){ return Math.round(Math.random())-0.5); // Underscore.js
+        return Futures.promise(data); // Promise rename to `immediate`
+      },
+      limit: function(data, n, params) {
+        data = data.first(n);
+        return Futures.promise(data);
+      },
+      display: function(data, params) {
+        $('#friend-area').render(directive, data); // jQuery+PURE
+        // always return the data, even if you don't modify it!
+        // otherwise your results could be unexpected
+        return data;
+      }
+    });
+
+Things to know:
+
+  * `providers` - promisables which return data
+  * `consumers` - functions which use and or change data
+    * the first argument must be `data`
+    * when returning a promisable the next method in the chain will not execute until the promise is fulfilled
+    * when returning a "literal object" the next method in the chain will use that object
+    * when returning `undefined` (or not returning anything) the next method in the chain will use the defined object
+  * `context` - `apply()`d to each provider and consumer, thus becoming the `this` object
+  * `params` - reserved for future use
 
 Futures.promise() -- create a chainable promise object
 -----------------
@@ -334,58 +394,6 @@ Given a syncback, returns a promisable - for all those times when you're dependi
     async
       .when(callback)
       .fail(errback);
-
-Futures.chainify(providers, consumers, context, params) / Futures.futurify()
----------------
-
-Asynchronous method queueing allows you to chain actions on data which may or may not be readily available.
-This is how Twitter's @Anywhere api works.
-
-You might want a model which remotely fetches data in this fashion:
-
-    Contacts.all(params).randomize().limit(10).display();
-    Contacts.one(id, params).display();
-
-Which could be implemented like so:
-
-    var Contacts = Futures.chainify({
-      // Providers must be promisables
-      all: function(params) {
-        var p = Futures.promise();
-        $.ajaxSetup({ error: p.smash });
-        $.getJSON('http://graph.facebook.com/me/friends', params, p.fulfill);
-        $.ajaxSetup({ error: undefined });
-        return p.passable();
-      },
-      one: function(id, params) {
-        var p = Futures.promise();
-        $.ajaxSetup({ error: p.smash });
-        $.getJSON('http://graph.facebook.com/' + id, params, p.fulfill);
-        $.ajaxSetup({ error: undefined });
-        return p.passable();
-      }
-    },{
-      // Consumers will be called in synchronous order
-      // with the `lastResult` of the previous provider or consumer.
-      // They should return either lastResult or a promise
-      randomize: function(data, params) {
-        data.sort(function(){ return Math.round(Math.random())-0.5); // Underscore.js
-        return Futures.promise(data); // Promise rename to `immediate`
-      },
-      limit: function(data, n, params) {
-        data = data.first(n);
-        return Futures.promise(data);
-      },
-      display: function(data, params) {
-        $('#friend-area').render(directive, data); // jQuery+PURE
-        // always return the data, even if you don't modify it!
-        // otherwise your results could be unexpected
-        return data;
-      }
-    });
-
-
-
 
 Futures.sleep() -- Sleep for some number of ms
 ---------------
