@@ -27,9 +27,12 @@ Loading FuturesJS
 Download the file `lib/futures.js` and include it in your application.
 
 In a browser:
+
     <script src='lib/futures.js'></script>
 
 In Node.js:
+
+    npm install futures@0.9.0
     node> var Futures = require('./lib/futures');
 
 For Rhino you will need `env.js` as Futures utilizes `setTimeout` and its friends.
