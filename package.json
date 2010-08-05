@@ -1,0 +1,12 @@
+{
+  "name"          : "futures",
+  "description"   : "Asynchronous programming aid for JavaScript. Works well with Underscore, jQuery, & PURE.",
+  "url"           : "http://github.com/coolaj86/futures/",
+  "keywords"      : ["util", "asynchronous", "futures", "promises", "subscriptions", "server", "client", "browser"],
+  "author"        : "AJ ONeal <coolaj86@gmail.com>",
+  "contributors"  : [],
+  "dependencies"  : [],
+  "lib"           : ".",
+  "main"          : "futures.js",
+  "version"       : "1.0a"
+}
