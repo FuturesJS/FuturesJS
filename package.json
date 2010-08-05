@@ -8,5 +8,5 @@
   "dependencies"  : [],
   "lib"           : ".",
   "main"          : "futures.js",
-  "version"       : "1.0a"
+  "version"       : "0.9.0"
 }
