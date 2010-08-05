@@ -643,12 +643,12 @@
       // whilst end end
 
       /**
-       * Anywhereify
+       * Chainify
        */
-      JSUnit.addTest('Futures.anywhereify(providers, consumers) - Async method queing', function () {
+      JSUnit.addTest('Futures.chainify(providers, consumers) - Async method queing', function () {
         // TODO nameOfAssert = this.ok('can blah blah blah'); nameOfAssert(b === c);
         var that = this,
-        contacts = Futures.anywhereify({
+        contacts = Futures.chainify({
           all: function(params) {
             return Futures.promise(['tom','dick','harry']);
             // TODO should passable be a public method also?

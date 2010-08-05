@@ -16,7 +16,6 @@ Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailin
 
 Near-future TODOs
 -----------------
-  * Goal: Tue Aug 3rd - Implement [**asynchronous method queue chaining**](http://www.dustindiaz.com/async-method-queues/) (aka Twitter Anywhere API underpinnings)
   * Goal: Fri Aug 6th - Document concrete **Use Cases** with Jekyll
   * Goal: Fri Aug 20th - Implement function **currying / partials**
   * Please mail [the list](http://groups.google.com/group/futures-javascript) with feature requests.
@@ -336,14 +335,20 @@ Given a syncback, returns a promisable - for all those times when you're dependi
       .when(callback)
       .fail(errback);
 
-Futures.anywhereify(providers, consumers) / Futures.futurify()
+Futures.chainify(providers, consumers, context, params) / Futures.futurify()
 ---------------
 
-Though certainly not the first to come up with the idea, this is named after the Twitter Anywhere API,
-which is perhaps the first well-known implementation of async-method queueing.
-Plus, I don't know what else to call it.
+Asynchronous method queueing allows you to chain actions on data which may or may not be readily available.
+This is how Twitter's @Anywhere api works.
 
-    var Contacts = Futures.anywhereify({
+You might want a model which remotely fetches data in this fashion:
+
+    Contacts.all(params).randomize().limit(10).display();
+    Contacts.one(id, params).display();
+
+Which could be implemented like so:
+
+    var Contacts = Futures.chainify({
       // Providers must be promisables
       all: function(params) {
         var p = Futures.promise();
@@ -379,7 +384,6 @@ Plus, I don't know what else to call it.
       }
     });
 
-    Contacts.all(params).randomize().limit(10).display();
 
 
 
