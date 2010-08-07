@@ -4,11 +4,6 @@ title: FuturesJS - Part 1
 category: quickstart
 updated_at: 'July 5th 2010'
 ---
-What is [FuturesJS](http://github.com/coolaj86/futures)?
-==================
-
-[FuturesJS](http://github.com/coolaj86/futures) is a JavaScript library which (when used as directed) simplifies handling Callbacks, Errbacks, Promises, Subscriptions, Joins, Synchronization of asynchronous data, and Eventually Consistent data. It is akin to [this well documented this MSDN library](http://blogs.msdn.com/b/rbuckton/archive/2010/01/29/promises-and-futures-in-javascript.aspx), but with a liberal MIT license.
-
 Promises, Immediates, and Joins
 ============
 
