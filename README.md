@@ -14,10 +14,17 @@ Additionally test.html contains a number of (obviously) working examples. These 
 
 Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailing List](http://groups.google.com/group/futures-javascript)
 
+Updates
+-------
+
+  * Aug 21st: Non-backwards-compatible API change to join() and synchronize() to work better with Node.js and other frameworks.
+
 Near-future TODOs
 -----------------
-  * Goal: Fri Aug 6th - Document concrete **Use Cases** with Jekyll
-  * Goal: Fri Aug 20th - Implement function **currying / partials**
+Due to some deadlines at my day job through september I won't work much on Futures.
+
+  * Goal: November 1st - Document concrete **Use Cases** with Jekyll
+  * Goal: November 15th - Implement function **currying / partials**
   * Please mail [the list](http://groups.google.com/group/futures-javascript) with feature requests.
   * I'll also be getting back to work on CopyCat, PURE in Reverse (ERUP), and finally tying it all together with Triforce
 
@@ -283,11 +290,15 @@ Join accepts both promises and subscriptions. One-time self-unsubscribing promis
 
     Futures.join(promise1, promise2, subscription3, ..., params);
         .when(function (result1, result2, result3) {
-            // results returned in order
+            var arg0, arg1, arg2;
+            arg0 = result1[0];
+            arg1 = result1[1];
+            arg2 = result1[2];
+            // Each result is the arguments array of the results of the promise
          });
     Futures.join([p1, p2, p3, ...], params);
-        .when(function (p_arr) {
-            // p_arr holds the results of [p1, p2, p3] in order
+        .when(function (result_array) {
+            // result_array holds an array of argument arrays for [p1, p2, p3] in order
          });
 
 

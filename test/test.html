@@ -5,15 +5,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Futures</title>
     <link rel="stylesheet" type="text/css" href="vendor/highlight/styles/school_book.css" media="screen" />
-    <script src="vendor/showdown/showdown.js"></script>
-    <script src="vendor/highlight/highlight.pack.js"></script>
-    <script src="vendor/jquery/jquery-1.4.2.js"></script>
-    <script src="vendor/underscore/underscore.js"></script>
+    <script src="../vendor/showdown/showdown.js"></script>
+    <script src="../vendor/highlight/highlight.pack.js"></script>
+    <script src="../vendor/jquery/jquery-1.4.2.js"></script>
+    <script src="../vendor/underscore/underscore.js"></script>
     <!-- script src="http://bitbucket.org/JustinLove/es5/raw/c6103eab597c/es5.js"></script -->
     <!-- script src="http://vice-versa.googlecode.com/files/vice-versa.0.1.4b.min.js"></script -->
-    <script src="vendor/persevere/global-es5.js"></script>
-    <script src="vendor/jaysyncunit/jaysyncunit.js"></script>
-    <script src="lib/futures.js"></script>
+    <script src="../vendor/persevere/global-es5.js"></script>
+    <script src="../vendor/jaysyncunit/jaysyncunit.js"></script>
+    <script src="../lib/futures.js"></script>
     <script>
       // Test App
       (function() {
@@ -256,9 +256,10 @@
 
         // Show that the repsonses come back in correct order
         j = Futures.join([p1, s2, p3]);
-        j.when(function(arr) {
+        j.when(function(results) {
             status = false;
-            if ("Hello, World!" === arr.join('')) {
+            // TODO use _.map
+            if ("Hello, World!" === results.map(function(args){ return args[0] }).join('')) {
               status = true;
             }
             that.complete(status);
@@ -285,9 +286,9 @@
 
         // Show that the repsonses come back in correct order
         j = Futures.join(p1, p2, p3);
-        j.when(function(a1, a2, a3) {
+        j.when(function(args1, args2, args3) {
             status = false;
-            if ("Hello, World!" === [a1, a2, a3].join('')) {
+            if ("Hello, World!" === [args1[0], args2[0], args3[0]].join('')) {
               status = true;
             }
             that.complete(status);
@@ -397,7 +398,6 @@
           .noConflict(function (s) {
             subscription = s;
           });
-        //alert('hey' + Object.keys(subscription));
         // something going wrong here:
         getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
             { tags: 'country', tagmode: "any", format: "json" });
@@ -416,7 +416,6 @@
           .noConflict(function (s) {
             subscription = s;
           });
-        //alert('hey' + Object.keys(subscription));
         // something going wrong here:
         getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
             { tags: 'country', tagmode: "any", format: "json" });
@@ -436,10 +435,10 @@
 
         // Show that the repsonses come back in correct order
         sync = Futures.synchronize([s1, s2, s3]);
-        sync.subscribe(function(arr) {
+        sync.subscribe(function(array_of_results) {
             status = false;
-            Futures.log("got string: " + JSON.stringify(arr));
-            if ("Hello, World!" === arr.join('')) {
+            Futures.log("got string: " + JSON.stringify(array_of_results));
+            if ("Hello, World!" === array_of_results.map(function (args) {return args[0];}).join('')) {
               status = true;
             }
             that.complete(status);
@@ -487,11 +486,11 @@
 
         // Show that the repsonses come back in correct order
         sync = Futures.synchronize([s1, s2, s3]);
-        sync.subscribe(function(arr) {
-            Futures.log("got string: " + JSON.stringify(arr));
-            if (0 == i && "Hello, World!" === arr.join('')) {
+        sync.subscribe(function(array_of_results) {
+            Futures.log("got string: " + JSON.stringify(array_of_results));
+            if (0 == i && "Hello, World!" === array_of_results.map(function (args) {return args[0];}).join('')) {
               i += 1;
-            } else if (1 == i && "Goodbye, World!" === arr.join('')) {
+            } else if (1 == i && "Goodbye, World!" === array_of_results.map(function (args) {return args[0];}).join('')) {
               i += 1;
               that.complete(true);
             } else if (2 == i) {
