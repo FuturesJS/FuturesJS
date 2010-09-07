@@ -559,7 +559,7 @@
         t = 0
         c;
 
-        function count_seq(fulfill, result, index, arr) {
+        function count_seq(fulfill, result /*, index, arr */) {
           t = (t == 200) ? 0 : 200;
           setTimeout(function () {
           if (!result) {
@@ -570,7 +570,8 @@
             that.complete(false);
             return;
           }
-          
+         
+          /* 
           if (i !== arr.length) {
             alert('array size not sequence');
             that.complete(false);
@@ -589,6 +590,7 @@
             return;
           }
           //alert('test passes: ' + i + ' ' + result + ' ' + index + ' ' + arr[index]);
+          */
           fulfill(i += 1);
           }, t);
         }
@@ -602,6 +604,10 @@
           .then(count_seq)
           .then(function (p, result, i, arr) {
             //alert(JSON.stringify(arr));
+            if (i !== result) {
+              that.complete(false);
+            }
+            /*
             if (5 !== arr.length) {
               that.complete(false);
             }
@@ -610,6 +616,7 @@
                 that.complete(false);
               }
             });
+            */
             that.complete(true);
           });
       }, 10000);     
@@ -656,11 +663,15 @@
             return Futures.promise([['tom','dick','harry'][id]]);
           }
         },{
-          randomize: function(data, params) {
+          randomize: function(results, params) {
+            var data = results[0];
+
             data.sort(function(){ return (Math.round(Math.random()) - 0.5); }); // Underscore.js
-            return Futures.promise(data); // Promise rename to `immediate`
+            return Futures.promise(data); // TODO Promise rename to `immediate`
           },
-          hollaback: function(data) {
+          hollaback: function(results) {
+            var data = results[0];
+
             //alert(JSON.stringify(data));
             if (3 === data.length) {
               that.complete(true);

@@ -91,14 +91,19 @@ Which could be implemented like so:
         data.sort(function(){ return Math.round(Math.random())-0.5); // Underscore.js
         return Futures.promise(data); // Promise rename to `immediate`
       },
-      limit: function(data, n, params) {
-        data = data.first(n);
+      limit: function(results, n, params) {
+        var data = results[0]; // array of args
+        
+        data = data.first(n); // underscore's limit function
         return Futures.promise(data);
       },
       display: function(data, params) {
+        var data = results[0];
+
         $('#friend-area').render(directive, data); // jQuery+PURE
         // always return the data, even if you don't modify it!
         // otherwise your results could be unexpected
+
         return data;
       }
     });
@@ -322,20 +327,26 @@ If s1 were to deliver 4 times before s2 and s3 deliver once, the 4th delivery is
 Futures.sequence() -- chain two or more asynchronous (and synchronous) functions
 ------------------
 
-Instead of nesting callbacks 10 levels deep, pass callback instead.
+Instead of nesting callbacks 10 levels deep, pass `fulfill` instead.
 
 Each next function receives the previous result and an array of all previous results
 
-    Futures.sequence(function (callback) { callback("I'm ready."); })
-        .then(function (callback, previousResult, index, [result0, result1, ...]) { callback("I'm here."); })
+    Futures.sequence(function (fulfill) {
+          // fulfill is Futures.promise().fulfill
 
-PROPOSED CHANGE: Is there a good use case for tracking the previousResults as an array? 
-I think this should be simplified to
+          fulfill("I'm ready.");
+        })
+        .then(function (fulfill, ready) {
+          // ready === "I'm ready."
 
-    .then(function(prevResult) {
-        this.fulfill;
-    });
-
+          fulfill(ready, "... and waiting");
+        })
+        .then(function (fulfill, ready, waiting) {
+          // ready === "I'm ready."
+          // waiting === "... and waiting"
+        
+          // this being the last in the sequence, `fulfill` is optional
+        });
 
 Futures.whilst() -- begin a "safe" loop with timeout, sleep, and max loop options
 ----------------
