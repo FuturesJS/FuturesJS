@@ -602,10 +602,11 @@
           .then(count_seq)
           .then(count_seq)
           .then(count_seq)
-          .then(function (p, result, i, arr) {
+          .then(function (fulfill, result) {
             //alert(JSON.stringify(arr));
             if (i !== result) {
               that.complete(false);
+              return;
             }
             /*
             if (5 !== arr.length) {
@@ -665,7 +666,7 @@
         },{
           randomize: function(results, params) {
             var data = results[0];
-
+              
             data.sort(function(){ return (Math.round(Math.random()) - 0.5); }); // Underscore.js
             return Futures.promise(data); // TODO Promise rename to `immediate`
           },
