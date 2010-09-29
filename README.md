@@ -26,7 +26,7 @@ Due to some deadlines at my day job through september I won't work much on Futur
   * Goal: November 1st - Document concrete **Use Cases** with Jekyll
   * Goal: November 15th - Implement function **currying / partials**
   * Please mail [the list](http://groups.google.com/group/futures-javascript) with feature requests.
-  * I'll also be getting back to work on CopyCat, PURE in Reverse (ERUP), and finally tying it all together with Triforce
+  * I'll also be getting back to work on [CopyCat](http://github.com/coolaj86/copycat), PURE in Reverse (ERUP), and finally tying it all together with Triforce
 
 Loading FuturesJS
 =================
@@ -140,7 +140,7 @@ If guarantee (optional) is passed, an immediate (an already fulfilled promise) i
 Futures.promisify(func, directive, params) -- wrap a function with a promisable
 -------------------
 
-`promisify()` uses CopyCatJS's `arguceptor()` to  wrap `func` according to the `directive`.
+`promisify()` uses [CopyCatJS](http://github.com/coolaj86/copycat)'s `arguceptor()` to  wrap `func` according to the `directive`.
 The directive tells promisify enough about `func` to swap out `callback` for `when` and `errback` for `fail`
 
 Example:
@@ -169,11 +169,11 @@ The full set of directives operate as follows:
     * `'errback'` - this argument may will be assumed to always be present if given
     * `'timeout'` - overrides the default timeout given in params
 
-  * CopyCatJS directives which specify that an argument will not be optional
+  * [CopyCatJS](http://github.com/coolaj86/copycat) directives which specify that an argument will not be optional
     * `true` - an argument with this substitute will always be required and ignored
     * `'arbitrary_name_here'` - ignored by FuturesJS, excepting the 3 above
 
-  * CopyCatJS directives which specifiy that an agument will be optional
+  * [CopyCatJS](http://github.com/coolaj86/copycat) directives which specifiy that an agument will be optional
     * false - an optional boolean argument
     * 0 - an optional int argument
     * '' - an optional string argument
