@@ -39,8 +39,8 @@ In a browser:
 
 In Node.js:
 
-    npm install futures@0.9.0
-    node> var Futures = require('./lib/futures');
+    npm install futures
+    node> var Futures = require('futures');
 
 For Rhino you will need `env.js` as Futures utilizes `setTimeout` and its friends.
 
