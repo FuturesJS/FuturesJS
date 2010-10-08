@@ -1,7 +1,6 @@
 "use strict";
 (function ($) {
     $(function (){
-
         //
         // Emulate a Slow http Request
         //
@@ -37,7 +36,10 @@
         $("body").delegate("form", "submit", function (ev) {
           ev.preventDefault(); // don't actually submit the form
           $("#contacts").html("loading...");  
-          $.getContacts(render_contacts);
+
+          var p = Futures.promise();
+          $.getContacts(p.fulfill);
+          p.when(render_contacts);
         });
     });
 }(window.jQuery));
