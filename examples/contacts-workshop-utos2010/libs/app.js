@@ -33,6 +33,7 @@
         //
         // Display the contacts
         //
+        $("#contacts").html("No contacts yet ...");  
         $("body").delegate("form", "submit", function (ev) {
           ev.preventDefault(); // don't actually submit the form
           $("#contacts").html("loading...");  
