@@ -1,6 +1,19 @@
 "use strict";
 (function ($) {
     $(function (){
+
+        //
+        // Emulate a Slow http Request
+        //
+        $.getContacts = function (func) {
+            setTimeout(function(){
+                func(MDB.contactsSource2);
+            },500);  
+        };
+
+        //
+        // Render the data using selectors (not templaets)
+        //
         var rfn =  $("#contacts").compile({
             ".contact" : {
                 "c<-contacts" : {
@@ -16,8 +29,14 @@
           $("#contacts").render(data, rfn);
         }
 
-        //$("#contacts").html("loading...");  
-        
-        render_contacts(MDB.contactsSource2);
+
+        //
+        // Display the contacts
+        //
+        $("body").delegate("form", "submit", function (ev) {
+          ev.preventDefault(); // don't actually submit the form
+          $("#contacts").html("loading...");  
+          $.getContacts(render_contacts);
+        });
     });
 }(window.jQuery));
