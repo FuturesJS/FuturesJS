@@ -1,0 +1,25 @@
+
+.contact {
+    border:2px solid green;
+    width:400px;
+    padding:2px;
+    margin-bottom:2px;
+}
+
+.left {
+    float:left;
+    margin:2px;
+}
+.right{
+    float:right;
+    margin:2px;
+}
+
+.clear {
+    clear:both;
+    height:0px; 
+    padding:0px;
+    margin:0px;
+    border:0px;
+    
+}
