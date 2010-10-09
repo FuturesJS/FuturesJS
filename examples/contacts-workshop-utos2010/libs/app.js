@@ -52,8 +52,22 @@
             }
         });
 
+
+        //
+        // Chainify'd Model
+        //
+        var Contacts = Futures.chainify({
+          // providers
+          all: $.getAllContacts
+        },{
+          // consumers
+          render: render_contacts
+        });
+
         function render_contacts (data) {
-          $("#contacts").render(data, rfn);
+          $("#contacts").render(data[0], rfn);
+          var p = Futures.promise().fulfill("heya");
+          return p;
         }
 
 
@@ -66,7 +80,7 @@
           ev.preventDefault(); // don't actually submit the form
           $("#contacts").html("loading...");  
 
-          $.getAllContacts().when(render_contacts);
+          Contacts.all().render();
           
         });
     });
