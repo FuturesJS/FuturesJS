@@ -1,6 +1,6 @@
 var MDB = {};
 (function () {
-    MDB.contactsSource1 = {
+    MDB.tacebookContacts = {
         migration:"19June2010",
         contacts:[
             {
@@ -36,7 +36,7 @@ var MDB = {};
         ]
     };
 
-    MDB.contactsSource2 = {
+    MDB.fwitterContacts = {
         migration:"19June2010",
         contacts:[
             {
