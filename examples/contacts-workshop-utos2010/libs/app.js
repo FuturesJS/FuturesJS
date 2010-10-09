@@ -61,7 +61,19 @@
           all: $.getAllContacts
         },{
           // consumers
-          render: render_contacts
+          render: render_contacts,
+          sayLater: function (data) {
+            alert(data);
+            return "Later passing to Now";
+          },
+          sayNow: function (data) {
+            alert(data);
+            return undefined; // uses previous data
+          },
+          sayAgain: function (data) {
+            alert(data);
+            return "I never get said";
+          }
         });
 
         function render_contacts (data) {
@@ -80,7 +92,7 @@
           ev.preventDefault(); // don't actually submit the form
           $("#contacts").html("loading...");  
 
-          Contacts.all().render();
+          Contacts.all().render().sayLater().sayNow().sayAgain();
           
         });
     });
