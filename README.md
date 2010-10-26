@@ -40,6 +40,8 @@ In a browser:
     <script src='lib/futures.all.js'></script>
     var Futures = require('futures'); // comes with thin require wrapper
 
+Consider http://jscompress.com/ for minify-ing.
+
 In Node.js:
 
     npm install futures
