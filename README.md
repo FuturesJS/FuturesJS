@@ -17,6 +17,7 @@ Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailin
 Updates
 -------
 
+  * Aug 26th: Must use `var Futures = require('futures')` to get Futures into the global namespace.
   * Aug 21st: Non-backwards-compatible API change to join() and synchronize() to work better with Node.js and other frameworks.
 
 Near-future TODOs
@@ -35,7 +36,9 @@ Download the file `lib/futures.js` and include it in your application.
 
 In a browser:
 
-    <script src='lib/futures.js'></script>
+    <script src='vendor/persevere/global-es5.js'></script>
+    <script src='lib/futures.all.js'></script>
+    var Futures = require('futures'); // comes with thin require wrapper
 
 In Node.js:
 

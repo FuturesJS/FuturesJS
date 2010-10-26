@@ -8,5 +8,5 @@
   "dependencies"  : [],
   "lib"           : "lib",
   "main"          : "./lib/futures",
-  "version"       : "0.9.1"
+  "version"       : "0.9.7"
 }
