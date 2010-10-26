@@ -40,7 +40,7 @@ In a browser:
     <script src='lib/futures.all.js'></script>
     var Futures = require('futures'); // comes with thin require wrapper
 
-Consider http://jscompress.com/ for minify-ing.
+Consider http://jscompress.com/ for minify-ing (7K packed, 3.6K gzipped).
 
 In Node.js:
 
