@@ -1,10 +1,10 @@
 FuturesJS
-=========
+====
 
 FuturesJS is a JavaScript library which (when used as directed) simplifies handling Callbacks, Errbacks, Promises, Subscriptions, Joins, Chains, Sequences, Asynchronous Method Queues, Synchronization of asynchronous data, and Eventually Consistent data.
 
-Loading FuturesJS
-=================
+Installing / Loading
+====
 
 Download the file `lib/futures.all.js` and include it in your application.
 
@@ -25,11 +25,18 @@ For Rhino you will need `env.js` as Futures utilizes `setTimeout` and its friend
 
 FYI: FuturesJS does pass JSLint regularly (but not every single commit)
 
+Getting Started
+----
+
+Look in the `examples` directory and in `test.html` for simple examples.
+
+Post questions, bugs, and stuff you want to share on the [(Google Groups) Mailing List](http://groups.google.com/group/futures-javascript)
+
 API
-=====
+====
 
 Overview
---------
+----
 
 `asyncify`, `chainify`, `join`, `loop`, `promise`, `sequence`, `subscription`, `subscription2promise`, `synchronize`, `trigger`, `whilst`
 
