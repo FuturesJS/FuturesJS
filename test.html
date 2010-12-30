@@ -1,0 +1,12 @@
+<body>
+<script src="./browser-lib/futures.all.js"></script>
+<script>
+  var Futures = require('futures'),
+    promise = Futures.promise();
+
+  promise.when(function (err, data) {
+    console.log(data);
+  });
+  promise.fulfill(undefined, "Hello World");
+</script>
+</body>
