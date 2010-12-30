@@ -30,7 +30,7 @@
 
   function testTimeout() {
     // SubscriptionTimeout, undefined, yellow
-    subscription.setTimeout(90);
+    subscription.setTimeout(20);
   }
 
   function testLocalContext() {
