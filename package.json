@@ -7,6 +7,6 @@
   "contributors"  : [],
   "dependencies"  : [],
   "lib"           : "lib",
-  "main"          : "./lib/futures",
-  "version"       : "0.9.7"
+  "main"          : "./lib/index",
+  "version"       : "1.0.1"
 }

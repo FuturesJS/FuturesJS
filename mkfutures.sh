@@ -9,7 +9,7 @@ cat ../vendor/require-kiss.js \
   chainify.js \
   util.js \
   deprecated.js \
-  futures.js > futures.deprecated.js
+  index.js > futures.deprecated.js
 
 cat ../vendor/require-kiss.js \
   private.js \
@@ -17,11 +17,11 @@ cat ../vendor/require-kiss.js \
   subscription.js \
   chainify.js \
   util.js \
-  futures.js > futures.all.js
+  index.js > futures.all.js
 
 cat ../vendor/require-kiss.js \
   private.js \
   promise.js \
   subscription.js \
   chainify.js \
-  futures.js > futures.core.js
+  index.js > futures.core.js

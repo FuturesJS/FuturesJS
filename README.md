@@ -42,10 +42,14 @@ In a browser:
 
 Consider http://jscompress.com/ for minify-ing (7K packed, 3.6K gzipped).
 
-In Node.js:
+Node.js / npm:
 
     npm install futures
     node> var Futures = require('futures');
+
+Node.js / sans-npm:
+
+    cp -a ./lib ~/.node_libraries/futures
 
 For Rhino you will need `env.js` as Futures utilizes `setTimeout` and its friends.
 
