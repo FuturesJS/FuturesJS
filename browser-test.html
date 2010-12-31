@@ -2,11 +2,18 @@
 <script src="./browser-lib/futures.all.js"></script>
 <script>
   var Futures = require('futures'),
-    promise = Futures.promise();
+    promise = Futures.promise(),
+    emitter = Futures.emitter();
 
   promise.when(function (err, data) {
     console.log(data);
   });
   promise.fulfill(undefined, "Hello World");
+
+  emitter.on("foo", function (data) {
+    console.log(data);
+  });
+
+  emitter.emit("foo", "bar");
 </script>
 </body>
