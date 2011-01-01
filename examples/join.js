@@ -4,11 +4,11 @@
   console.log("This is a visual test.");
 
   var Synchronize = require(__dirname + "/../lib/join"),
-    Subscription = require(__dirname + "/../lib/subscription"),
+    Future = require(__dirname + "/../lib/future"),
     synchronize = Synchronize(),
-    s1 = Subscription(),
-    s2 = Subscription(),
-    s3 = Subscription();
+    s1 = Future(),
+    s2 = Future(),
+    s3 = Future();
 
   console.log(Synchronize);
 
