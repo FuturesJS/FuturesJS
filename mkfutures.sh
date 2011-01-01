@@ -3,9 +3,8 @@
 mkdir -p release
 cat \
   vendor/require-kiss.js \
-  vendor/global-es5.js \
-  lib/subscription.js \
-  lib/promise.js \
+  vendor/persevere/global-es5.js \
+  lib/future.js \
   lib/join.js \
   lib/sequence.js \
   lib/emitter.js \
