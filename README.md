@@ -1,6 +1,8 @@
 FuturesJS v2.x
 ====
 
+THIS IS A **DRAFT**
+
   [Documentation for Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
 
 FuturesJS is a JavaScript library which (when used as directed) simplifies Asynchronous Programming (aka Callbacks & Errbacks).
@@ -46,7 +48,7 @@ Think this is sexy?
     // limit - takes the first 30 contacts
     // render - some function to render the contacts
 
-Read through the API
+So do the ladies. Now keep on reading.
 
 API
 ====
