@@ -5,11 +5,11 @@ FuturesJS v2.x
 
 FuturesJS is a JavaScript library which (when used as directed) simplifies Asynchronous Programming (aka Callbacks & Errbacks).
 
-  * Futures - aka Promises, Deferreds, Subscriptions
-  * Joins - Synchronization of multiple Futures and asynchronous / eventually consistent data
-  * Events - (using [Node.JS](http://nodejs.org)'s [EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-13), modified for browser use)
-  * Sequences - Chains of chronological callbacks
-  * Asynchronous Method Queues - Think Twitter Anywhere API
+  * **Futures** - aka Promises, Deferreds, Subscriptions
+  * **Joins** - Synchronization of multiple Futures and asynchronous / eventually consistent data
+  * **Events** - (using [Node.JS](http://nodejs.org)'s [EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-13), modified for browser use)
+  * **Sequences** - Chains of chronological callbacks
+  * **Asynchronous Method Queues** - Think Twitter Anywhere API
 
 Installation
 ====
@@ -32,14 +32,28 @@ or
 
 **Rhino / Ringo / etc**
 
-    You'll probably need `env.js`. Shoot me a message and we'll figure it out.
+You'll probably need `env.js`. Shoot me a message and we'll figure it out.
+
+How FutureJS will get you more dates
+====
+
+Futures isn't a framework, perse, but it does make building a beautiful API dirt simple.
+
+Think this is sexy?
+
+    Contacts.all({httpAuth: base64("coolaj86:secret"}).limit(30).render();
+    // all - makes request to two servers to get contacts
+    // limit - takes the first 30 contacts
+    // render - some function to render the contacts
+
+Read through the API
 
 API
 ====
 
-`future`, `join`, `sequence`, `chainify`, `loop`, `emitter`
+`asyncify`, `chainify`, `emitter`, `future`, `join`, `loop`, `sequence`
 
-Futures.future([globalContext])
+future()
 ----
 
 Creates a Future (aka Promise, Deferred, Subscription, Callback) object.
@@ -63,9 +77,11 @@ Note: A callback cannot be added multiple times.
 
 **Accessory**
 
-  * `errback(err)` - Pass this when the peer-library requires a method specifically for errbacks (i.e. `jQuery`'s `$.ajax`)
+  * `errback(err)` - Useful for a peer-library requiring a method specifically for errbacks
+    * i.e. `jQuery`'s `$.ajax`
 
-  * `callback(data [, ...])` - Pass this when the peer-library requires a method which does not pass `err` as the first parameter (i.e. `jQuery`'s `$.ajax`)
+  * `callback(data [, ...])` - Useful for a peer-library requiring a method which does not pass `err` as the first parameter
+    * i.e. `jQuery`'s `$.ajax`
 
   * `removeCallback(callback, context=null)` - This callback and associated context will no longer receive messages
 
@@ -103,14 +119,14 @@ Output:
         at [object SomeObject]:x:y
         ...
 
-Futures.join(globalContext)
+join()
 ----
 
 Creates a Future-ish object for the purpose of synchronizing other Futures.
 
 **Core**
 
-  * `Futures.join(context=null)` - create a Future and modifies it
+  * `Futures.join(globalContext=null)` - create a Future and modifies it
   * `add(future [, ...] | Array)` - add single, multiple, or an array of Futures which to join
   * `isJoin` - a best-effort guess as to whether or not an object is a Join
   * **Removed Methods**: `deliver`, `fulfill`
@@ -136,18 +152,22 @@ Note: All `add(future)`s must be done before calling `when` or `whenever` on the
     // or join.add(fs[0], fs[1], fs[2]);
     // or join.add(fs[0]).add(fs[1]).add(fs[2]);
 
-    join.when(function (err, f0Args, f1Args, f2Args) {
+    join.when(function (f0Args, f1Args, f2Args) {
       console.log(f1Args[1], f2Args[1], f3Args[1], f2Args[2]);
     });
 
-Futures.sequence()
+
+sequence()
 ----
 
 Creates an Asynchronous Stack which execute each enqueued method after the previous function calls the provided `next(err, data [, ...])`.
 
 **Core**
 
-  * `then(next, err, data [, ...])` - Start the domino effect by popping the first 
+  * `Futures.sequence(globalContext=null)`
+  * `then(next, err, data [, ...])` - add a method onto the queue
+    * begins or resumes the queue
+    * passes the results of the previous function into the next
 
 **Example:**
 
@@ -170,10 +190,10 @@ Creates an Asynchronous Stack which execute each enqueued method after the previ
           console.log(a, b);
           next();
         }, 50);
-      })
-      .begin();
+      });
 
-Futures.chainify()
+
+chainify()
 ----
 
 Creates an asynchronous model using asynchronous method queueing.
@@ -196,7 +216,7 @@ Note: `next` is an instance of `Futures.deliver`
 
 Let's say we want to produce a model which acts like this:
 
-    Contacts.all({user: "coolaj86", password: "secret"}).limit(30).render();
+    Contacts.all({httpAuth: base64("coolaj86:secret")}).limit(30).render();
 
 The code to produce such a model might look like this:
 
@@ -207,45 +227,51 @@ The code to produce such a model might look like this:
 
     // Get resources from various sites
     providers = {
-      facebook: function (next, credentials, params) {
+      facebook: function (next, params) {
         var future = Futures.future();
         // make async calls to get data
-        next(err, data);
+
+        // probably best to handle errors
+        // and not pass them on
+        next(data);
       },
-      twitter: function (next, credentials, params) {
+      twitter: function (next, params) {
         // same as above
       },
-      all: function (next, credentials, params) {
+      all: function (next, params) {
         var join = Futures.join();
         join.add([
-          providers.FacebookContacts(credentials, params),
-          providers.TwitterContacts(credentials, params)
+          providers.FacebookContacts(params),
+          providers.TwitterContacts(params)
         ]);
         join.when(next);
       }
     };
 
     modifiers = {
-      limit: function(next, err, data) {
-        next(err, data);
+      limit: function(next, data, params) {
+        data = data.first(params);
+        next(data);
       }
     };
 
     consumers = {
-      display: function (err, data) {
-        Template.render(data);
+      display: function (data, params) {
+        Template.render(data, params);
       }
     };
 
     Contacts = Futures.chainify(providers, modifiers, consumers);
 
-Futures.loop(context)
+
+loop()
 ----
 
 Creates a "safe" asynchronous loop.
 
 **core**
 
+  * `Futures.loop(context=null)` - creates a loop object
   * `run(function (next), seed [, ...])` - Start the loop
     * `next = function (err, data [, ...]) {}`
       * `next("break")` will break the loop
@@ -272,7 +298,8 @@ Note: In a browser each loop will be at least 4ms apart.
       next(undefined, data);
     }, 0);
 
-Futures.emitter()
+
+emitter()
 ----
 
 See [Node.JS#EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-13) for full documentation.
@@ -299,7 +326,7 @@ See [Node.JS#EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-1
     emitter.emit("error", new Error("Goodbye Cruel World..."));
 
 
-Futures.asyncify()
+asyncify()
 ----
 
   * `doStuff = Futures.asyncify(doStuffSync)` - returns a fuction with the same signature which catches errors and returns a future rather than the synchronous data.
