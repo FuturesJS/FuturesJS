@@ -8,5 +8,7 @@ cat \
   lib/join.js \
   lib/sequence.js \
   lib/emitter.js \
+  lib/asyncify.js \
+  lib/loop.js \
   lib/index.js \
   > release/futures.all.js

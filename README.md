@@ -13,6 +13,8 @@ FuturesJS is a JavaScript library which (when used as directed) simplifies Async
   * **Sequences** - Chains of chronological callbacks
   * **Asynchronous Method Queues** - Think Twitter Anywhere API
 
+Weighs in at a mere 5.9K when Minified, Uglified, and Packed
+
 Installation
 ====
 

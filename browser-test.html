@@ -1,8 +1,9 @@
 <body>
-<script src="./release/futures.all.js"></script>
+<script src="./vendor/persevere/global-es5.js"></script>
+<script src="./release/futures.all.uglified.packed.js"></script>
 <script>
   var Futures = require('futures'),
-    promise = Futures.promise(),
+    promise = Futures.future(),
     emitter = Futures.emitter();
 
   promise.when(function (err, data) {

@@ -2,7 +2,7 @@
   "use strict";
 
   var Futures = require('futures'),
-    promise = Futures.promise();
+    promise = Futures.future();
 
   promise.fulfill(undefined, "Hello World");
 
