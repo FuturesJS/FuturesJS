@@ -342,7 +342,13 @@ asyncify()
 
     var doStuff = Futures.asyncify(doStuffSync);
 
-    doStuff.when(function (err, data) {
+    doStuff.whenever(function (err, data) {
+      console.log(err, data);
+    });
+
+    doStuff();
+    doStuff();
+    doStuff().when(function (err, data) {
       if (err) {
         throw err;
       }
