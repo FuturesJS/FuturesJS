@@ -51,7 +51,8 @@
     subscription.removeCallback(context.handler, context);
     console.log('S 0 === ' + subscription.callbackCount());
     subscription.when(context.handler);
-    console.log('S 1 === ' + subscription.callbackCount());
+    // 0 when asap is on, 1 when asap is off
+    console.log('S 0 === ' + subscription.callbackCount());
     subscription.deliver(undefined, "hello world");
     console.log('D 4 === ' + subscription.deliveryCount());
   }

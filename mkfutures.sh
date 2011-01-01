@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir -p browser-lib
+mkdir -p release
 cat \
   vendor/require-kiss.js \
   vendor/global-es5.js \
@@ -10,4 +10,4 @@ cat \
   lib/sequence.js \
   lib/emitter.js \
   lib/index.js \
-  > browser-lib/futures.all.js
+  > release/futures.all.js
