@@ -37,7 +37,7 @@ or
 API
 ====
 
-`future`, `join`, `sequence`, `loop`, `emitter`
+`future`, `join`, `sequence`, `chainify`, `loop`, `emitter`
 
 Futures.future([globalContext])
 ----
@@ -238,3 +238,84 @@ The code to produce such a model might look like this:
     };
 
     Contacts = Futures.chainify(providers, modifiers, consumers);
+
+Futures.loop(context)
+----
+
+Creates a "safe" asynchronous loop.
+
+**core**
+
+  * `run(function (next), seed [, ...])` - Start the loop
+    * `next = function (err, data [, ...]) {}`
+      * `next("break")` will break the loop
+    * `seed` - the data to start with
+
+  * `setTimeout(ms)` - Kill the loop if it runs for `ms`
+  * `setMaxLoop(count)` - Kill the loop if it continues `count+1` times
+  * `setWait(ms)` - Wait at least `ms` before looping again (Browser minimum is 4ms, even if 0 is set)
+
+Note: In a browser each loop will be at least 4ms apart.
+
+**Example:**
+
+    var loop = Futures.loop();
+
+    loop.setTimeout(1000);
+    loop.setMaxLoop(20);
+
+    loop.run(function (next, err, data) {
+      if (data == 4) {
+        next("break");
+      }
+      data += 1;
+      next(undefined, data);
+    }, 0);
+
+Futures.emitter()
+----
+
+See [Node.JS#EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-13) for full documentation.
+
+**Core**
+
+  * `on(event, callback)` - registers a callback with a listener
+  * `emit(event, data [, ...])` - sends `data [, ...]` to all listeners
+  * `emit("error", err)` - Throws `err` if no "error" listeners are present.
+
+**Example:**
+
+    var emitter = Futures.emitter();
+
+    emitter.on("error", function (err) {
+      throw err;
+    });
+
+    emitter.on("data", function (data) {
+      console.log(JSON.stringify(data));
+    });
+
+    emitter.emit("data", "Hello World!");
+    emitter.emit("error", new Error("Goodbye Cruel World..."));
+
+
+Futures.asyncify()
+----
+
+  * `doStuff = Futures.asyncify(doStuffSync)` - returns a fuction with the same signature which catches errors and returns a future rather than the synchronous data.
+
+**Example:**
+
+    function doStuffSync = function (params) {
+      throw new Error("Error of some sort");
+      return "Hello";
+    }
+
+    var doStuff = Futures.asyncify(doStuffSync);
+
+    doStuff.when(function (err, data) {
+      if (err) {
+        throw err;
+      }
+      console.log(data);
+    });
