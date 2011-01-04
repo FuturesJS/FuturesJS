@@ -1,7 +1,9 @@
 FuturesJS v2.x
 ====
 
-
+###################################################################################
+#
+#
 
 This document is currently at **DRAFT** status.
 **Futures 2.0** is scheduled for release on **Sunday, Jan 9th 2011**
@@ -9,7 +11,9 @@ This document is currently at **DRAFT** status.
 
 [Documentation for Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
 
-
+#
+#
+###################################################################################
 
 
 
