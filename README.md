@@ -34,6 +34,10 @@ or
     git checkout v2.0
     cp -a ./lib ~/.node_libraries/futures
 
+**npm dependency** `package.json`:
+
+    "dependencies"  : {"futures": ">=1.9.0"},
+
 **Rhino / Ringo / etc**
 
 You'll probably need `env.js`. Shoot me a message and we'll figure it out.
@@ -55,7 +59,7 @@ So do the ladies. Now keep on reading.
 API
 ====
 
-`asyncify`, `chainify`, `emitter`, `future`, `join`, `loop`, `sequence`
+`asyncify`, `modelify`, `emitter`, `future`, `join`, `loop`, `sequence`
 
 future()
 ----
@@ -68,7 +72,7 @@ Creates a Future (aka Promise, Deferred, Subscription, Callback) object.
 
   * `deliver(err, data, ...)` - Send a message (data) to all listeners (callbacks)
 
-  * `fulfill(err, data, ...)` - `deliver` and then prevent the sending of any future messages
+  * `fulfill([err, data, ...])` - Prevent the sending of any future messages. If arguments are passed they will be `deliver`ed.
 
   * `whenever(callback, [context])` - Listen to all messages, applying `context` if provided (passing `null` cancels `globalContext`)
 
@@ -78,6 +82,7 @@ Creates a Future (aka Promise, Deferred, Subscription, Callback) object.
 
 Note: A callback cannot be added multiple times.
 
+Note: The 
 
 **Accessory**
 
@@ -133,7 +138,11 @@ Creates a Future-ish object for the purpose of synchronizing other Futures.
   * `Futures.join(globalContext=null)` - create a Future and modifies it
   * `add(future [, ...] | Array)` - add single, multiple, or an array of Futures which to join
   * `isJoin` - a best-effort guess as to whether or not an object is a Join
-  * **Removed Methods**: `deliver`, `fulfill`
+
+**Inherited-ish**
+
+  * `when` - see `Future.future().when`
+  * `whenever` - see `Future.future().whenever`
 
 Note: All `add(future)`s must be done before calling `when` or `whenever` on the join object.
 
@@ -156,7 +165,7 @@ Note: All `add(future)`s must be done before calling `when` or `whenever` on the
     // or join.add(fs[0], fs[1], fs[2]);
     // or join.add(fs[0]).add(fs[1]).add(fs[2]);
 
-    join.when(function (f0Args, f1Args, f2Args) {
+    join.when(function (err, f0Args, f1Args, f2Args) {
       console.log(f1Args[1], f2Args[1], f3Args[1], f2Args[2]);
     });
 
@@ -197,14 +206,14 @@ Creates an Asynchronous Stack which execute each enqueued method after the previ
       });
 
 
-chainify()
+modelify()
 ----
 
 Creates an asynchronous model using asynchronous method queueing.
 
 **Core**
 
-  * `Futures.chainify(providers, modifiers, consumers, context)` - creates an asynchronous model
+  * `Futures.modelify(providers, modifiers, consumers, context)` - creates an asynchronous model
     * `providers` - methods which provide data - must return Futures or Joins
       * `function (next, params)` must call `next`
 
@@ -265,7 +274,7 @@ The code to produce such a model might look like this:
       }
     };
 
-    Contacts = Futures.chainify(providers, modifiers, consumers);
+    Contacts = Futures.modelify(providers, modifiers, consumers);
 
 
 loop()
