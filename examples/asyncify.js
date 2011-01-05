@@ -19,7 +19,7 @@
     return function () {
       var f = func;
       func = function () {
-        throw new Error("Don't call me no more: I'm dead");
+        throw new Error("[Pass: not actually an error] Don't call me no more: I'm dead");
       };
       return f.apply(this, arguments);
     };
