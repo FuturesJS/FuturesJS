@@ -5,7 +5,6 @@
 mkdir -p release
 cat \
   vendor/require-kiss.js \
-  vendor/persevere/global-es5.js \
   lib/browser-dirname.js \
   lib/future.js \
   lib/join.js \
