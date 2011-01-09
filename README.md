@@ -5,16 +5,13 @@ FuturesJS v2.x
 #
 #
 
-This document is currently at **DRAFT** status.
-**Futures 2.0** is scheduled for release on **Sunday, Jan 9th 2011**
-
+Futures 2.0 **Beta**
 
 [Documentation for Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
 
 #
 #
 ###################################################################################
-
 
 
 
@@ -25,6 +22,7 @@ FuturesJS is a JavaScript library which (when used as directed) simplifies Async
   * **Events** - (using [Node.JS](http://nodejs.org)'s [EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-13), modified for browser use)
   * **Sequences** - Chains of chronological callbacks
   * **Asynchronous Method Queues** - Think Twitter Anywhere API
+  * **Asynchronous Models**
 
 Weighs in at a mere 5.9K when Minified, Uglified, and Packed
 
@@ -49,7 +47,7 @@ or
 
 **npm dependency** `package.json`:
 
-    "dependencies"  : {"futures": ">=1.9.0"},
+    "dependencies"  : { "futures": ">=1.9.0" },
 
 **Rhino / Ringo / etc**
 
@@ -58,7 +56,7 @@ You'll probably need `env.js`. Shoot me a message and we'll figure it out.
 How FutureJS will get you more dates
 ====
 
-Futures isn't a framework, perse, but it does make building a beautiful API dirt simple.
+Futures isn't a framework perse, but it does make building a beautiful API dirt simple.
 
 Think this is sexy?
 
@@ -67,12 +65,12 @@ Think this is sexy?
     // limit - takes the first 30 contacts
     // render - some function to render the contacts
 
-So do the ladies. Now keep on reading.
+So do the ladies. Now read up on the API.
 
 API
 ====
 
-`asyncify`, `modelify`, `emitter`, `future`, `join`, `loop`, `sequence`
+`asyncify`, `chainify`, `emitter`, `future`, `join`, `loop`, `sequence`
 
 future()
 ----
@@ -93,9 +91,6 @@ Creates a Future (aka Promise, Deferred, Subscription, Callback) object.
 
   * `setTimeout(ms)` - will sends a `FutureTimeout` error if no activity occurs within `ms`
 
-Note: A callback cannot be added multiple times.
-
-Note: The 
 
 **Accessory**
 
@@ -178,7 +173,7 @@ Note: All `add(future)`s must be done before calling `when` or `whenever` on the
     // or join.add(fs[0], fs[1], fs[2]);
     // or join.add(fs[0]).add(fs[1]).add(fs[2]);
 
-    join.when(function (err, f0Args, f1Args, f2Args) {
+    join.when(function (f0Args, f1Args, f2Args) {
       console.log(f1Args[1], f2Args[1], f3Args[1], f2Args[2]);
     });
 
@@ -219,14 +214,14 @@ Creates an Asynchronous Stack which execute each enqueued method after the previ
       });
 
 
-modelify()
+chainify()
 ----
 
 Creates an asynchronous model using asynchronous method queueing.
 
 **Core**
 
-  * `Futures.modelify(providers, modifiers, consumers, context)` - creates an asynchronous model
+  * `Futures.chainify(providers, modifiers, consumers, context)` - creates an asynchronous model
     * `providers` - methods which provide data - must return Futures or Joins
       * `function (next, params)` must call `next`
 
@@ -287,7 +282,7 @@ The code to produce such a model might look like this:
       }
     };
 
-    Contacts = Futures.modelify(providers, modifiers, consumers);
+    Contacts = Futures.chainify(providers, modifiers, consumers);
 
 
 loop()

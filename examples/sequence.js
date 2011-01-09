@@ -9,13 +9,15 @@
 
   sequence
     .then(function (next) {
-      next(err, "a", "b", "c");
+      setTimeout(function () {
+        next(err, "a", "b", "c");
+      }, 100);
     })
     .then(function (next, err, a, b, c) {
       setTimeout(function () {
         console.log(a, b, c);
         next(err, "d", "e", "f");
-      }, 1000);
+      }, 200);
     })
     .then(function (next, err, d, e, f) {
       setTimeout(function () {
@@ -26,10 +28,8 @@
 
   sequence
     .then(function (next, err, g, h, i) {
-      setTimeout(function () {
-        console.log(g, h, i);
-        next(err, "j", "k", "l");
-      }, 100);
+      console.log(g, h, i);
+      next(err, "j", "k", "l");
     }).then(function (next, err, j, k, l) {
       console.log(j, k, l);
       next(err, "m", "n", "o");

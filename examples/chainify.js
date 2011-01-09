@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Modelify = require(__dirname + "/../lib/modelify"),
+  var Chainify = require(__dirname + "/../lib/chainify"),
     model,
     providers,
     modifiers,
@@ -38,9 +38,9 @@
     }
   };
 
-  console.log(Modelify);
+  console.log(Chainify);
 
-  model = Modelify(providers, modifiers, consumers);
+  model = Chainify(providers, modifiers, consumers);
 
   console.log("\none");
   model.one("provider params").caps("modifier params").print(function (str) { return ("Pass: " + str); });
