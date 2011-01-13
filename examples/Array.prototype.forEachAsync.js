@@ -1,8 +1,8 @@
+// Extending Array.prototype.forEachAsync
 (function () {
   "use strict";
 
-  var Sequence = require('futures/sequence'),
-    count = 0;
+  var Sequence = require('futures/sequence');
 
   Array.prototype.forEachAsync = function (callback) {
     var self = this,
@@ -15,11 +15,31 @@
     }
 
     this.forEach(handleItem);
+
+    return sequence;
   };
+}());
 
+// Testing functionality
+(function () {
+  "use strict";
 
-  [101,502,203,604,105].forEachAsync(function (next, time) {
+  var count = 0,
+    timers = [
+      101,
+      502,
+      203,
+      604,
+      105
+    ],
+    sequence;
+
+  sequence = timers.forEachAsync(function (next, time) {
     console.log(count += 1, time);
     setTimeout(next, time);
+  });
+
+  sequence.then(function (next) {
+    console.log("All Done");
   });
 }());
