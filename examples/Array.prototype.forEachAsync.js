@@ -34,12 +34,11 @@
     ],
     sequence;
 
-  sequence = timers.forEachAsync(function (next, time) {
+  timers.forEachAsync(function (next, time) {
     console.log(count += 1, time);
     setTimeout(next, time);
-  });
-
-  sequence.then(function (next) {
+  })
+  .then(function (next) {
     console.log("All Done");
   });
 }());
