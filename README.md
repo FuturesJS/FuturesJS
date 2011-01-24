@@ -5,11 +5,11 @@ FuturesJS v2.x
 #
 #
 
-Futures 2.0 **Beta**
+Futures 2.0
 
 Mailing List: [Google Groups FuturesJS](https://groups.google.com/forum/#!forum/futures-javascript)
 
-[Documentation for Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
+Documentation for [Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
 
 #
 #
@@ -41,7 +41,7 @@ Requires JSON and ES5 support (libraries provided for legacy browsers)
 
 **Node.JS**
 
-    npm install futures # v2.0 not yet available
+    npm install futures
 
 or
 
