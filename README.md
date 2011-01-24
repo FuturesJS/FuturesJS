@@ -21,6 +21,10 @@ Node.js / npm:
     npm install futures
     node> var Futures = require('futures');
 
+**npm dependency** `package.json`:
+
+    "dependencies"  : { "futures": "<1.9.0" },
+
 Node.js / sans-npm:
 
     cp -a ./lib ~/.node_libraries/futures
