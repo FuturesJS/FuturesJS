@@ -1,13 +1,16 @@
 /*jslint browser: true, devel: true, debug: true, es5: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
+var provide = provide || function () {},
+   __dirname = __dirname || '';
+
 (function () {     
   "use strict";
 
-  var Emitter, ___dirname;
+  var modulepath;
 
   if (!__dirname) {
-    ___dirname = 'futures';
+    modulepath = 'futures';
   } else {
-    ___dirname = __dirname;
+    modulepath = __dirname;
   }
 
   function upgradeMessage() {
@@ -21,15 +24,14 @@
     subscription: upgradeMessage,
     synchronize: upgradeMessage,
     whilst: upgradeMessage,
-    future: require(___dirname + '/future'),
-    sequence: require(___dirname + '/sequence'),
-    join: require(___dirname + '/join'),
-    emitter: require(___dirname + '/emitter'),
-    asyncify: require(___dirname + '/asyncify'),
-    loop: require(___dirname + '/loop'),
-    chainify: require(___dirname + '/chainify')
+    future: require(modulepath + '/future'),
+    sequence: require(modulepath + '/sequence'),
+    join: require(modulepath + '/join'),
+    emitter: require(modulepath + '/emitter'),
+    asyncify: require(modulepath + '/asyncify'),
+    loop: require(modulepath + '/loop'),
+    chainify: require(modulepath + '/chainify')
   };
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures');
 }());

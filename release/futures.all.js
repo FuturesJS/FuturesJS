@@ -40,6 +40,7 @@
   window.__dirname = '';
 }());
 // promise, future, deliver, fulfill
+var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -328,15 +329,12 @@
   Future.isFuture = isFuture;
   module.exports = Future;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/future');
 }());
+var provide = provide || function () {},
+  __dirname = __dirname || '';
 (function () {
   "use strict";
-
-  if ('undefined' === typeof __dirname) {
-    __dirname = '';
-  }
 
   var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
 
@@ -435,9 +433,9 @@
   Join.isJoin = isJoin;
   module.exports = Join;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/join');
 }());
+var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -496,9 +494,10 @@
   Sequence.isSequence = isSequence;
   module.exports = Sequence;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/sequence');
 }());
+var process,
+  provide = provide || function () {};
 /* browser boiler-plate */
 (function () {
   "use strict";
@@ -650,10 +649,10 @@ process.Promise = exports.Promise;
   };
 
   module.exports = Emitter;
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/emitter');
 }());
 /* End browser boiler-plate */
+var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -695,15 +694,12 @@ process.Promise = exports.Promise;
 
   module.exports = asyncify;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/asyncify');
 }());
+var provide = provide || function () {},
+  __dirname = __dirname || '';
 (function () {
   "use strict";
-
-  if ('undefined' === typeof __dirname) {
-    __dirname = '';
-  }
 
   var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future'),
     Sequence = require((__dirname ? __dirname + '/' : 'futures') + '/sequence');
@@ -817,15 +813,12 @@ process.Promise = exports.Promise;
 
   module.exports = Chainify;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/chainify');
 }());
+var provide = provide || function () {},
+  __dirname = __dirname || '';
 (function () {
   "use strict";
-
-  if ('undefined' === typeof __dirname) {
-    __dirname = '';
-  }
 
   var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
 
@@ -961,19 +954,21 @@ process.Promise = exports.Promise;
   }
   module.exports = Loop;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/loop');
 }());
 /*jslint browser: true, devel: true, debug: true, es5: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
+var provide = provide || function () {},
+   __dirname = __dirname || '';
+
 (function () {     
   "use strict";
 
-  var Emitter, ___dirname;
+  var modulepath;
 
   if (!__dirname) {
-    ___dirname = 'futures';
+    modulepath = 'futures';
   } else {
-    ___dirname = __dirname;
+    modulepath = __dirname;
   }
 
   function upgradeMessage() {
@@ -987,15 +982,14 @@ process.Promise = exports.Promise;
     subscription: upgradeMessage,
     synchronize: upgradeMessage,
     whilst: upgradeMessage,
-    future: require(___dirname + '/future'),
-    sequence: require(___dirname + '/sequence'),
-    join: require(___dirname + '/join'),
-    emitter: require(___dirname + '/emitter'),
-    asyncify: require(___dirname + '/asyncify'),
-    loop: require(___dirname + '/loop'),
-    chainify: require(___dirname + '/chainify')
+    future: require(modulepath + '/future'),
+    sequence: require(modulepath + '/sequence'),
+    join: require(modulepath + '/join'),
+    emitter: require(modulepath + '/emitter'),
+    asyncify: require(modulepath + '/asyncify'),
+    loop: require(modulepath + '/loop'),
+    chainify: require(modulepath + '/chainify')
   };
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures');
 }());

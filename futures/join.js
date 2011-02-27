@@ -1,9 +1,7 @@
+var provide = provide || function () {},
+  __dirname = __dirname || '';
 (function () {
   "use strict";
-
-  if ('undefined' === typeof __dirname) {
-    __dirname = '';
-  }
 
   var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
 
@@ -102,6 +100,5 @@
   Join.isJoin = isJoin;
   module.exports = Join;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/join');
 }());

@@ -1,3 +1,4 @@
+var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -56,6 +57,5 @@
   Sequence.isSequence = isSequence;
   module.exports = Sequence;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/sequence');
 }());

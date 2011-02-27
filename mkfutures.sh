@@ -5,15 +5,15 @@
 mkdir -p release
 cat \
   vendor/require-kiss.js \
-  lib/browser-dirname.js \
-  lib/future.js \
-  lib/join.js \
-  lib/sequence.js \
-  lib/emitter.js \
-  lib/asyncify.js \
-  lib/chainify.js \
-  lib/loop.js \
-  lib/index.js \
+  futures/browser-dirname.js \
+  futures/future.js \
+  futures/join.js \
+  futures/sequence.js \
+  futures/emitter.js \
+  futures/asyncify.js \
+  futures/chainify.js \
+  futures/loop.js \
+  futures/index.js \
   > release/futures.all.js
 
 cat \
@@ -27,4 +27,4 @@ cat \
   examples/chainify.js \
   examples/subscription.js \
   > release/futures.tests.all.js
-sed -i "s:/../lib:futures:g" release/futures.tests.all.js
+sed -i "s:/../futures:futures:g" release/futures.tests.all.js

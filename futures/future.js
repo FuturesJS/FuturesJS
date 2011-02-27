@@ -1,4 +1,5 @@
 // promise, future, deliver, fulfill
+var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -287,6 +288,5 @@
   Future.isFuture = isFuture;
   module.exports = Future;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/future');
 }());

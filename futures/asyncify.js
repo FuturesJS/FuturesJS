@@ -1,3 +1,4 @@
+var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -39,6 +40,5 @@
 
   module.exports = asyncify;
 
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/asyncify');
 }());

@@ -1,3 +1,5 @@
+var process,
+  provide = provide || function () {};
 /* browser boiler-plate */
 (function () {
   "use strict";
@@ -149,7 +151,6 @@ process.Promise = exports.Promise;
   };
 
   module.exports = Emitter;
-  provide = ('undefined' !== typeof provide) ? provide : function () {};
   provide('futures/emitter');
 }());
 /* End browser boiler-plate */

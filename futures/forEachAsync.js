@@ -1,10 +1,7 @@
 // Extending Array.prototype.forEachAsync
+var __dirname = __dirname || '';
 (function () {
   "use strict";
-
-  if ('undefined' === typeof __dirname) {
-    __dirname = '';
-  }
 
   var Sequence = require((__dirname ? __dirname + '/' : 'futures') + '/sequence');
 
