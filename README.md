@@ -36,6 +36,7 @@ Installation
 Requires JSON and ES5 support (libraries provided for legacy browsers)
 
     <script src='vendor/json2.js'></script>
+    <script src='vendor/persevere/global-es5.js'></script>
     <script src='release/futures.all.js'></script>
     var Futures = require('futures'); // comes with thin require wrapper
 
@@ -52,7 +53,7 @@ or
 
 **npm dependency** `package.json`:
 
-    "dependencies"  : { "futures": ">=1.9.0" },
+    "dependencies"  : { "futures": ">=1.9.4" },
 
 **Rhino / Ringo / etc**
 
