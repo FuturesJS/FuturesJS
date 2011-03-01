@@ -54,7 +54,7 @@ var provide = provide || function () {};
 
     self.setContext = function (context) {
       global_context = context;
-    }
+    };
 
     self.setTimeout = function (new_time) {
       time = new_time;
@@ -78,7 +78,7 @@ var provide = provide || function () {};
 
       args.unshift(undefined);
       self.deliver.apply(self, args);
-    }
+    };
 
 
 
@@ -146,7 +146,7 @@ var provide = provide || function () {};
 
     self.hasCallback = function () {
       return !!findCallback.apply(self, arguments);
-    }
+    };
 
 
 
@@ -257,8 +257,8 @@ var provide = provide || function () {};
       return self;
     };
 
-    
-    // 
+
+    //
     function privatize(obj, pubs) {
       var result = {};
       pubs.forEach(function (pub) {

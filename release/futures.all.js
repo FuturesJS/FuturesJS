@@ -95,7 +95,7 @@ var provide = provide || function () {};
 
     self.setContext = function (context) {
       global_context = context;
-    }
+    };
 
     self.setTimeout = function (new_time) {
       time = new_time;
@@ -119,7 +119,7 @@ var provide = provide || function () {};
 
       args.unshift(undefined);
       self.deliver.apply(self, args);
-    }
+    };
 
 
 
@@ -187,7 +187,7 @@ var provide = provide || function () {};
 
     self.hasCallback = function () {
       return !!findCallback.apply(self, arguments);
-    }
+    };
 
 
 
@@ -298,8 +298,8 @@ var provide = provide || function () {};
       return self;
     };
 
-    
-    // 
+
+    //
     function privatize(obj, pubs) {
       var result = {};
       pubs.forEach(function (pub) {
@@ -351,7 +351,7 @@ var provide = provide || function () {},
       begun = false,
       updated = 0,
       join_future = Future(global_context);
-    
+
     global_context = global_context || null;
 
     function relay() {
@@ -434,8 +434,7 @@ var provide = provide || function () {},
   module.exports = Join;
 
   provide('futures/join');
-}());
-var provide = provide || function () {};
+}());var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -448,7 +447,7 @@ var provide = provide || function () {};
       waiting = true,
       data,
       stack = [];
-    
+
     global_context = global_context || null;
 
     function next() {
@@ -638,7 +637,7 @@ process.Promise = exports.Promise;
 */
 
 /* browser boiler-plate */
-  
+
   emitter = EventEmitter;
   function Emitter(context) {
     // TODO use prototype instead of new
@@ -737,7 +736,7 @@ var provide = provide || function () {},
      */
     function methodify(provider, sequence) {
       var methods = {};
-      
+
       function chainify_one(callback, is_consumer) {
         return function () {
           var params = Array.prototype.slice.call(arguments);
@@ -832,8 +831,8 @@ var provide = provide || function () {},
 
 
   function MaxCountReached(max_loops) {
-      this.name = "MaxCountReached",
-      this.message = "Loop looped " + max_loops + " times"
+      this.name = "MaxCountReached";
+      this.message = "Loop looped " + max_loops + " times";
   }
 
 
@@ -856,6 +855,7 @@ var provide = provide || function () {},
       time,
       timed_out,
       timeout_id,
+      data,
       callback;
 
     self.setMaxLoop = function (new_max) {
@@ -868,7 +868,7 @@ var provide = provide || function () {},
     self.setWait = function (new_wait) {
       min_wait = new_wait;
       return self;
-    }
+    };
 
 
 
@@ -886,12 +886,15 @@ var provide = provide || function () {},
         clearTimeout(timeout_id);
       });
       return self;
-    }
+    };
 
 
 
     function runAgain() {
       var wait = Math.max(min_wait - (timestamp() - latest), 0);
+      if (isNaN(wait)) {
+        wait = min_wait;
+      }
 
       if (timed_out) {
         return;
@@ -928,7 +931,7 @@ var provide = provide || function () {},
       runAgain();
     }
 
-    
+
 
     self.run = function (doStuff) {
       data = Array.prototype.slice.call(arguments);
@@ -936,7 +939,7 @@ var provide = provide || function () {},
       data[0] = undefined;
       next.apply(self, data);
       return self;
-    }
+    };
 
 
 
@@ -960,7 +963,7 @@ var provide = provide || function () {},
 var provide = provide || function () {},
    __dirname = __dirname || '';
 
-(function () {     
+(function () {
   "use strict";
 
   var modulepath;
@@ -973,7 +976,7 @@ var provide = provide || function () {},
 
   function upgradeMessage() {
     var msg = "You have upgraded to Futures 2.x. See http://github.com/coolaj86/futures for details.";
-    console.log(msg); 
+    console.log(msg);
     throw new Error(msg);
   }
 

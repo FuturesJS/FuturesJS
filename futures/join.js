@@ -18,7 +18,7 @@ var provide = provide || function () {},
       begun = false,
       updated = 0,
       join_future = Future(global_context);
-    
+
     global_context = global_context || null;
 
     function relay() {
