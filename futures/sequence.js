@@ -11,7 +11,7 @@ var provide = provide || function () {};
       waiting = true,
       data,
       stack = [];
-    
+
     global_context = global_context || null;
 
     function next() {

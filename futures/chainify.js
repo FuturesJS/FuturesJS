@@ -39,7 +39,7 @@ var provide = provide || function () {},
      */
     function methodify(provider, sequence) {
       var methods = {};
-      
+
       function chainify_one(callback, is_consumer) {
         return function () {
           var params = Array.prototype.slice.call(arguments);

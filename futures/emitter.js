@@ -140,7 +140,7 @@ process.Promise = exports.Promise;
 */
 
 /* browser boiler-plate */
-  
+
   emitter = EventEmitter;
   function Emitter(context) {
     // TODO use prototype instead of new

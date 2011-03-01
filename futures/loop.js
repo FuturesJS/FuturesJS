@@ -15,8 +15,8 @@ var provide = provide || function () {},
 
 
   function MaxCountReached(max_loops) {
-      this.name = "MaxCountReached",
-      this.message = "Loop looped " + max_loops + " times"
+      this.name = "MaxCountReached";
+      this.message = "Loop looped " + max_loops + " times";
   }
 
 
@@ -51,7 +51,7 @@ var provide = provide || function () {},
     self.setWait = function (new_wait) {
       min_wait = new_wait;
       return self;
-    }
+    };
 
 
 
@@ -69,7 +69,7 @@ var provide = provide || function () {},
         clearTimeout(timeout_id);
       });
       return self;
-    }
+    };
 
 
 
@@ -111,7 +111,7 @@ var provide = provide || function () {},
       runAgain();
     }
 
-    
+
 
     self.run = function (doStuff) {
       data = Array.prototype.slice.call(arguments);
@@ -119,7 +119,7 @@ var provide = provide || function () {},
       data[0] = undefined;
       next.apply(self, data);
       return self;
-    }
+    };
 
 
 

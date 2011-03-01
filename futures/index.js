@@ -2,7 +2,7 @@
 var provide = provide || function () {},
    __dirname = __dirname || '';
 
-(function () {     
+(function () {
   "use strict";
 
   var modulepath;
@@ -15,7 +15,7 @@ var provide = provide || function () {},
 
   function upgradeMessage() {
     var msg = "You have upgraded to Futures 2.x. See http://github.com/coolaj86/futures for details.";
-    console.log(msg); 
+    console.log(msg);
     throw new Error(msg);
   }
 
