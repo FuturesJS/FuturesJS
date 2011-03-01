@@ -39,6 +39,7 @@ var provide = provide || function () {},
       time,
       timed_out,
       timeout_id,
+      data,
       callback;
 
     self.setMaxLoop = function (new_max) {
@@ -75,6 +76,9 @@ var provide = provide || function () {},
 
     function runAgain() {
       var wait = Math.max(min_wait - (timestamp() - latest), 0);
+      if (isNaN(wait)) {
+        wait = min_wait;
+      }
 
       if (timed_out) {
         return;
