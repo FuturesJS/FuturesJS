@@ -1,43 +1,67 @@
-/*jslint browser: true, devel: true, debug: true, es5: true, onevar: true, undef: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
-/*
-  var window = {}, exports = {}, module = {}, global = {};
-*/
-// Implementation of require(), modules, exports, and provide to the browser
-"use strict";
+/*jslint onevar: true, undef: true, newcap: true, regexp: true, plusplus: true, bitwise: true, devel: true, maxerr: 50, indent: 2 */
+/*global module: true, exports: true, provide: true */
+var global = global || (function () { return this; }()),
+  __dirname = __dirname || '';
 (function () {
-    if ('undefined' !== typeof window && 'undefined' !== typeof alert) {
-      (function () {
-        var global = window;
-        function resetModule() {
-          global.module = {};
-          global.exports = {};
-          global.module.exports = exports;
-        }
-        global._PLUGIN_EXPORTS = global._PLUGIN_EXPORTS || {};
-        global.require = function (name) {
-          var plugin = global._PLUGIN_EXPORTS[name] || global[name],
-            msg = "One of the included scripts requires '" + 
-              name + "', which is not loaded. " +
-              "\nTry including '<script src=\"" + name + ".js\"></script>'.\n";
-          if ('undefined' === typeof plugin) {
-            alert(msg);
-            throw new Error(msg);
-          }
-          return plugin;
-        };
-        global.provide = function (name) {
-          global._PLUGIN_EXPORTS[name] = module.exports;
-          resetModule();
-        };
-        resetModule();
-      }());
-    } else {
-      global.provide = function () {};
+  "use strict";
+
+  var thrownAlready = false;
+
+  function ssjsProvide(exports) {
+    module.exports = exports || module.exports;
+  }
+
+  function resetModule() {
+    global.module = {};
+    global.exports = {};
+    global.module.exports = exports;
+  }
+
+  function normalize(name) {
+    if ('./' === name.substr(0,2)) {
+      name = name.substr(2);
     }
-}());
-(function () {
-  "use strict"
-  window.__dirname = '';
+    return name;
+  }
+
+  function browserRequire(name) {
+    var module,
+      msg = "One of the included scripts requires '" + 
+        name + "', which is not loaded. " +
+        "\nTry including '<script src=\"" + name + ".js\"></script>'.\n";
+
+    name = normalize(name);
+    module = global.__REQUIRE_KISS_EXPORTS[name] || global[name];
+
+    if ('undefined' === typeof module && !thrownAlready) {
+      thrownAlready = true;
+      alert(msg);
+      throw new Error(msg);
+    }
+
+    return module;
+  }
+
+  function browserProvide(name, new_exports) {
+    name = normalize(name);
+    global.__REQUIRE_KISS_EXPORTS[name] = new_exports || module.exports;
+    resetModule();
+  }
+
+  if (global.require) {
+    if (global.provide) {
+      return;
+    }
+    global.provide = ssjsProvide;
+    return;
+  }
+
+  global.__REQUIRE_KISS_EXPORTS = global.__REQUIRE_KISS_EXPORTS || {};
+  global.require = global.require || browserRequire;
+  global.provide = global.provide || browserProvide;
+  resetModule();
+
+  provide('require-kiss');
 }());
 // promise, future, deliver, fulfill
 var provide = provide || function () {};

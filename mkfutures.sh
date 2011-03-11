@@ -4,8 +4,7 @@
 
 mkdir -p release
 cat \
-  vendor/require-kiss.js \
-  futures/browser-dirname.js \
+  vendor/require-kiss/lib/require-kiss.js \
   futures/future.js \
   futures/join.js \
   futures/sequence.js \
@@ -27,4 +26,3 @@ cat \
   examples/chainify.js \
   examples/subscription.js \
   > release/futures.tests.all.js
-sed -i "s:/../futures:futures:g" release/futures.tests.all.js
