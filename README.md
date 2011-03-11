@@ -38,7 +38,9 @@ Requires JSON and ES5 support (libraries provided for legacy browsers)
     <script src='vendor/json2.js'></script>
     <script src='vendor/persevere/global-es5.js'></script>
     <script src='release/futures.all.js'></script>
-    var Futures = require('futures'); // comes with thin require wrapper
+    <script>
+        var Futures = require('futures'); // uses `require-kiss` for SSJS / Browser compatibility layer
+    </script>
 
 **Node.JS**
 
