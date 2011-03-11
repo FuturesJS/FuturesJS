@@ -4,7 +4,6 @@
 
 mkdir -p release
 cat \
-  vendor/require-kiss/lib/require-kiss.js \
   futures/future.js \
   futures/join.js \
   futures/sequence.js \
@@ -13,6 +12,11 @@ cat \
   futures/chainify.js \
   futures/loop.js \
   futures/index.js \
+  > release/futures.js
+
+cat \
+  vendor/require-kiss/lib/require-kiss.js \
+  release/futures.js \
   > release/futures.all.js
 
 cat \
