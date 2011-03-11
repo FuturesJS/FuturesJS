@@ -175,7 +175,7 @@ Note: All `add(future)`s must be done before calling `when` or `whenever` on the
     setTimeout(function () { fs[0].deliver(e, "Hello"); }, 500);
     setTimeout(function () { fs[2].deliver(e, "!", "!"); }, 700);
 
-    join.add(futures);
+    join.add(fs);
     // or join.add(fs[0], fs[1], fs[2]);
     // or join.add(fs[0]).add(fs[1]).add(fs[2]);
 
