@@ -1,11 +1,24 @@
 {
-  "name"          : "futures",
-  "description"   : "Asynchronous programming aid for JavaScript. Works well with Underscore, jQuery, & PURE.",
-  "url"           : "http://github.com/coolaj86/futures/",
-  "keywords"      : ["util", "asynchronous", "futures", "promises", "subscriptions", "chaining", "server", "client", "browser"],
-  "author"        : "AJ ONeal <coolaj86@gmail.com>",
-  "contributors"  : [],
-  "dependencies"  : [],
-  "main"          : "./index",
-  "version"       : "1.9.4"
+  "name": "futures",
+  "version": "2.0.0"
+  "description": "An asynchronous flow-control library for JavaScript (Browser and Node.js)",
+  "version": "1.0.0",
+  "homepage": "http://github.com/coolaj86/futures",
+  "url": "http://github.com/coolaj86/futures/",
+  "keywords": ["flow-control", "sequence", "chain", "asynchronous", "futures", "promises", "deferreds", "subscriptions", "chaining", "server", "client", "browser"],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coolaj86/futures.git"
+  },
+  "author": "AJ ONeal <coolaj86@gmail.com> (http://coolaj86.info)",
+  "main": "index.js",
+  "directories": {
+    "lib": "."
+  },
+  "dependencies": {
+    "require-kiss": ">= 1.0.5"
+  },
+  "engines": {
+    "node": "*"
+  }
 }
