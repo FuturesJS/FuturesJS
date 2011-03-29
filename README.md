@@ -38,7 +38,9 @@ Requires JSON and ES5 support (libraries provided for legacy browsers)
     <script src='vendor/json2.js'></script>
     <script src='vendor/persevere/global-es5.js'></script>
     <script src='release/futures.all.js'></script>
-    var Futures = require('futures'); // comes with thin require wrapper
+    <script>
+        var Futures = require('futures'); // uses `require-kiss` for SSJS / Browser compatibility layer
+    </script>
 
 **Node.JS**
 
@@ -175,7 +177,7 @@ Note: All `add(future)`s must be done before calling `when` or `whenever` on the
     setTimeout(function () { fs[0].deliver(e, "Hello"); }, 500);
     setTimeout(function () { fs[2].deliver(e, "!", "!"); }, 700);
 
-    join.add(futures);
+    join.add(fs);
     // or join.add(fs[0], fs[1], fs[2]);
     // or join.add(fs[0]).add(fs[1]).add(fs[2]);
 
