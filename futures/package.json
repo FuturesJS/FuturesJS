@@ -2,9 +2,8 @@
   "name": "futures",
   "version": "2.0.0",
   "description": "An asynchronous flow-control library for JavaScript (Browser and Node.js)",
-  "version": "1.0.0",
   "homepage": "https://github.com/coolaj86/futures",
-  "keywords": ["flow-control", "sequence", "chain", "join", "asynchronous", "futures", "promises", "deferreds", "subscriptions", "chaining", "server", "client", "browser"],
+  "keywords": ["flow-control", "sequence", "chain", "join", "async", "asynchronous", "futures", "promises", "deferreds", "subscriptions", "chaining", "util", "server", "client", "browser"],
   "repository": {
     "type": "git",
     "url": "git://github.com/coolaj86/futures.git"
