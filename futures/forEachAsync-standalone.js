@@ -1,4 +1,3 @@
-// Extending Array.prototype.forEachAsync
 var __dirname = __dirname || '',
     provide = provide || function () {};
 (function () {
@@ -6,8 +5,8 @@ var __dirname = __dirname || '',
 
   var Sequence = require((__dirname ? __dirname + '/' : 'futures') + '/sequence');
 
-  function forEachAsync (arr, callback) {
-	var sequence = Sequence();
+  function forEachAsync(arr, callback) {
+    var sequence = Sequence();
 
     function handleItem(item, i, arr) {
       sequence.then(function (next) {
@@ -17,7 +16,7 @@ var __dirname = __dirname || '',
 
     arr.forEach(handleItem);
 
-	return sequence;
+    return sequence;
   }
 
   module.exports = forEachAsync;
