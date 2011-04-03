@@ -204,6 +204,8 @@ var provide = provide || function () {};
     self.fulfill = function () {
       if (arguments.length) {
         self.deliver.apply(self, arguments);
+      } else {
+        self.deliver();
       }
       fulfilled = true;
     };
