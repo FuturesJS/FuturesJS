@@ -5,8 +5,6 @@ var __dirname = __dirname || '';
 
   var forEachAsync = require('./forEachAsync-standalone');
 
-  console.log(forEachAsync);
-
   Array.prototype.forEachAsync = function (callback) {
     return forEachAsync(this, callback);
   };
