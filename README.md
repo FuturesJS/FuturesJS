@@ -5,7 +5,7 @@ FuturesJS v2.x
 #
 #
 
-Futures 2.0
+Futures 2.0 - JavaScript's most popular standalone flow-control library*
 
 Mailing List: [Google Groups FuturesJS](https://groups.google.com/forum/#!forum/futures-javascript)
 
@@ -17,7 +17,7 @@ Documentation for [Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
 
 
 
-FuturesJS is a JavaScript library which (when used as directed) simplifies Asynchronous Programming (aka Callbacks & Errbacks).
+FuturesJS is a JavaScript library which (when used as directed) simplifies the flow-control of asynchronous programming (aka Callbacks & Errbacks).
 
   * **Futures** - aka Promises, Deferreds, Subscriptions
   * **Joins** - Synchronization of multiple Futures and asynchronous / eventually consistent data
@@ -27,6 +27,11 @@ FuturesJS is a JavaScript library which (when used as directed) simplifies Async
   * **Asynchronous Models**
 
 Weighs in at a mere 5.9K when Minified, Uglified, and Packed
+
+*Futures is the most-watched JavaScript flow-control library on Github (see [2.no.de](http://2.no.de/#flow-control). I'm shamelessly taking bragging rights for that. =8^D
+
+  * [Stack Overflow](http://stackoverflow.com/questions/3249646/client-side-javascript-to-support-promises-futures-etc/3251177#3251177)
+  * [InfoQ: How to Survive Asynchronous Programming in JavaScript](http://www.infoq.com/articles/surviving-asynchronous-programming-in-javascript)
 
 Installation
 ====
