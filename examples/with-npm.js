@@ -4,7 +4,7 @@
   var Futures = require('futures'),
     promise = Futures.future();
 
-  promise.fulfill(undefined, "Hello World");
+  promise.fulfill(null, "Hello World");
 
   promise.when(console.log);
 }());

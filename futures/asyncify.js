@@ -1,10 +1,7 @@
-var provide = provide || function () {};
 (function () {
   "use strict";
 
-  if ('undefined' === typeof __dirname) {
-    __dirname = '';
-  }
+  require('require-kiss');
 
   var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
 
@@ -39,6 +36,5 @@ var provide = provide || function () {};
   }
 
   module.exports = asyncify;
-
-  provide('futures/asyncify');
+  provide('futures/asyncify', module.exports);
 }());
