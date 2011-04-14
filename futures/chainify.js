@@ -45,9 +45,9 @@ var provide = provide || function () {},
           var params = Array.prototype.slice.call(arguments);
 
           sequence.then(function() {
-            var args = Array.prototype.slice.call(arguments),
-              args_params = [];
-              next = args.shift();
+            var args = Array.prototype.slice.call(arguments)
+              , args_params = []
+              , next = args.shift();
 
             args.forEach(function (arg) {
               args_params.push(arg);
