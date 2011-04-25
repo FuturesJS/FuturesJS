@@ -21,5 +21,5 @@ var __dirname = __dirname || '',
 
   module.exports = forEachAsync;
 
-  provide('forEachAsync', module.exports);
+  provide('futures/forEachAsync-standalone', module.exports);
 }());

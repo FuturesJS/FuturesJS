@@ -204,6 +204,8 @@ var provide = provide || function () {};
     self.fulfill = function () {
       if (arguments.length) {
         self.deliver.apply(self, arguments);
+      } else {
+        self.deliver();
       }
       fulfilled = true;
     };
@@ -454,6 +456,32 @@ var provide = provide || function () {},
 
   provide('futures/sequence');
 }());
+var __dirname = __dirname || '',
+    provide = provide || function () {};
+(function () {
+  "use strict";
+
+  var Sequence = require((__dirname ? __dirname + '/' : 'futures') + '/sequence');
+
+  function forEachAsync(arr, callback) {
+    var sequence = Sequence();
+
+    function handleItem(item, i, arr) {
+      sequence.then(function (next) {
+        callback(next, item, i, arr);
+      });
+    }
+
+    arr.forEach(handleItem);
+
+    return sequence;
+  }
+
+  module.exports = forEachAsync;
+
+  provide('forEachAsync', module.exports);
+  provide('futures/forEachAsync-standalone', module.exports);
+}());
 var process,
   provide = provide || function () {};
 /* browser boiler-plate */
@@ -610,13 +638,10 @@ process.Promise = exports.Promise;
   provide('futures/emitter');
 }());
 /* End browser boiler-plate */
-var provide = provide || function () {};
 (function () {
   "use strict";
 
-  if ('undefined' === typeof __dirname) {
-    __dirname = '';
-  }
+  require('require-kiss');
 
   var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
 
@@ -651,8 +676,7 @@ var provide = provide || function () {};
   }
 
   module.exports = asyncify;
-
-  provide('futures/asyncify');
+  provide('futures/asyncify', module.exports);
 }());
 var provide = provide || function () {},
   __dirname = __dirname || '';
@@ -701,9 +725,9 @@ var provide = provide || function () {},
           var params = Array.prototype.slice.call(arguments);
 
           sequence.then(function() {
-            var args = Array.prototype.slice.call(arguments),
-              args_params = [];
-              next = args.shift();
+            var args = Array.prototype.slice.call(arguments)
+              , args_params = []
+              , next = args.shift();
 
             args.forEach(function (arg) {
               args_params.push(arg);
@@ -945,6 +969,7 @@ var provide = provide || function () {},
     synchronize: upgradeMessage,
     whilst: upgradeMessage,
     future: require(modulepath + '/future'),
+    forEachAsync: require(modulepath + '/forEachAsync-standalone'),
     sequence: require(modulepath + '/sequence'),
     join: require(modulepath + '/join'),
     emitter: require(modulepath + '/emitter'),

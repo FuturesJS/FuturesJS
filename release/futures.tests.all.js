@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Asyncify = require(__dirname + "/../lib/asyncify"),
+  var Asyncify = require("futures/asyncify"),
     onceOnlySync,
     onceOnly,
     future;
@@ -51,7 +51,7 @@
 (function () {
   "use strict";
 
-  var Futures = require(__dirname + '/../lib');
+  var Futures = require('futures');
 
   if (!Futures.future) {
     console.log("Fail: no futures");
@@ -64,7 +64,7 @@
 
   console.log("This is a visual test.");
 
-  var Loop = require(__dirname + "/../lib/loop"),
+  var Loop = require("futures/loop"),
     loop = Loop();
 
   console.log(Loop);
@@ -88,7 +88,7 @@
 
   console.log("This is a visual test.");
 
-  var Promise = require(__dirname + "/../lib/future"),
+  var Promise = require("futures/future"),
     promise = Promise();
 
   console.log(Promise);
@@ -112,7 +112,7 @@
 
   console.log("This is a visual test.");
 
-  var Sequence  = require(__dirname + "/../lib/sequence"),
+  var Sequence  = require("futures/sequence"),
     sequence = Sequence(),
     err = undefined;
 
@@ -150,7 +150,7 @@
 
   console.log("This is a visual test.");
 
-  var Emitter = require(__dirname + "/../lib/emitter"),
+  var Emitter = require("futures/emitter"),
     emitter = Emitter();
 
   console.log(Emitter);
@@ -168,8 +168,8 @@
 
   console.log("This is a visual test.");
 
-  var Synchronize = require(__dirname + "/../lib/join"),
-    Future = require(__dirname + "/../lib/future"),
+  var Synchronize = require("futures/join"),
+    Future = require("futures/future"),
     synchronize = Synchronize(),
     s1 = Future(),
     s2 = Future(),
@@ -203,7 +203,7 @@
 
   console.log("This is a visual test.");
 
-  var Chainify = require(__dirname + "/../lib/chainify"),
+  var Chainify = require("futures/chainify"),
     model,
     providers,
     modifiers,
@@ -254,7 +254,7 @@
 
   console.log("This is a visual test.");
 
-  var Future = require(__dirname + "/../lib/future"),
+  var Future = require("futures/future"),
     global_context = {
       color: 'yellow'
     },

@@ -5,7 +5,7 @@ FuturesJS v2.x
 #
 #
 
-Futures 2.0 - JavaScript's most popular standalone flow-control library*
+Futures 2.0 - A JavaScript flow-control library*
 
 Mailing List: [Google Groups FuturesJS](https://groups.google.com/forum/#!forum/futures-javascript)
 
@@ -21,14 +21,17 @@ FuturesJS is a JavaScript library which (when used as directed) simplifies the f
 
   * **Futures** - aka Promises, Deferreds, Subscriptions
   * **Joins** - Synchronization of multiple Futures and asynchronous / eventually consistent data
+  * **Asynchronous ForEach** - an ordered, asynchronous `ForEachAsync` implementation available as a prototype or standalone
   * **Events** - (using [Node.JS](http://nodejs.org)'s [EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-13), modified for browser use)
   * **Sequences** - Chains of chronological callbacks
   * **Asynchronous Method Queues** - Think Twitter Anywhere API
   * **Asynchronous Models**
 
-Weighs in at a mere 5.9K when Minified, Uglified, and Packed
+Weighs in at mere 3.5K when [Uglified](https://github.com/mishoo/UglifyJS) (minified) and gzipped.
 
-*Futures is the most-watched JavaScript flow-control library on Github (see [2.no.de](http://2.no.de/#flow-control). I'm shamelessly taking bragging rights for that. =8^D
+**Note**: Using `packer` results in insignificantly smaller size, but results slower and more CPU-intensive page loads
+
+*Futures one of the most-watched JavaScript flow-control library on Github (see [2.no.de](http://2.no.de/#flow-control). I'm shamelessly taking bragging rights for that. =8^D
 
   * [Stack Overflow](http://stackoverflow.com/questions/3249646/client-side-javascript-to-support-promises-futures-etc/3251177#3251177)
   * [InfoQ: How to Survive Asynchronous Programming in JavaScript](http://www.infoq.com/articles/surviving-asynchronous-programming-in-javascript)
@@ -83,7 +86,7 @@ So do the ladies. Now read up on the API.
 API
 ====
 
-`asyncify`, `chainify`, `emitter`, `future`, `join`, `loop`, `sequence`
+`asyncify`, `chainify`, `emitter`, `future`, `join`, `loop`, `sequence`, `Array.forEachAsync`
 
 future()
 ----
@@ -190,7 +193,6 @@ Note: All `add(future)`s must be done before calling `when` or `whenever` on the
       console.log(f1Args[1], f2Args[1], f3Args[1], f2Args[2]);
     });
 
-
 sequence()
 ----
 
@@ -226,6 +228,48 @@ Creates an Asynchronous Stack which execute each enqueued method after the previ
         }, 50);
       });
 
+Array.forEachAsync()
+----
+
+Another reincarnation of `sequence` that makes sense for the use case of arrays.
+
+**Warning:** [Poorly written code](https://gist.github.com/941362) may have really strange errors when `Array.prototype` is extended.
+If you run into such problems please contact the author of the code (I'm also willing to help if they are unavailable).
+Libraries such as `jQuery` or `MooTools` will accept bug reports for such failures.
+
+In the browser you must explicitly include `<script src="./javascripts/futures/forEachAsync.js"></script>`
+
+**Example:**
+
+    var count = 0
+      , timers = [
+          101,
+          502,
+          203,
+          604,
+          105
+        ];
+
+    function hello(next, time) {
+      console.log(count += 1, time);
+      setTimeout(next, time);
+    }
+
+    function goodbye() {
+      console.log("All Done");
+    }
+
+
+    // Array.protoype.forEachAsync
+    require('futures/forEachAsync');
+    timers.forEachAsync(hello).then(goodbye);
+
+
+    // Futures.forEachAsync
+    var forEachAsync = require('futures').forEachAsync;
+    forEachAsync(timers, hello).then(goodbye);
+
+Note: Run one example or the other... not both
 
 chainify()
 ----

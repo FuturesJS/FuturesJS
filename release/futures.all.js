@@ -1,3 +1,68 @@
+/*jslint onevar: true, undef: true, newcap: true, regexp: true, plusplus: true, bitwise: true, devel: true, maxerr: 50, indent: 2 */
+/*global module: true, exports: true, provide: true */
+var global = global || (function () { return this; }()),
+  __dirname = __dirname || '';
+(function () {
+  "use strict";
+
+  var thrownAlready = false;
+
+  function ssjsProvide(exports) {
+    module.exports = exports || module.exports;
+  }
+
+  function resetModule() {
+    global.module = {};
+    global.exports = {};
+    global.module.exports = exports;
+  }
+
+  function normalize(name) {
+    if ('./' === name.substr(0,2)) {
+      name = name.substr(2);
+    }
+    return name;
+  }
+
+  function browserRequire(name) {
+    var module,
+      msg = "One of the included scripts requires '" + 
+        name + "', which is not loaded. " +
+        "\nTry including '<script src=\"" + name + ".js\"></script>'.\n";
+
+    name = normalize(name);
+    module = global.__REQUIRE_KISS_EXPORTS[name] || global[name];
+
+    if ('undefined' === typeof module && !thrownAlready) {
+      thrownAlready = true;
+      alert(msg);
+      throw new Error(msg);
+    }
+
+    return module;
+  }
+
+  function browserProvide(name, new_exports) {
+    name = normalize(name);
+    global.__REQUIRE_KISS_EXPORTS[name] = new_exports || module.exports;
+    resetModule();
+  }
+
+  if (global.require) {
+    if (global.provide) {
+      return;
+    }
+    global.provide = ssjsProvide;
+    return;
+  }
+
+  global.__REQUIRE_KISS_EXPORTS = global.__REQUIRE_KISS_EXPORTS || {};
+  global.require = global.require || browserRequire;
+  global.provide = global.provide || browserProvide;
+  resetModule();
+
+  provide('require-kiss');
+}());
 // promise, future, deliver, fulfill
 var provide = provide || function () {};
 (function () {
@@ -204,6 +269,8 @@ var provide = provide || function () {};
     self.fulfill = function () {
       if (arguments.length) {
         self.deliver.apply(self, arguments);
+      } else {
+        self.deliver();
       }
       fulfilled = true;
     };
@@ -454,6 +521,32 @@ var provide = provide || function () {},
 
   provide('futures/sequence');
 }());
+var __dirname = __dirname || '',
+    provide = provide || function () {};
+(function () {
+  "use strict";
+
+  var Sequence = require((__dirname ? __dirname + '/' : 'futures') + '/sequence');
+
+  function forEachAsync(arr, callback) {
+    var sequence = Sequence();
+
+    function handleItem(item, i, arr) {
+      sequence.then(function (next) {
+        callback(next, item, i, arr);
+      });
+    }
+
+    arr.forEach(handleItem);
+
+    return sequence;
+  }
+
+  module.exports = forEachAsync;
+
+  provide('forEachAsync', module.exports);
+  provide('futures/forEachAsync-standalone', module.exports);
+}());
 var process,
   provide = provide || function () {};
 /* browser boiler-plate */
@@ -610,13 +703,10 @@ process.Promise = exports.Promise;
   provide('futures/emitter');
 }());
 /* End browser boiler-plate */
-var provide = provide || function () {};
 (function () {
   "use strict";
 
-  if ('undefined' === typeof __dirname) {
-    __dirname = '';
-  }
+  require('require-kiss');
 
   var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
 
@@ -651,8 +741,7 @@ var provide = provide || function () {};
   }
 
   module.exports = asyncify;
-
-  provide('futures/asyncify');
+  provide('futures/asyncify', module.exports);
 }());
 var provide = provide || function () {},
   __dirname = __dirname || '';
@@ -701,9 +790,9 @@ var provide = provide || function () {},
           var params = Array.prototype.slice.call(arguments);
 
           sequence.then(function() {
-            var args = Array.prototype.slice.call(arguments),
-              args_params = [];
-              next = args.shift();
+            var args = Array.prototype.slice.call(arguments)
+              , args_params = []
+              , next = args.shift();
 
             args.forEach(function (arg) {
               args_params.push(arg);
@@ -945,6 +1034,7 @@ var provide = provide || function () {},
     synchronize: upgradeMessage,
     whilst: upgradeMessage,
     future: require(modulepath + '/future'),
+    forEachAsync: require(modulepath + '/forEachAsync-standalone'),
     sequence: require(modulepath + '/sequence'),
     join: require(modulepath + '/join'),
     emitter: require(modulepath + '/emitter'),

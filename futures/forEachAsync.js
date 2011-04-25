@@ -3,7 +3,7 @@ var __dirname = __dirname || '';
 (function () {
   "use strict";
 
-  var forEachAsync = require('./forEachAsync-standalone');
+  var forEachAsync = require((__dirname ? __dirname + '/' : 'futures') + '/forEachAsync-standalone');
 
   Array.prototype.forEachAsync = function (callback) {
     return forEachAsync(this, callback);
