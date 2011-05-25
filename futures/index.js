@@ -28,7 +28,6 @@ var provide = provide || function () {},
     forEachAsync: require(modulepath + '/forEachAsync-standalone'),
     sequence: require(modulepath + '/sequence'),
     join: require(modulepath + '/join'),
-    emitter: require(modulepath + '/emitter'),
     asyncify: require(modulepath + '/asyncify'),
     loop: require(modulepath + '/loop'),
     chainify: require(modulepath + '/chainify')

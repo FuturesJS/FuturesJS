@@ -12,7 +12,6 @@ cat \
   futures/join.js \
   futures/sequence.js \
   futures/forEachAsync-standalone.js \
-  futures/emitter.js \
   futures/asyncify.js \
   futures/chainify.js \
   futures/loop.js \
@@ -25,6 +24,7 @@ uglifyjs \
 
 cat \
   vendor/require-kiss/lib/require-kiss.js \
+  vendor/events.js \
   release/futures.js \
   > release/futures.all.js
 
@@ -38,7 +38,6 @@ cat \
   examples/loop.js \
   examples/promise.js \
   examples/sequence.js \
-  examples/emitter.js \
   examples/join.js \
   examples/chainify.js \
   examples/subscription.js \

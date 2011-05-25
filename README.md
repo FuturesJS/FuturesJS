@@ -47,7 +47,10 @@ Requires JSON and ES5 support (libraries provided for legacy browsers)
     <script src='vendor/persevere/global-es5.js'></script>
     <script src='release/futures.all.js'></script>
     <script>
-        var Futures = require('futures'); // uses `require-kiss` for SSJS / Browser compatibility layer
+        // Note that `futures.all.js` includes `require-kiss` and `events`. `futures.js` does not include either.
+        var Futures = require('futures') // uses `require-kiss` for SSJS / Browser compatibility layer
+          , EventEmitter = require('events').EventEmitter // taken directly from Node.JS
+          ;
     </script>
 
 **Node.JS**
@@ -86,7 +89,7 @@ So do the ladies. Now read up on the API.
 API
 ====
 
-`asyncify`, `chainify`, `emitter`, `future`, `join`, `loop`, `sequence`, `Array.forEachAsync`
+`asyncify`, `chainify`, `future`, `join`, `loop`, `sequence`, `Array.forEachAsync`
 
 future()
 ----
@@ -377,7 +380,7 @@ Note: In a browser each loop will be at least 4ms apart.
     }, 0);
 
 
-emitter()
+EventEmitter()
 ----
 
 See [Node.JS#EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-13) for full documentation.
@@ -390,7 +393,7 @@ See [Node.JS#EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-1
 
 **Example:**
 
-    var emitter = Futures.emitter();
+    var emitter = new EventEmitter();
 
     emitter.on("error", function (err) {
       throw err;

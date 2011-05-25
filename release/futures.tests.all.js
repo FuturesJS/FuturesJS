@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Asyncify = require("futures/asyncify"),
+  var Asyncify = require(__dirname + "/../lib/asyncify"),
     onceOnlySync,
     onceOnly,
     future;
@@ -51,7 +51,7 @@
 (function () {
   "use strict";
 
-  var Futures = require('futures');
+  var Futures = require(__dirname + '/../lib');
 
   if (!Futures.future) {
     console.log("Fail: no futures");
@@ -64,14 +64,16 @@
 
   console.log("This is a visual test.");
 
-  var Loop = require("futures/loop"),
-    loop = Loop();
+  var Loop = require(__dirname + "/../lib/loop")
+    , loop = Loop()
+    , maxLoop = 8
+    , maxTimeout = 800;
 
   console.log(Loop);
 
-  loop.setTimeout(400);
+  loop.setTimeout(maxTimeout);
   loop.setWait(100);
-  loop.setMaxLoop(3);
+  loop.setMaxLoop(maxLoop);
   loop.run(function (next, err, data) {
     if (data > 5) {
       next("break", err, data);
@@ -79,7 +81,7 @@
     console.log(data);
     next(err, data + 1);
   }, 0).when(function (err, data) {
-    console.log("loop ended", err, data);
+    console.log("loop ended [Pass, ignore error, if any]", err, data);
   });
   
 }());
@@ -88,7 +90,7 @@
 
   console.log("This is a visual test.");
 
-  var Promise = require("futures/future"),
+  var Promise = require(__dirname + "/../lib/future"),
     promise = Promise();
 
   console.log(Promise);
@@ -112,7 +114,7 @@
 
   console.log("This is a visual test.");
 
-  var Sequence  = require("futures/sequence"),
+  var Sequence  = require(__dirname + "/../lib/sequence"),
     sequence = Sequence(),
     err = undefined;
 
@@ -150,26 +152,8 @@
 
   console.log("This is a visual test.");
 
-  var Emitter = require("futures/emitter"),
-    emitter = Emitter();
-
-  console.log(Emitter);
-
-  console.log(emitter);
-
-  emitter.on("foo", function (data) {
-    console.log(data);
-  });
-
-  emitter.emit("foo", "bar");
-}());
-(function () {
-  "use strict";
-
-  console.log("This is a visual test.");
-
-  var Synchronize = require("futures/join"),
-    Future = require("futures/future"),
+  var Synchronize = require(__dirname + "/../lib/join"),
+    Future = require(__dirname + "/../lib/future"),
     synchronize = Synchronize(),
     s1 = Future(),
     s2 = Future(),
@@ -203,7 +187,7 @@
 
   console.log("This is a visual test.");
 
-  var Chainify = require("futures/chainify"),
+  var Chainify = require(__dirname + "/../lib/chainify"),
     model,
     providers,
     modifiers,
@@ -254,7 +238,7 @@
 
   console.log("This is a visual test.");
 
-  var Future = require("futures/future"),
+  var Future = require(__dirname + "/../lib/future"),
     global_context = {
       color: 'yellow'
     },
