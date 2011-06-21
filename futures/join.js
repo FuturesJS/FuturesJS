@@ -43,7 +43,7 @@ var provide = provide || function () {},
       ready = Array(subs.length);
 
       subs.forEach(function (sub, id) {
-        sub.whenever(function () {
+        sub[type](function () {
           var args = Array.prototype.slice.call(arguments);
           data[id] = args;
           if (!ready[id]) {
