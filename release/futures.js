@@ -642,17 +642,11 @@ var provide = provide || function () {},
 }());
 var provide = provide || function () {},
   __dirname = __dirname || '';
+
 (function () {
   "use strict";
 
   var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
-
-
-
-  function BreakAsyncLoop() {
-      this.name = "BreakAsyncLoop";
-      this.message = "Normal";
-  }
 
 
 
@@ -666,8 +660,6 @@ var provide = provide || function () {},
   function timestamp() {
     return (new Date()).valueOf();
   }
-
-
 
 
 
@@ -737,10 +729,7 @@ var provide = provide || function () {},
           callback.apply(context, data);
           count += 1;
         } catch(e) {
-          if (e instanceof BreakAsyncLoop) {
-            future.deliver.apply(future, data);
-            return;
-          }
+          console.log('I\'m an error');
           throw e;
         }
       }, wait);
@@ -749,10 +738,12 @@ var provide = provide || function () {},
 
 
     function next() {
+      // dirty hack to turn arguments object into an array
       data = Array.prototype.slice.call(arguments);
       if ("break" === data[0]) {
         data.shift();
-        throw new BreakAsyncLoop();
+        future.deliver.apply(future, data);
+        return;
       }
       runAgain();
     }
@@ -760,6 +751,7 @@ var provide = provide || function () {},
 
 
     self.run = function (doStuff) {
+      // dirty hack to turn arguments object into an array
       data = Array.prototype.slice.call(arguments);
       callback = doStuff;
       data[0] = undefined;
