@@ -30,7 +30,7 @@ var provide = provide || function () {};
       seq.callback.apply(seq.context, args);
     }
 
-    self.then = function (callback, context) {
+    function then(callback, context) {
       if ('function' !== typeof callback) {
         throw new Error("`Sequence().then(callback [context])` requires that `callback` be a function and that `context` be `null`, an object, or a function");
       }
@@ -47,7 +47,10 @@ var provide = provide || function () {};
       }
 
       return self;
-    };
+    }
+
+    self.next = next;
+    self.then = then;
   }
 
   function Sequence(context) {
