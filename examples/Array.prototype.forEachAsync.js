@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  require('futures/forEachAsync');
+  require('Array.prototype.forEachAsync');
 
   var count = 0,
     timers = [

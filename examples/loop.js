@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Loop = require(__dirname + "/../lib/loop")
+  var Loop = require("loop")
     , loop = Loop()
     , maxLoop = 8
     , maxTimeout = 800;

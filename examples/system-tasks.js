@@ -3,8 +3,8 @@
 
   console.log("This is a visual test.");
 
-  var Synchronize = require(__dirname + "/../lib/join"),
-    Future = require(__dirname + "/../lib/future"),
+  var Synchronize = require("join"),
+    Future = require("future"),
     synchronize = Synchronize(),
     s1 = Future(),
     s2 = Future(),

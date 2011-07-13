@@ -1,0 +1,17 @@
+{
+  "name": "futures-tests",
+  "version": "2.1.1",
+  "dependencies": {
+      "future": ">= 2.1.1"
+    , "join": ">= 2.1.1"
+    , "sequence": ">= 2.1.1"
+    , "chainify": ">= 2.1.1"
+    , "asyncify": ">= 2.1.1"
+    , "loop": ">= 2.1.1"
+    , "forEachAsync": ">= 2.1.1"
+    , "Array.prototype.forEachAsync": "2.1.1"
+  },
+  "engines": {
+    "node": "*"
+  }
+}

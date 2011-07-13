@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Chainify = require(__dirname + "/../lib/chainify"),
+  var Chainify = require("chainify"),
     model,
     providers,
     modifiers,

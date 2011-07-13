@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Emitter = require(__dirname + "/../lib/emitter"),
+  var Emitter = require("emitter"),
     emitter = Emitter();
 
   console.log(Emitter);

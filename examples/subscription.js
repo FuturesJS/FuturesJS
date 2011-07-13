@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Future = require(__dirname + "/../lib/future"),
+  var Future = require("future"),
     global_context = {
       color: 'yellow'
     },

@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Sequence  = require(__dirname + "/../lib/sequence"),
+  var Sequence  = require("sequence"),
     sequence = Sequence(),
     err = undefined;
 

@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Asyncify = require(__dirname + "/../lib/asyncify"),
+  var Asyncify = require("asyncify"),
     onceOnlySync,
     onceOnly,
     future;

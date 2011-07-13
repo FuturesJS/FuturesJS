@@ -3,7 +3,7 @@
 
   console.log("This is a visual test.");
 
-  var Promise = require(__dirname + "/../lib/future"),
+  var Promise = require("future"),
     promise = Promise();
 
   console.log(Promise);

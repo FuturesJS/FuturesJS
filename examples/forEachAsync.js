@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  var forEachAsync = require(__dirname + '/../lib/forEachAsync-standalone')
+  var forEachAsync = require('forEachAsync')
     , count = 0
     , timers = [
         101,
