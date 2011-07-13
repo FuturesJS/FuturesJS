@@ -39,7 +39,36 @@ Weighs in at mere 3.5K when [Uglified](https://github.com/mishoo/UglifyJS) (mini
 Installation
 ====
 
-**Browser**
+As of 2.2.0 `futures` is a stub package which lists a number of submodules
+
+**Ender.JS (browser)**
+
+    ender build futures
+
+    # or individually
+    ender build future join sequence chainify asyncify forEachAsync loop Array.prototype.forEach
+
+    <script src='ender.js'></script>
+
+**Node.JS**
+
+    npm install futures Array.prototype.forEach
+
+    # or individually
+    ender build future join sequence chainify asyncify forEachAsync loop Array.prototype.forEach
+
+or
+
+    git clone https://github.com/coolaj86/futures.git
+    cd futures
+    git checkout v2.0
+    cp -a ./futures ~/.node_libraries/futures
+
+**npm dependency** `package.json`:
+
+    "dependencies"  : { "futures": ">=2.1.0" },
+
+**Browser (without Ender.JS)**
 
 Requires JSON and ES5 support (libraries provided for legacy browsers)
 
@@ -52,21 +81,6 @@ Requires JSON and ES5 support (libraries provided for legacy browsers)
           , EventEmitter = require('events').EventEmitter // taken directly from Node.JS
           ;
     </script>
-
-**Node.JS**
-
-    npm install futures
-
-or
-
-    git clone https://github.com/coolaj86/futures.git
-    cd futures
-    git checkout v2.0
-    cp -a ./lib ~/.node_libraries/futures
-
-**npm dependency** `package.json`:
-
-    "dependencies"  : { "futures": ">=1.9.4" },
 
 **Rhino / Ringo / etc**
 
@@ -89,7 +103,7 @@ So do the ladies. Now read up on the API.
 API
 ====
 
-`asyncify`, `chainify`, `future`, `join`, `loop`, `sequence`, `Array.forEachAsync`
+`asyncify`, `chainify`, `future`, `join`, `loop`, `sequence`, `Array.prototype.forEachAsync`
 
 future()
 ----
@@ -240,7 +254,7 @@ Another reincarnation of `sequence` that makes sense for the use case of arrays.
 If you run into such problems please contact the author of the code (I'm also willing to help if they are unavailable).
 Libraries such as `jQuery` or `MooTools` will accept bug reports for such failures.
 
-In the browser you must explicitly include `<script src="./javascripts/futures/forEachAsync.js"></script>`
+In the browser you must explicitly include `<script src="./javascripts/futures.forEachAsync-prototype/Array.prototype.forEachAsync.js"></script>`
 
 **Example:**
 
@@ -264,7 +278,7 @@ In the browser you must explicitly include `<script src="./javascripts/futures/f
 
 
     // Array.protoype.forEachAsync
-    require('futures/forEachAsync');
+    require('Array.prototype.forEachAsync');
     timers.forEachAsync(hello).then(goodbye);
 
 
