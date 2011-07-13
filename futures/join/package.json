@@ -1,0 +1,23 @@
+{
+  "name": "join",
+  "version": "2.1.1",
+  "description": "The join / synchronize module of FuturesJS (Ender.JS and Node.JS)",
+  "homepage": "https://github.com/coolaj86/futures",
+  "keywords": ["flow-control", "async", "asynchronous", "futures", "promises", "deferreds", "join", "synchronize", "util", "browser"],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coolaj86/futures.git"
+  },
+  "author": "AJ ONeal <coolaj86@gmail.com> (http://coolaj86.info)",
+  "main": "join.js",
+  "directories": {
+    "lib": "."
+  },
+  "dependencies": {
+    "future": ">= 2.1.1"
+  },
+  "engines": {
+    "node": "*",
+    "ender": ">= 0.5.0"
+  }
+}

@@ -1,25 +1,16 @@
-var provide = provide || function () {},
-  __dirname = __dirname || '';
-
 (function () {
   "use strict";
 
-  var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
-
-
+  var Future = require('future');
 
   function MaxCountReached(max_loops) {
       this.name = "MaxCountReached";
       this.message = "Loop looped " + max_loops + " times";
   }
 
-
-
   function timestamp() {
     return (new Date()).valueOf();
   }
-
-
 
   function loop(context) {
     var self = this,
@@ -125,12 +116,9 @@ var provide = provide || function () {},
 
 
 
-
   function Loop(context) {
     // TODO use prototype instead of new
     return (new loop(context));
   }
   module.exports = Loop;
-
-  provide('futures/loop');
 }());

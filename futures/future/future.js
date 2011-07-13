@@ -1,5 +1,3 @@
-// promise, future, deliver, fulfill
-var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -287,8 +285,7 @@ var provide = provide || function () {};
     // TODO use prototype instead of new
     return (new future(context));
   }
+
   Future.isFuture = isFuture;
   module.exports = Future;
-
-  provide('futures/future');
 }());

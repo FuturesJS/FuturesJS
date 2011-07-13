@@ -1,9 +1,7 @@
-var provide = provide || function () {},
-  __dirname = __dirname || '';
 (function () {
   "use strict";
 
-  var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
+  var Future = require('future');
 
   function isJoin(obj) {
     return obj instanceof join;
@@ -99,6 +97,4 @@ var provide = provide || function () {},
   }
   Join.isJoin = isJoin;
   module.exports = Join;
-
-  provide('futures/join');
 }());

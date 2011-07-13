@@ -1,9 +1,7 @@
-var __dirname = __dirname || '',
-    provide = provide || function () {};
 (function () {
   "use strict";
 
-  var Sequence = require((__dirname ? __dirname + '/' : 'futures') + '/sequence');
+  var Sequence = require('sequence');
 
   function forEachAsync(arr, callback) {
     var sequence = Sequence();
@@ -20,6 +18,4 @@ var __dirname = __dirname || '',
   }
 
   module.exports = forEachAsync;
-
-  provide('futures/forEachAsync-standalone', module.exports);
 }());

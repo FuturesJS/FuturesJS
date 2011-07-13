@@ -1,4 +1,3 @@
-var provide = provide || function () {};
 (function () {
   "use strict";
 
@@ -59,6 +58,4 @@ var provide = provide || function () {};
   }
   Sequence.isSequence = isSequence;
   module.exports = Sequence;
-
-  provide('futures/sequence');
 }());

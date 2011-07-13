@@ -1,9 +1,7 @@
 (function () {
   "use strict";
 
-  require('require-kiss');
-
-  var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future');
+  var Future = require('future');
 
   function asyncify(doStuffSync, context) {
     var future = Future(),
@@ -36,5 +34,4 @@
   }
 
   module.exports = asyncify;
-  provide('futures/asyncify', module.exports);
 }());

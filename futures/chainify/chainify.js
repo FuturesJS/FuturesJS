@@ -1,11 +1,8 @@
-var provide = provide || function () {},
-  __dirname = __dirname || '';
 (function () {
   "use strict";
 
-  var Future = require((__dirname ? __dirname + '/' : 'futures') + '/future'),
-    Sequence = require((__dirname ? __dirname + '/' : 'futures') + '/sequence');
-
+  var Future = require('future'),
+    Sequence = require('sequence');
 
   // This is being saved in case I later decide to require future-functions
   // rather than always passing `next`
@@ -114,6 +111,4 @@ var provide = provide || function () {},
   }
 
   module.exports = Chainify;
-
-  provide('futures/chainify');
 }());
