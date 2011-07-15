@@ -46,16 +46,16 @@ As of 2.2.0 `futures` is a stub package which lists a number of submodules
     ender build futures
 
     # or individually
-    ender build future join sequence chainify asyncify forEachAsync loop Array.prototype.forEach
+    ender build future join sequence chainify asyncify forEachAsync loop Array.prototype.forEachAsync
 
     <script src='ender.js'></script>
 
 **Node.JS**
 
-    npm install futures Array.prototype.forEach
+    npm install futures Array.prototype.forEachAsync
 
     # or individually
-    npm install future join sequence chainify asyncify forEachAsync loop Array.prototype.forEach
+    npm install future join sequence chainify asyncify forEachAsync loop Array.prototype.forEachAsync
 
 or
 
