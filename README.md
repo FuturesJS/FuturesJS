@@ -190,22 +190,34 @@ Note: All `add(future)`s must be done before calling `when` or `whenever` on the
 **Example:**
 
     var join = Futures.join(),
-      fs = [
+      fArray = [
         Futures.future(),
         Futures.future(),
         Futures.future()
       ],
       e;
 
-    setTimeout(function () { fs[1].deliver(e, "World"); }, 100);
-    setTimeout(function () { fs[0].deliver(e, "Hi"); }, 300);
-    setTimeout(function () { fs[0].deliver(e, "Hello"); }, 500);
-    setTimeout(function () { fs[2].deliver(e, "!", "!"); }, 700);
+    setTimeout(function () { fArr[1].deliver(e, "World"); }, 100);
+    setTimeout(function () { fArr[0].deliver(e, "Hi"); }, 300);
+    setTimeout(function () { fArr[0].deliver(e, "Hello"); }, 500);
+    setTimeout(function () { fArr[2].deliver(e, "!", "!"); }, 700);
 
-    join.add(fs);
-    // or join.add(fs[0], fs[1], fs[2]);
-    // or join.add(fs[0]).add(fs[1]).add(fs[2]);
+    // * join.add() -- creates a callback that you can pass in to another function
+    //
+    //    $.get('/xyz.json', join.add());
 
+    // * join.add(<future>) -- adds a single future
+    //
+    //    var f1 = Futures.future()
+    //      , f2 = Futures.future()
+    //      ;
+    //    join.add(f1, f2); // or join.add(f1).add(f2);
+
+    // * join.add([<future>, ...]) -- adds an array of futures
+    //
+    //   join.add(fArr);
+
+    join.add(fArr);
     join.when(function (f0Args, f1Args, f2Args) {
       console.log(f1Args[1], f2Args[1], f3Args[1], f2Args[2]);
     });
