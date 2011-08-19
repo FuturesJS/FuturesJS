@@ -74,11 +74,10 @@ Requires JSON and ES5 support (libraries provided for legacy browsers)
 
     <script src='vendor/json2.js'></script>
     <script src='vendor/persevere/global-es5.js'></script>
-    <script src='release/futures.all.js'></script>
+    <script src='release/futures.ender.js'></script>
     <script>
-        // Note that `futures.all.js` includes `require-kiss` and `events`. `futures.js` does not include either.
-        var Futures = require('futures') // uses `require-kiss` for SSJS / Browser compatibility layer
-          , EventEmitter = require('events').EventEmitter // taken directly from Node.JS
+        var Futures = require('futures') // uses `ender.js` for SSJS / Browser compatibility layer
+          , EventEmitter = require('events.node').EventEmitter // taken directly from Node.JS
           ;
     </script>
 

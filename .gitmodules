@@ -1,3 +1,0 @@
-[submodule "vendor/require-kiss"]
-	path = vendor/require-kiss
-	url = git://github.com/coolaj86/require-kiss-js.git
