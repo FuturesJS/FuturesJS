@@ -14,7 +14,7 @@ Ender.JS (Browser):
 
     ender build join
 
-Standalone Usage Example
+Standalone Usage
 ---
 
     var Join = require('join')
@@ -44,10 +44,11 @@ Standalone Usage Example
     // this must be called after all 
     join.when(abcComplete);
 
-Usage Example with FuturesJS
+Usage with FuturesJS
 ---
 
-    var join = Futures.join()
+    var Futures = require('futures')
+      , join = Futures.join()
       , fArray = [
             Futures.future()
           , Futures.future()
