@@ -14,7 +14,7 @@
 
 
 
-  function future(global_context) {
+  function future(global_context, options) {
     var everytimers = {},
       onetimers = {},
       index = 0,
@@ -31,6 +31,10 @@
     // TODO change `null` to `this`
     global_context = ('undefined' === typeof global_context ? null : global_context);
 
+    options = options || {};
+    options.error = options.error || function (err) {
+      throw err;
+    };
 
     function resetTimeout() {
       if (timeout_id) {
@@ -97,7 +101,8 @@
         new_asap = true;
       }
       if (true !== new_asap && false !== new_asap) {
-        throw new Error("Future.setAsap(asap) accepts literal true or false, not " + new_asap);
+        options.error(new Error("Future.setAsap(asap) accepts literal true or false, not " + new_asap));
+        return;
       }
       asap = new_asap;
     };
@@ -163,7 +168,8 @@
 
     self.deliver = function() {
       if (fulfilled) {
-        throw new Error("`Future().fulfill(err, data, ...)` renders future deliveries useless");
+        options.error(new Error("`Future().fulfill(err, data, ...)` renders future deliveries useless"));
+        return;
       }
       var args = Array.prototype.slice.call(arguments);
       data = args;
@@ -215,12 +221,13 @@
         everytimer;
 
       if ('function' !== typeof callback) {
-        throw new Error("Future().whenever(callback, [context]): callback must be a function.");
+        options.error(new Error("Future().whenever(callback, [context]): callback must be a function."));
+        return;
       }
 
       if (findCallback(callback, local_context)) {
         // TODO log
-        throw new Error("Future().everytimers is a strict set. Cannot add already subscribed `callback, [context]`.");
+        options.error( new Error("Future().everytimers is a strict set. Cannot add already subscribed `callback, [context]`."));
         return;
       }
 
