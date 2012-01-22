@@ -227,7 +227,7 @@
 
       if (findCallback(callback, local_context)) {
         // TODO log
-        options.error( new Error("Future().everytimers is a strict set. Cannot add already subscribed `callback, [context]`."));
+        options.error(new Error("Future().everytimers is a strict set. Cannot add already subscribed `callback, [context]`."));
         return;
       }
 
@@ -288,9 +288,9 @@
 
   }
 
-  function Future(context) {
+  function Future(context, options) {
     // TODO use prototype instead of new
-    return (new future(context));
+    return (new future(context, options));
   }
 
   Future.isFuture = isFuture;
