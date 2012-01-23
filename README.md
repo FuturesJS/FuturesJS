@@ -7,8 +7,6 @@ FuturesJS v2.x
 
 Futures 2.0 - A JavaScript flow-control library*
 
-Mailing List: [Google Groups FuturesJS](https://groups.google.com/forum/#!forum/futures-javascript)
-
 Documentation for [Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
 
 #
