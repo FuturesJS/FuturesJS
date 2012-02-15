@@ -44,6 +44,8 @@ Output:
 API
 ---
 
+Creates a Future (aka Promise, Deferred, Subscription, Callback) object.
+
 **Core**
 
   * `Futures.future(globalContext=null)` - creates a `Future` object and uses `globalContext` as the default `this` for callbacks
@@ -78,3 +80,30 @@ API
   * `deliveryCount(callback, context)` - The number of deliveries made
 
   * `hasCallback(callback, context=null)` - Returns `true` if the callback is listening
+
+
+Example
+---
+
+    var context = { "foo": "bar" },
+      future = Futures.future(context),
+      err,
+      message = "Hello World!";
+
+    future.whenever(function (error, data) {
+      if (error) {
+        throw err;
+      }
+      console.log(this.foo + " says: " + data);
+    });
+
+    future.setTimeout(100);
+    future.deliver(err, message);
+
+Output:
+
+    "bar says: Hello World"
+    FutureTimeout: timeout 100ms
+        at [object SomeObject]:x:y
+        ...
+

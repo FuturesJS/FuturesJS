@@ -102,3 +102,10 @@ Creates a Future-ish object for the purpose of synchronizing other Futures.
     * Must be called after the last `add()`
     * see `Future.future().whenever`
   * `join.isJoin` - a best-effort guess as to whether or not an object is a Join
+
+**Inherited-ish**
+
+  * `when` - see `Future.future().when`
+  * `whenever` - see `Future.future().whenever`
+
+Note: All `add(future)`s must be done before calling `when` or `whenever` on the join object.

@@ -7,7 +7,6 @@ FuturesJS v2.x
 
 Futures 2.x - A JavaScript flow-control library*
 
-Documentation for [Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
 
 #
 #
@@ -33,22 +32,23 @@ Weighs in at mere 3.5K when [Uglified](https://github.com/mishoo/UglifyJS) (mini
 
   * [Stack Overflow](http://stackoverflow.com/questions/3249646/client-side-javascript-to-support-promises-futures-etc/3251177#3251177)
   * [InfoQ: How to Survive Asynchronous Programming in JavaScript](http://www.infoq.com/articles/surviving-asynchronous-programming-in-javascript)
+  * [JavaScript Jabber: Asynchronous Programming](http://javascriptjabber.com/001-jsj-asynchronous-programming/)
 
 Installation
 ====
 
 As of 2.2.0 `futures` is a stub package which lists a number of submodules
 
-**Ender.JS (browser)**
+**Pakmanager (browser)**
 
-    ender build futures
+    npm init
+    # list `futures` in `browserDependencies` 
+    # or individually list `join`, `forEachAsync`, etc in `browserDependencies`
+    pakmanager build
 
-    # or individually
-    ender build future join sequence chainify asyncify forEachAsync loop Array.prototype.forEachAsync
+    <script src='pakmanaged.js'></script>
 
-    <script src='ender.js'></script>
-
-**Node.JS**
+**NodeJS**
 
     npm install futures Array.prototype.forEachAsync
 
@@ -102,29 +102,20 @@ API
 
 `asyncify`, `chainify`, `future`, `join`, `loop`, `sequence`, `forEachAsync`
 
+See the documentation for each in the individual folders.
 
-EventEmitter()
-----
+`join`, `forEachAsync`, and `sequence` are probably what you're most interested in handling serial and parallel callbacks.
 
-See [Node.JS#EventEmitter](http://nodejs.org/docs/v0.2.6/api.html#eventemitter-13) for full documentation.
+`chainify` is what you're interested in if you want to create a beautiful API.
 
-**Core**
+EventEmitter
+===
 
-  * `on(event, callback)` - registers a callback with a listener
-  * `emit(event, data [, ...])` - sends `data [, ...]` to all listeners
-  * `emit("error", err)` - Throws `err` if no "error" listeners are present.
+No event library is complete without an Event Emitter.
 
-**Example:**
+In conjunction with FuturesJS, I recommend using [Node.JS#EventEmitter](http://nodejs.org/docs/latest/api/events.html#events.EventEmitter), which is available in `npm` as `events.node` for browser use.
 
-    var emitter = new EventEmitter();
+Old Docs
+===
 
-    emitter.on("error", function (err) {
-      throw err;
-    });
-
-    emitter.on("data", function (data) {
-      console.log(JSON.stringify(data));
-    });
-
-    emitter.emit("data", "Hello World!");
-    emitter.emit("error", new Error("Goodbye Cruel World..."));
+Documentation for [Futures v1.x](https://github.com/coolaj86/futures/tree/v1.0)
