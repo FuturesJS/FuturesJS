@@ -1,0 +1,24 @@
+{
+  "name": "parallel",
+  "version": "2.3.0",
+  "description": "Like join, but sequences out n batches of async functions rather than all at once. Part of FuturesJS (Pakmanager / Ender.JS and Node.JS)",
+  "homepage": "https://github.com/coolaj86/futures",
+  "keywords": ["flow-control", "async", "asynchronous", "futures", "promises", "deferreds", "parallel", "synchronize", "util", "browser"],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coolaj86/futures.git"
+  },
+  "author": "AJ ONeal <coolaj86@gmail.com> (http://coolaj86.info)",
+  "main": "parallel.js",
+  "directories": {
+    "lib": "."
+  },
+  "dependencies": {
+    "sequence": "2.x",
+    "join": "2.x"
+  },
+  "engines": {
+    "node": "*",
+    "ender": ">= 0.5.0"
+  }
+}
