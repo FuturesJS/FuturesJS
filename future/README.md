@@ -19,7 +19,7 @@ Usage
 
     var context = { "foo": "bar" }
       , Future = require('future')
-      , future = Future(context)
+      , future = Future.create(context)
       , err
       , message = "Hello World!"
       ;
