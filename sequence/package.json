@@ -1,6 +1,6 @@
 {
   "name": "sequence",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "The sequence module of FuturesJS (Ender.JS and Node.JS)",
   "homepage": "https://github.com/coolaj86/futures",
   "keywords": ["flow-control", "async", "asynchronous", "futures", "sequence", "chain", "step", "util", "browser"],

@@ -2,14 +2,18 @@
   "use strict";
 
   function isSequence(obj) {
-    return obj instanceof sequence;
+    return obj instanceof Sequence;
   }
 
-  function sequence(global_context) {
+  function Sequence(global_context) {
     var self = this,
       waiting = true,
       data,
       stack = [];
+
+    if (!this) {
+      return new Sequence(global_context);
+    }
 
     global_context = global_context || null;
 
@@ -52,10 +56,11 @@
     self.then = then;
   }
 
-  function Sequence(context) {
+  function createSequence(context) {
     // TODO use prototype instead of new
-    return (new sequence(context));
+    return (new Sequence(context));
   }
+  Sequence.create = createSequence;
   Sequence.isSequence = isSequence;
   module.exports = Sequence;
 }());
