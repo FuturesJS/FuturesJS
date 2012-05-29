@@ -55,13 +55,6 @@ As of 2.2.0 `futures` is a stub package which lists a number of submodules
     # or individually
     npm install future join sequence chainify asyncify forEachAsync loop Array.prototype.forEachAsync
 
-or
-
-    git clone https://github.com/coolaj86/futures.git
-    cd futures
-    git checkout v2.0
-    cp -a ./futures ~/.node_libraries/futures
-
 **npm dependency** `package.json`:
 
     "dependencies"  : { "futures": ">=2.1.0" },
