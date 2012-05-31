@@ -11,7 +11,7 @@
       data,
       stack = [];
 
-    if (!this) {
+    if (!isSequence(this)) {
       return new Sequence(global_context);
     }
 

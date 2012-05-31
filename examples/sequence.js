@@ -1,11 +1,14 @@
+/*jshint strict:true node:true es5:true onevar:true laxcomma:true laxbreak:true*/
 (function () {
   "use strict";
 
   console.log("This is a visual test.");
 
-  var Sequence  = require("sequence"),
-    sequence = Sequence(),
-    err = undefined;
+  //var Sequence = require("../sequence")
+  var Sequence = require("../futures").sequence
+    , sequence = Sequence()
+    , err = undefined
+    ;
 
   sequence
     .then(function (next) {
