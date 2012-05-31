@@ -1,16 +1,18 @@
+/*jshint strict:true node:true es5:true onevar:true laxcomma:true laxbreak:true*/
 (function () {
   "use strict";
 
   console.log("This is a visual test.");
 
-  var Synchronize = require("join"),
-    Future = require("future"),
-    synchronize = Synchronize(),
-    s1 = Future(),
-    s2 = Future(),
-    s3 = Future();
+  var Join = require("../join")
+    , Future = require("../future")
+    , synchronize = Join()
+    , s1 = Future()
+    , s2 = Future()
+    , s3 = Future()
+    ;
 
-  console.log(Synchronize);
+  console.log(Join);
 
   s1.deliver(undefined, "Hello");
   s3.deliver(undefined, "!");
@@ -22,7 +24,9 @@
     console.log('[when]', args1[1], args2[1], args3[1]);
   });
 
+  /*
   s2.deliver(undefined, "Amazing");
+  */
 
   synchronize.whenever(function (args1, args2, args3) {
     console.log('[whenever]', args1[1], args2[1], args3[1]);

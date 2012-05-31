@@ -18,7 +18,7 @@ Standalone Usage
 ---
 
     var Join = require('join')
-      , join = Join()
+      , join = Join.create()
       , callbackA = join.add()
       , callbackB = join.add()
       , callbackC = join.add()
@@ -44,15 +44,15 @@ Standalone Usage
     // this must be called after all 
     join.when(abcComplete);
 
-Usage with FuturesJS
+Usage with Futures
 ---
 
-    var Futures = require('futures')
-      , join = Futures.join()
+    var Future = require('futures')
+      , join = require('join').create()
       , fArray = [
-            Futures.future()
-          , Futures.future()
-          , Futures.future()
+            Future.create()
+          , Future.create()
+          , Future.create()
         ]
       , e
       ;
@@ -68,8 +68,8 @@ Usage with FuturesJS
 
     // * join.add(<future>) -- adds a single future
     //
-    //    var f1 = Futures.future()
-    //      , f2 = Futures.future()
+    //    var f1 = Future.create()
+    //      , f2 = Future.create()
     //      ;
     //    join.add(f1, f2); // or join.add(f1).add(f2);
 
@@ -89,23 +89,23 @@ Creates a Future-ish object for the purpose of synchronizing other Futures.
 
 **Core**
 
-  * `join = Futures.join(globalContext=null)` - create a Future and modifies it
+  * `join = Join.create(globalContext=null)` - create a Future and modifies it
   * `join.add()` - creates a joinable callback that you can throw around
   * `join.add(future0, future1, ...)` - add one or more `Future`s which to join
   * `join.add([future0, future2, ...])` - add an array of `Future`s
   * `join.when(finalCallback)`
     * Fires `finalCallback` when all joined callbacks have completed
     * Must be called after the last `add()`
-    * See `Future.future().when`
+    * See `Future#when`
   * `join.whenever(eventCallback)`
     * Fires `eventCallback` each time all callbacks have completed at least once
     * Must be called after the last `add()`
-    * see `Future.future().whenever`
+    * see `Future#whenever`
   * `join.isJoin` - a best-effort guess as to whether or not an object is a Join
 
 **Inherited-ish**
 
-  * `when` - see `Future.future().when`
-  * `whenever` - see `Future.future().whenever`
+  * `when` - see `Future#when`
+  * `whenever` - see `Future#whenever`
 
 Note: All `add(future)`s must be done before calling `when` or `whenever` on the join object.

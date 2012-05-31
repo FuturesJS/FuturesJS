@@ -30,7 +30,7 @@
       }
 
       args.unshift(next);
-      seq.callback.apply(seq.context, args);
+      seq.callback.apply(seq._context, args);
     }
 
     function then(callback, context) {
@@ -39,7 +39,7 @@
       }
       stack.push({
         callback: callback,
-        context: (null === context ? null : context || global_context),
+        _context: (null === context ? null : context || global_context),
         index: stack.length
       });
 
@@ -62,5 +62,6 @@
   }
   Sequence.create = createSequence;
   Sequence.isSequence = isSequence;
+
   module.exports = Sequence;
 }());

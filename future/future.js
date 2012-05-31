@@ -26,7 +26,7 @@
   }
 
   function Future(global_context, options) {
-    if (!this || this === global) {
+    if (!isFuture(this)) {
       return new Future(global_context, options);
     }
 

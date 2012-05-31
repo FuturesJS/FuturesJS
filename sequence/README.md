@@ -5,15 +5,16 @@ Creates an Asynchronous Stack which execute each enqueued method after the previ
 
 **Core**
 
-  * `Futures.sequence(globalContext=null)`
+  * `Sequence.create(globalContext=null)`
   * `then(next, err, data [, ...])` - add a method onto the queue
     * begins or resumes the queue
     * passes the results of the previous function into the next
 
 **Example:**
 
-    var sequence = Futures.sequence(),
-      err;
+    var sequence = require('sequence').create()
+      , err
+      ;
 
     sequence
       .then(function (next) {

@@ -1,23 +1,29 @@
+/*jshint strict:true node:true es5:true onevar:true laxcomma:true laxbreak:true*/
 (function () {
   "use strict";
 
   var Future = require('future');
 
   function isJoin(obj) {
-    return obj instanceof join;
+    return obj instanceof Join;
   }
 
-  function join(global_context) {
-    var self = this,
-      data = [],
-      ready = [],
-      subs = [],
-      promise_only = false,
-      begun = false,
-      updated = 0,
-      join_future = Future(global_context);
+  function Join(global_context) {
+    var self = this
+      , data = []
+      , ready = []
+      , subs = []
+      , promise_only = false
+      , begun = false
+      , updated = 0
+      , join_future = Future.create(global_context)
+      ;
 
     global_context = global_context || null;
+
+    if (!isJoin(this)) {
+      return new Join(global_context);
+    }
 
     function relay() {
       var i;
@@ -26,8 +32,8 @@
       }
       updated = 0;
       join_future.deliver.apply(join_future, data);
-      data = Array(data.length);
-      ready = Array(ready.length);
+      data = new Array(data.length);
+      ready = new Array(ready.length);
       //for (i = 0; i < data.length; i += 1) {
       //  data[i] = undefined;
       //}
@@ -37,8 +43,8 @@
       var type = (promise_only ? "when" : "whenever");
 
       begun = true;
-      data = Array(subs.length);
-      ready = Array(subs.length);
+      data = new Array(subs.length);
+      ready = new Array(ready.length);
 
       subs.forEach(function (sub, id) {
         sub[type](function () {
@@ -54,12 +60,13 @@
     }
 
     self.deliverer = function () {
-      var future = Future();
+      var future = Future.create();
       self.add(future);
       return future.deliver;
     };
     self.newCallback = self.deliverer;
 
+    // fn, ctx
     self.when = function () {
       if (!begun) {
         init();
@@ -67,6 +74,7 @@
       join_future.when.apply(join_future, arguments);
     };
 
+    // fn, ctx
     self.whenever = function () {
       if (!begun) {
         init();
@@ -95,10 +103,12 @@
     };
   }
 
-  function Join(context) {
+  function createJoin(context) {
     // TODO use prototype instead of new
-    return (new join(context));
+    return (new Join(context));
   }
+
+  Join.create = createJoin;
   Join.isJoin = isJoin;
   module.exports = Join;
 }());
