@@ -14,7 +14,7 @@
     "lib": "."
   },
   "dependencies": {
-    "sequence": ">= 2.1.1"
+    "sequence": ">= 2.2.1"
   },
   "engines": {
     "node": "*",
