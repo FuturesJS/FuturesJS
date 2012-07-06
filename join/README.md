@@ -47,17 +47,17 @@ Standalone Usage
 Usage with Futures
 ---
 
-    var Future = require('futures')
+    var Futures = require('futures')
       , join = require('join').create()
-      , fArray = [
-            Future.create()
-          , Future.create()
-          , Future.create()
+      , fArr = [
+            Futures.future.create()
+          , Futures.future.create()
+          , Futures.future.create()
         ]
       , e
       ;
 
-    setTimeout(function () { fArr[1].deliver(e, "World"); }, 100);
+    setTimeout(function () { fArr[1].deliver(e, " World"); }, 100);
     setTimeout(function () { fArr[0].deliver(e, "Hi"); }, 300);
     setTimeout(function () { fArr[0].deliver(e, "Hello"); }, 500);
     setTimeout(function () { fArr[2].deliver(e, "!", "!"); }, 700);
@@ -79,7 +79,7 @@ Usage with Futures
 
     join.add(fArr);
     join.when(function (f0Args, f1Args, f2Args) {
-      console.log(f1Args[1], f2Args[1], f3Args[1], f2Args[2]);
+      console.log(f0Args[1] + f1Args[1] + f2Args[2]);
     });
 
 API
