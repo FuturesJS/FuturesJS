@@ -6,7 +6,7 @@ Creates an asynchronous model using asynchronous method queueing.
 **Core**
 
   * `Futures.chainify(providers, modifiers, consumers, context)` - creates an asynchronous model
-    * `providers` - methods which provide data - must return Futures or Joins
+    * `providers` - methods which provide data - must return Futures or Joins or undefined
       * `function (next, params)` must call `next`
 
     * `modifiers` - methods which use provided data and modify it - act as Sequences
