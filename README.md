@@ -1,3 +1,8 @@
+FuturesJS v3.x
+====
+
+FuturesJS v3.x, code-named 'Diet Cola' is on its way. Preview the project [at its new location](https://github.com/coolaj86/FuturesJS).
+
 FuturesJS v2.x
 ====
 
