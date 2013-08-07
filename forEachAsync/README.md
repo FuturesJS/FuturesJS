@@ -1,7 +1,7 @@
 forEachAsync v3.x
 ===
 
-**New Version**: [forEachAsync](https://github.com/FuturesJS/forEachAsync)
+**New Version** in a [new repo - FuturesJS/forEachAsync](https://github.com/FuturesJS/forEachAsync)
 
 v3.x (aka 'Diet Cola") has all of the awesomeness of forEachAsync v2.x, but trims the fat and comes browser-ready!
 
