@@ -1,6 +1,6 @@
 FuturesJS - The simple asynchronous toolkit.
 
-FuturesJS is a JavaScript flow-control library
+It's a JavaScript flow-control library
 (or control-flow - however you like to say it)
 with the aim of being simple and intuitive.
 
@@ -13,11 +13,11 @@ FuturesJS v3 (aka 'Diet Cola')
 
 Status: Maintained, In Development
 
-<https://github.com/FuturesJS>
-
 v3.x is simply an experiment in making FuturesJS
 more **browser-friendly**, simpler, **smaller**,
 and more *intuitively obvious, even to the most casual observer*!
+
+For v3 each module has been split into its own repository in <https://github.com/FuturesJS>.
 
 Completed thus far (release candidate status):
 
