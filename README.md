@@ -50,5 +50,7 @@ Status: Deprecated
 
 <https://github.com/FuturesJS/FuturesJS/tree/v1.0>
 
+<http://gh-pages.coolaj86.com/futures/>
+
 This version is not active, nor is it complete.
 If you find bugs, I don't want to hear about them.
