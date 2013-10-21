@@ -61,7 +61,7 @@ The code to produce such a model might look like this:
     };
 
     consumers = {
-      display: function (data, params) {
+      render: function (data, params) {
         Template.render(data, params);
       }
     };
