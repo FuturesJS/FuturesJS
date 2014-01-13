@@ -32,6 +32,7 @@ Completed thus far:
     * `reduceRightAsync`
   * [`forAllAsync`](https://github.com/FuturesJS/forAllAsync)
   * [`lateral`](https://github.com/FuturesJS/lateral)
+  * [`sequence`](https://github.com/FuturesJS/sequence)
 
 In progress:
 
@@ -39,7 +40,6 @@ In progress:
   * [`chainify`](https://github.com/FuturesJS/chainify)
   * [`future`](https://github.com/FuturesJS/future)
   * [`loop`](https://github.com/FuturesJS/loop)
-  * [`sequence`](https://github.com/FuturesJS/sequence)
 
 FuturesJS v2
 ===
