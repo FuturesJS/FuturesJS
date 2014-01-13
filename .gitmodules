@@ -1,0 +1,18 @@
+[submodule "ArrayAsync"]
+	path = ArrayAsync
+	url = git@github.com:FuturesJS/ArrayAsync.git
+[submodule "forAllAsync"]
+	path = forAllAsync
+	url = git@github.com:FuturesJS/forAllAsync.git
+[submodule "forEachAsync"]
+	path = forEachAsync
+	url = git@github.com:FuturesJS/forEachAsync.git
+[submodule "join"]
+	path = join
+	url = git@github.com:FuturesJS/join.git
+[submodule "lateral"]
+	path = lateral
+	url = git@github.com:FuturesJS/lateral.git
+[submodule "sequence"]
+	path = sequence
+	url = git@github.com:FuturesJS/sequence.git
