@@ -1,6 +1,6 @@
 {
   "name": "asyncify",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "The asyncify deferred module of FuturesJS (Ender.JS and Node.JS)",
   "homepage": "https://github.com/coolaj86/futures",
   "keywords": ["flow-control", "async", "asynchronous", "asyncify", "util", "browser"],
@@ -14,7 +14,7 @@
     "lib": "."
   },
   "dependencies": {
-    "future": "*"
+    "future": "2.x"
   },
   "engines": {
     "node": "*",
