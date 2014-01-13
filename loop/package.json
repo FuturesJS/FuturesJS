@@ -1,6 +1,6 @@
 {
   "name": "loop",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "The promise / subscribe / deferred module of FuturesJS (Ender.JS and Node.JS)",
   "homepage": "https://github.com/coolaj86/futures",
   "keywords": ["flow-control", "async", "asynchronous", "futures", "loop", "util", "browser"],
@@ -14,7 +14,7 @@
     "lib": "."
   },
   "dependencies": {
-    "future": ">= 2.1.1"
+    "future": "2.x"
   },
   "engines": {
     "node": "*",
