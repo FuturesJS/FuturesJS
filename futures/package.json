@@ -1,6 +1,6 @@
 {
   "name": "futures",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "An async flow-control library for JavaScript (Browser and NodeJS)",
   "homepage": "https://github.com/coolaj86/futures",
   "keywords": ["flow-control", "sequence", "chain", "join", "async", "asynchronous", "futures", "promises", "deferreds", "subscriptions", "chaining", "util", "server", "client", "browser", "pakmanager"],
@@ -14,14 +14,14 @@
     "lib": "."
   },
   "dependencies": {
-      "future": ">= 2.3.1"
-    , "join": ">= 2.3.1"
-    , "sequence": ">= 2.2.1"
-    , "chainify": ">= 2.1.1"
-    , "asyncify": ">= 2.1.1"
-    , "loop": ">= 2.1.1"
-    , "events.node": ">= 0.4.0"
-    , "forEachAsync": ">= 2.1.1"
+      "future": "2.x"
+    , "join": "2.x"
+    , "sequence": "2.x"
+    , "chainify": "2.x"
+    , "asyncify": "2.x"
+    , "loop": "2.x"
+    , "events.node": "0.4.x"
+    , "forEachAsync": "2.x"
   },
   "engines": {
     "node": "*"
