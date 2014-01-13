@@ -1,6 +1,6 @@
 {
   "name": "chainify",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "The chainify module of FuturesJS (Ender.JS and Node.JS)",
   "homepage": "https://github.com/coolaj86/futures",
   "keywords": ["flow-control", "async", "asynchronous", "futures", "chainify", "chain", "step", "util", "browser"],
@@ -14,8 +14,8 @@
     "lib": "."
   },
   "dependencies": {
-    "future": ">= 2.1.1",
-    "sequence": ">= 2.1.1"
+    "future": "2.x",
+    "sequence": "2.x"
   },
   "engines": {
     "node": "*",
