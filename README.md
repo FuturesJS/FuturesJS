@@ -19,8 +19,9 @@ and more *intuitively obvious, even to the most casual observer*!
 
 For v3 each module has been split into its own repository in <https://github.com/FuturesJS>.
 
-Completed thus far (release candidate status):
+Completed thus far:
 
+  * [`join`](https://github.com/FuturesJS/join)
   * [`forEachAsync`](https://github.com/FuturesJS/forEachAsync)
   * [`ArrayAsync`](https://github.com/FuturesJS/ArrayAsync)
     * `someAsync`
@@ -29,6 +30,8 @@ Completed thus far (release candidate status):
     * `mapAsync`
     * `reduceAsync`
     * `reduceRightAsync`
+  * [`forAllAsync`](https://github.com/FuturesJS/forAllAsync)
+  * [`lateral`](https://github.com/FuturesJS/lateral)
 
 FuturesJS v2
 ===
