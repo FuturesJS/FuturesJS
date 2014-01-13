@@ -1,6 +1,6 @@
 {
   "name": "forEachAsync",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "The forEachAsync module of FuturesJS (Ender.JS and Node.JS)",
   "homepage": "https://github.com/coolaj86/futures",
   "keywords": ["flow-control", "async", "asynchronous", "futures", "forEachAsync", "chain", "step", "util", "browser"],
@@ -14,7 +14,7 @@
     "lib": "."
   },
   "dependencies": {
-    "sequence": ">= 2.2.1"
+    "sequence": "2.x"
   },
   "engines": {
     "node": "*",
