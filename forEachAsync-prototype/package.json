@@ -1,6 +1,6 @@
 {
   "name": "Array.prototype.forEachAsync",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "The Array.prototype.forEachAsync module of FuturesJS (Ender.JS and Node.JS)",
   "homepage": "https://github.com/coolaj86/futures",
   "keywords": ["flow-control", "async", "asynchronous", "futures", "Array.prototype.forEachAsync", "chain", "step", "util", "browser"],
@@ -14,7 +14,7 @@
     "lib": "."
   },
   "dependencies": {
-    "forEachAsync": ">= 2.1.1"
+    "forEachAsync": "2.x"
   },
   "engines": {
     "node": "*",
